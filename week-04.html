@@ -82,7 +82,7 @@ Lecture.mount({
     notes:[`Students usually find more than they expect. Ask the top finder to present their list.`],
     fig:{label:`Phone AI hunt`, build:hunt} },
 
-  { nav:'Recommendations', title:'How recommendations work, and the filter bubble', kind:'activity', minutes:20, wide:true,
+  { nav:'Recommendations', video:{id:'B8ofWFx525s',title:'Beware online “filter bubbles”',by:'TED · Eli Pariser',why:'The talk that named the filter bubble. Does it describe your feed?'}, title:'How recommendations work, and the filter bubble', kind:'activity', minutes:20, wide:true,
     narration:[
      `<b>1 · Collect</b> what you watch, like and skip. <b>2 · Compare</b> you with similar users. <b>3 · Predict</b> what you will click next. <b>4 · Show</b> a personalised feed.`,
      B.ex(`You watch three cooking videos. The system finds others who watched those and also liked a baking channel, so it suggests baking to you.`),
@@ -90,7 +90,7 @@ Lecture.mount({
      B.exam(`Risk: the <b>filter bubble</b>. The more you click, the narrower your feed becomes.`)],
     think:`Who decides what you see on your feed: you, the algorithm, or the company that sets its goals?`,
     notes:[`This is collaborative filtering in plain words: “people like you liked this”. The simulator is a simplified model.`],
-    fig:{label:`Your feed · click what you like`, build:bubble} },
+    fig:{flow:[{t:'Collect',s:'watch, like, skip',d:'The app records what you watch, like and skip.'},{t:'Compare',s:'people like you',d:'It finds users whose history looks like yours.'},{t:'Predict',s:'your next click',d:'It estimates what you are most likely to click next.'},{t:'Show',s:'your feed',d:'It fills your feed with those predictions. Your clicks feed step 1 again: a loop.'}],label:`Your feed · click what you like`, build:bubble} },
 
   { nav:'Ask me anything', title:'Ask me anything: six common questions', minutes:15,
     narration:[
@@ -121,7 +121,7 @@ Lecture.mount({
     notes:[`Encourage students to think about their own position honestly.`],
     fig:{label:`Where do you stand?`, build:el=>W.poll(el,{q:`In your future career, where do you expect to stand?`,opts:[`Likely to benefit`,`At some risk`,`Both, depending on my choices`,`I don't know yet`],reveal:i=>[`What will you do to keep that advantage, and who could you help?`,`Which skill would move you to the other column? Assignment 4 later asks you to imagine this future.`,`The most realistic answer for most people. The choices are the point of this week.`,`An honest answer. This course is designed to help you find out.`][i]})} },
 
-  { nav:'Biased algorithms', title:'Case: biased algorithms in the real world', minutes:20,
+  { nav:'Biased algorithms', video:{id:'UG_X_7g63rY',title:"How I'm fighting bias in algorithms",by:'TED · Joy Buolamwini',why:'A researcher discovers that face-analysis software failed to see her face, and asks why.'}, title:'Case: biased algorithms in the real world', minutes:20,
     narration:[
      B.plain(`Both cases below learned from historical human decisions. If history was unfair, the model copies it and makes it look objective.`),
      `<b>COMPAS (US courts):</b> software predicting who might reoffend. ProPublica (2016) reported that Black defendants who did not reoffend were wrongly labelled high risk almost twice as often as white defendants (44.9% vs 23.5%). The vendor disputed the analysis.`,
@@ -148,11 +148,11 @@ Lecture.mount({
     notes:[`Connect to Week 10 (limits, bias, black box) and the ethics weeks later in the course.`],
     fig:{label:`Four levels · click each`, build:el=>W.picker(el,{'Who can act':[[`Individuals`,`Build AI skills, verify outputs, protect your data, question results.`],[`Organisations`,`Test for bias, be transparent, keep humans in the loop, retrain staff.`],[`Governments`,`Regulate high-risk uses, fund education and access, protect privacy.`],[`Designers`,`Use diverse data, explain decisions, include affected communities.`]]})} },
 
-  { nav:'Exam takeaways', title:'Exam takeaways · Week 4', kind:'exam', minutes:15,
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 4', kind:'exam', minutes:15,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Everyday AI:</b> recommendations, maps, face unlock, spam filters; mostly narrow AI.</li><li><b>Recommendation:</b> collect, compare, predict, show; risk = filter bubble.</li><li><b>Equity lenses:</b> access, representation, outcomes, power.</li><li><b>Who benefits:</b> those with data, capital, skills, access; others at risk.</li><li><b>Cases:</b> COMPAS (justice) and the Amazon recruiting tool: biased past data.</li><li><b>Inevitable?</b> Determinism vs choice; IMF 2024: about 40% of jobs exposed.</li></ul>`),
      `Return to the questions your class wrote at the start. Which ones can you now answer?`],
-    fig:{label:`Likely exam questions`, build:el=>W.practice(el,[
+    fig:{mindmap:{center:'Who does AI affect?',branches:[{t:'Everyday AI',items:['Face unlock · maps · spam','Mostly narrow AI','Prediction from data']},{t:'Recommendations',items:['Collect · compare · predict · show','Risk: filter bubble']},{t:'Equity lenses',items:['Access','Representation','Outcomes','Power']},{t:'Who benefits',items:['Data, capital, skills, access','At risk: routine jobs','At risk: under-represented groups']},{t:'Bias cases',items:['COMPAS: 44.9% vs 23.5%','Amazon recruiting tool (2018)']},{t:'Inevitable?',items:['Determinism vs choice','IMF 2024: ≈40% of jobs exposed','ATMs and bank tellers']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Give three examples of AI in everyday life.`,hint:`Recommendations, maps traffic, face unlock, spam filters, autocorrect; say what each predicts.`},
       {q:`What is algorithmic bias? Give a real case.`,hint:`Unfair results from biased data or design; COMPAS (44.9% vs 23.5%) or the Amazon recruiting tool.`},
       {q:`Who benefits from AI and who is at risk?`,hint:`Those with data, capital, skills and access vs those without; use the four equity lenses.`},

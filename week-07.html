@@ -212,7 +212,7 @@ Lecture.mount({
      B.exam(`<b>Fraud detection = anomaly detection.</b> Trade-off: false alarms vs missed fraud (the same trade-off as Week 6's threshold).`)],
     think:`Is it fair that a customer who travels or shops at night gets declined more often?`,
     notes:[`With all four signals at ≥2, all fraud is blocked but so are the hotel and sofa. Turning off “Amount far above usual” at ≥2 gives a perfect week. Then ask whether that rule would work next month (overfitting in plain words).`,`Anomaly detection is unsupervised or semi-supervised learning (Week 3).`],
-    fig:{label:`Fictional card · 12 payments`, build:fraud} },
+    fig:{flow:[{t:'Inputs',s:'amount, place, time…',d:'Amount, place, time, device and merchant type for each payment.'},{t:'Compare',s:'with your normal',d:'The model compares the payment with your usual pattern and known fraud patterns.'},{t:'Risk score',s:'0 to 1',d:'Unusual combinations push the score up.'},{t:'Decide',s:'approve · block · ask',d:'Above the threshold the payment is blocked or you get a “Was this you?” text.'}],label:`Fictional card · 12 payments`, build:fraud} },
 
   { nav:'Credit scoring', title:'Risk management 2: credit scoring and its bias risk', minutes:15,
     narration:[
@@ -235,13 +235,13 @@ Lecture.mount({
     notes:[`Markowitz: Modern Portfolio Theory (1952), Nobel Memorial Prize in Economic Sciences 1990. Walk the numbers: 0.5 × 20 + 0.5 × (−5) = 7.5.`,`Fund numbers in the widget are illustrative.`],
     fig:{label:`Two funds · illustrative numbers`, build:diversify} },
 
-  { nav:'Robo-advisors and trading', title:'Robo-advisors and algorithmic trading', minutes:10,
+  { nav:'Robo-advisors and trading', fig:{label:'How a robo-advisor works', flow:[{t:'Questionnaire',s:'goals and risk',d:'Age, savings goal, time horizon, comfort with risk.'},{t:'Portfolio',s:'e.g. 80/20',d:'The app proposes a mix, e.g. 80% shares and 20% bonds for a 20-year-old.'},{t:'Rebalance',s:'automatically',d:'When markets move the mix drifts; the app sells and buys to restore it.'},{t:'Review',s:'human check',d:'Special situations still need a human adviser.'}]}, title:'Robo-advisors and algorithmic trading', minutes:10,
     narration:[
      `<table class="tbl"><thead><tr><th></th><th>Robo-advisor</th><th>Algorithmic trading</th></tr></thead><tbody><tr><td>What</td><td>An app that builds and rebalances your portfolio from your goals and risk comfort</td><td>Programs place orders automatically using rules or learned patterns; high-frequency trading sends thousands of orders per second</td></tr><tr><td>Benefit</td><td>Low fees, low minimums, always on</td><td>Speed, lower cost, no emotion</td></tr><tr><td>Limit</td><td>Not a human; weak on special situations</td><td>Errors spread at machine speed</td></tr></tbody></table>`,
      B.ex(`Robo-advisor: “I am 20, saving for 30 years, medium risk.” The app proposes about 80% shares and 20% bonds and rebalances each year.`)],
     notes:[`Robo-advisors serve ordinary customers; algorithmic trading is mostly institutional. Keep the definitions crisp.`] },
 
-  { nav:'When algorithms go wrong', title:'When algorithms go wrong: Flash Crash and Knight Capital', minutes:10,
+  { nav:'When algorithms go wrong', video:{id:'TDaFwnOiKVE',title:'How algorithms shape our world',by:'TED · Kevin Slavin',why:'Trading algorithms, the Flash Crash, and what happens when machines act faster than people can follow.'}, title:'When algorithms go wrong: Flash Crash and Knight Capital', minutes:10,
     narration:[
      `<b>Flash Crash, 6 May 2010:</b> US stocks fell about 9% within minutes, then largely recovered. Automated trading amplified a large sell order. Markets can move faster than humans can react.`,
      `<b>Knight Capital, 1 August 2012:</b> a software error sent unintended orders; about US$440 million was lost in around 45 minutes. No one could stop it fast enough. Testing and “kill switches” are essential.`,
@@ -285,11 +285,11 @@ Lecture.mount({
     notes:[`Students post their chosen field on Moodle before leaving.`],
     fig:{label:`Brief and rubric · from the syllabus`, html:A2} },
 
-  { nav:'Exam takeaways', title:'Exam takeaways · Week 7', kind:'exam', minutes:15,
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 7', kind:'exam', minutes:15,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Uses:</b> fraud detection, credit scoring, risk management, portfolio optimisation, trading, robo-advice.</li><li><b>Fraud:</b> anomaly detection; trade-off between false alarms and missed fraud.</li><li><b>Portfolio:</b> diversification lowers risk (Markowitz). Return vs risk.</li><li><b>Algorithmic trading:</b> fast and cheap, but errors spread (Flash Crash, Knight Capital).</li><li><b>Credit bias:</b> past unfair data and proxy variables recreate bias.</li><li><b>Risks:</b> herding, black box, systemic risk, data quality, cost.</li></ul>`),
      `Which of the three fields (education, healthcare, finance) worries you most, and why? Then open the <a href="review.html">Midterm review</a> page.`],
-    fig:{label:`Likely exam questions`, build:el=>W.practice(el,[
+    fig:{mindmap:{center:'AI in finance',branches:[{t:'Uses',items:['Fraud · credit · risk','Portfolio · trading · robo-advice']},{t:'Fraud',items:['Anomaly detection','False alarms vs missed fraud']},{t:'Credit',items:['The bias loop','Proxy variables (postcode)']},{t:'Portfolio',items:['Diversification (Markowitz 1952)','Return vs risk']},{t:'Trading risks',items:['Flash Crash 2010','Knight Capital 2012','Kill switches']},{t:'Big risks',items:['Herding · black box','Systemic risk · data quality']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain how AI detects fraud, with an example.`,hint:`Learn normal behaviour, flag what does not fit (anomaly detection); Sara's AED 12,000 at 3 a.m. abroad; trade-off of false alarms vs missed fraud.`},
       {q:`What is diversification and how can AI help?`,hint:`Spread investments to lower risk (umbrella + sunscreen = steady 7.5%); AI estimates co-movement across thousands of assets and searches for the best mix.`},
       {q:`Discuss two risks of algorithmic trading.`,hint:`Errors at machine speed (Knight Capital, US$440m in 45 min); herding and systemic risk (Flash Crash); need kill switches and oversight.`},

@@ -174,7 +174,7 @@ Lecture.mount({
     fig:{label:`Timeline game`, build:el=>W.order(el,[
       {y:1943,t:`First mathematical neuron`},{y:1950,t:`Turing asks “Can machines think?”`},{y:1956,t:`Dartmouth workshop names AI`},{y:1958,t:`Perceptron`},{y:1966,t:`ELIZA chatbot`},{y:1973,t:`Lighthill Report`},{y:1986,t:`Backpropagation popularised`},{y:1997,t:`Deep Blue beats Kasparov`},{y:2011,t:`Watson wins Jeopardy!`},{y:2012,t:`AlexNet wins ImageNet`},{y:2016,t:`AlphaGo beats Lee Sedol`},{y:2017,t:`Transformer paper`},{y:2022,t:`ChatGPT released`}])} },
 
-  { nav:'Deep Blue vs AlphaGo', title:'Case: Deep Blue (1997) vs AlphaGo (2016)', minutes:15,
+  { nav:'Deep Blue vs AlphaGo', video:{id:'WXuK6gekU1Y',title:'AlphaGo – The Movie',by:'Google DeepMind',why:'Watch the opening at home: the story of AlphaGo against Lee Sedol, and why Go needed learning rather than brute force.'}, title:'Case: Deep Blue (1997) vs AlphaGo (2016)', minutes:15,
     narration:[
      `<table class="tbl"><thead><tr><th></th><th>Deep Blue · chess · 1997</th><th>AlphaGo · Go · 2016</th></tr></thead><tbody><tr><td>Method</td><td>Searched millions of positions per second</td><td>Neural networks plus search</td></tr><tr><td>Knowledge</td><td>Chess rules and scoring written by experts</td><td>Learned from human games, then from playing itself</td></tr><tr><td>Learning</td><td>None during the match</td><td>Made moves experts called creative</td></tr></tbody></table>`,
      B.plain(`Chess can be attacked by brute-force search. Go has far too many positions, more than the number of atoms in the observable universe, so the machine had to <b>learn</b> good intuition. That shift is the story of modern AI.`),
@@ -189,12 +189,12 @@ Lecture.mount({
     notes:[`Students post their chosen milestone on Moodle before leaving, so topics are spread across the timeline.`],
     fig:{label:`Brief and rubric · from the syllabus`, html:A1} },
 
-  { nav:'Exam takeaways', title:'Exam takeaways · Week 2', kind:'exam', minutes:15,
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 2', kind:'exam', minutes:15,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Birth:</b> 1956 Dartmouth workshop; McCarthy named “AI”; Turing 1950.</li><li><b>Early AI:</b> symbolic, hand-written rules; brittle.</li><li><b>Winters:</b> 1970s and late 1980s; hype, weak computers, little data.</li><li><b>Neural nets:</b> perceptron 1958; backpropagation 1986; revival.</li><li><b>Boom (2012):</b> big data + GPUs + better algorithms; AlexNet.</li><li><b>Milestones:</b> Deep Blue 1997, AlphaGo 2016, Transformer 2017, ChatGPT 2022.</li></ul>`),
      `Try the likely exam questions, then open the hints.`],
     notes:[`Remind students: Assignment 1 is due next week (check Moodle).`],
-    fig:{label:`Likely exam questions`, build:el=>W.practice(el,[
+    fig:{mindmap:{center:'History of AI',branches:[{t:'Roots',items:['1943 mathematical neuron','1950 Turing’s question','1956 Dartmouth names AI','1958 perceptron · 1966 ELIZA']},{t:'Symbolic AI',items:['Hand-written IF-THEN rules','Expert systems','Brittle outside narrow tasks']},{t:'AI winters',items:['1970s: Lighthill Report 1973','Late 1980s: expert systems collapse','Hype, slow computers, little data']},{t:'Deep learning',items:['Backpropagation 1986','2012 AlexNet','Data + GPUs + algorithms']},{t:'AI spring',items:['1997 Deep Blue','2016 AlphaGo','2017 Transformer','2022 ChatGPT']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Outline three key moments in AI history.`,hint:`Any three with dates and why they matter, e.g. 1956 Dartmouth (field named), 2012 AlexNet (deep learning boom), 2022 ChatGPT (public generative AI).`},
       {q:`What caused the AI winters?`,hint:`Over-hyped promises, weak computers, little data, brittle rule systems; 1970s (Lighthill 1973) and late 1980s (expert systems).`},
       {q:`Why did deep learning succeed after 2012?`,hint:`Big data + GPUs + better algorithms (backpropagation, deeper networks); AlexNet won ImageNet.`},

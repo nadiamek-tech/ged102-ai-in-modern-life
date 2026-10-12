@@ -158,7 +158,7 @@ Lecture.mount({
       {t:`A robot learning to walk by falling and trying again`,a:2,why:`Staying upright is rewarded.`},
       {t:`Finding unusual bank transactions with no fraud labels`,a:1,why:`Learn what is normal, flag what is not (Week 7: anomaly detection).`}]})} },
 
-  { nav:'A network learns', title:'A neural network in plain words', kind:'activity', minutes:20, wide:true,
+  { nav:'A network learns', video:{id:'aircAruvnKk',title:'But what is a neural network? Deep learning chapter 1',by:'3Blue1Brown',why:'The clearest visual explanation of neurons, layers and weights. Watch after trying the neuron on this page.'}, title:'A neural network in plain words', kind:'activity', minutes:20, wide:true,
     narration:[
      B.plain(`Input (pixels, words, numbers) → hidden layers that find patterns step by step → output (“cat” 92%). <b>Training</b> = show an example, compare the network's answer with the right answer, nudge the connection strengths (<b>weights</b>) to reduce the error, repeat millions of times.`),
      `On the right is the smallest possible network: a single “neuron” deciding whether a student passes, from hours studied and hours slept. Green students passed, red ones failed. The blue line is the neuron's current guess.`,
@@ -181,7 +181,7 @@ Lecture.mount({
       {q:`Translate Arabic to English`,o:[`Transformer`,`k-means`,`Linear regression`,`Diffusion model`],a:0,why:`Sequences of words: transformer with attention.`},
       {q:`Predict tomorrow's electricity demand in kWh`,o:[`Linear regression`,`Diffusion model`,`k-means`,`CNN`],a:0,why:`Predicting a number.`}])} },
 
-  { nav:'How ChatGPT works', title:'How ChatGPT works, in four steps', kind:'activity', minutes:20, wide:true,
+  { nav:'How ChatGPT works', video:[{id:'wjZofJX0v4M',title:'Transformers, the tech behind LLMs',by:'3Blue1Brown',why:'How a transformer turns tokens into a prediction of the next word.'},{id:'eMlx5fFNoYc',title:'Attention in transformers, step-by-step',by:'3Blue1Brown',why:'Going further: how attention lets words use context. Optional.'}], title:'How ChatGPT works, in four steps', kind:'activity', minutes:20, wide:true,
     narration:[
      `<b>1 · Tokenise:</b> your text is cut into small pieces called tokens. <b>2 · Understand context:</b> the transformer weighs which earlier words matter, using <b>attention</b>. <b>3 · Predict:</b> it picks a likely next token from probabilities. <b>4 · Repeat:</b> it adds that token and predicts again until the answer is complete.`,
      `Try steps 1 and 2 on the right. Type your own sentence to see the tokens. Then click “it” in the sentence and compare the two endings: the same word attends to different words depending on context. That is the job attention does, and the reason transformers were such a breakthrough in 2017.`,
@@ -189,7 +189,7 @@ Lecture.mount({
      B.exam(`LLMs <b>predict the next token</b>. Key terms: <b>token, transformer, attention, probability</b>.`)],
     think:`If the model never “looks up” facts, where does its knowledge actually live?`,
     notes:[`Attention weights shown are illustrative, chosen to show the idea clearly.`],
-    fig:{label:`Tokens and attention`, build:chatflow} },
+    fig:{flow:[{t:'Tokenise',s:'text → pieces',d:'Your text is cut into tokens. Try it below.'},{t:'Attention',s:'weigh context',d:'Each token looks at the other tokens to decide which ones matter. Try it below with “it”.'},{t:'Predict',s:'next token',d:'The model gives every possible next token a probability and picks a likely one.'},{t:'Repeat',s:'until done',d:'The new token is added to the text and the loop runs again, one token at a time.'}],label:`Tokens and attention`, build:chatflow} },
 
   { nav:'How it was trained', title:'How was ChatGPT trained? Three stages', minutes:15,
     narration:[
@@ -207,11 +207,11 @@ Lecture.mount({
     notes:[`These capabilities return in later weeks: healthcare images (6), art (8), design (9).`],
     fig:{label:`What AI can do today`, build:el=>W.picker(el,{'State of the art':[[`Text`,`Chatbots, summaries, translation, code help.`],[`Images`,`Recognise objects; generate pictures from a text description.`],[`Speech`,`Voice assistants, live captions, voice cloning.`],[`Video`,`Text-to-video, editing, and deepfakes.`],[`Science`,`Protein structures (AlphaFold), weather forecasting, new materials.`],[`Robotics`,`Warehouse robots, self-driving research, drones.`]]})} },
 
-  { nav:'Exam takeaways', title:'Exam takeaways · Week 3', kind:'exam', minutes:15,
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 3', kind:'exam', minutes:15,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Nesting:</b> deep learning ⊂ machine learning ⊂ AI.</li><li><b>Three ML types:</b> supervised (labels), unsupervised (groups), reinforcement (rewards).</li><li><b>Neural net:</b> input, hidden layers, output; weights adjusted in training.</li><li><b>Models:</b> CNN = images; Transformer = language; k-means = grouping.</li><li><b>ChatGPT:</b> tokenise, attention, predict next token, repeat.</li><li><b>Training:</b> pre-training, fine-tuning, RLHF.</li></ul>`),
      `Pair task: explain the ChatGPT four-step flow to your partner without notes, then swap.`],
-    fig:{label:`Likely exam questions`, build:el=>W.practice(el,[
+    fig:{mindmap:{center:'How AI thinks',branches:[{t:'Nesting',items:['Deep learning ⊂ ML ⊂ AI']},{t:'Types of ML',items:['Supervised: labels','Unsupervised: groups','Reinforcement: rewards']},{t:'Neural networks',items:['Input → hidden layers → output','Weights = connection strengths','Training reduces error']},{t:'Key models',items:['CNN = images','Transformer = language','k-means = grouping','Regression = a number']},{t:'ChatGPT',items:['Tokenise','Attention','Predict next token','Repeat']},{t:'Training',items:['Pre-training (self-supervised)','Fine-tuning','RLHF']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Draw and explain AI, ML and deep learning.`,hint:`Nested circles; rule-based chess (AI only), spam filter (ML), ChatGPT (DL).`},
       {q:`Compare supervised and unsupervised learning with examples.`,hint:`Supervised uses labelled answers (spam/not spam); unsupervised finds groups without labels (customer segments).`},
       {q:`Explain how ChatGPT generates an answer.`,hint:`Tokenise → attention weighs context → predict next token from probabilities → repeat.`},

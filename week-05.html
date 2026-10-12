@@ -224,7 +224,7 @@ Lecture.mount({
     notes:[`Ask students to open the Georgia State link at home and check the numbers themselves.`],
     fig:{label:`Students · Teachers · Institutions`, build:el=>W.picker(el,LAND)} },
 
-  { nav:'Opportunities', title:'Opportunities: what LLMs can do for learning', minutes:15,
+  { nav:'Opportunities', video:{id:'hJP5GqnTrNo',title:'How AI Could Save (Not Destroy) Education',by:'TED · Sal Khan',why:'A strong case for AI tutors (Khanmigo). Watch critically: which risks from this week does he mention, and which does he leave out?'}, title:'Opportunities: what LLMs can do for learning', minutes:15,
     narration:[
      `<ul><li><b>1 · Personal tutor, 24/7:</b> explains a topic again and again, at your speed, in simple words. No fear of asking a “silly” question.</li><li><b>2 · Instant feedback:</b> checks grammar, structure and clarity of your draft in seconds, not days.</li><li><b>3 · Accessibility:</b> translation, text-to-speech and simplified text help non-native speakers and students with learning difficulties.</li><li><b>4 · Teacher time saved:</b> drafts quizzes, rubrics and routine emails, so teachers can spend time with students.</li></ul>`,
      `Why such excitement? In 1984 Benjamin Bloom reported that students tutored one-to-one scored about <strong>two standard deviations</strong> higher than students in a conventional class (the average tutored student beat about 98% of the class). LLMs offer something like a tutor for everyone. Later studies usually find smaller gains, but real ones.`,
@@ -293,11 +293,11 @@ Lecture.mount({
     notes:[`Pairs argue the middle rows of the table for 2 minutes, then build the policy in groups.`,`Use the merged policy as the AI-use statement for Assignment 2.`],
     fig:{label:`Traffic-light policy builder`, build:policy} },
 
-  { nav:'Exam takeaways', title:'Exam takeaways · Week 5', kind:'exam', minutes:15,
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 5', kind:'exam', minutes:15,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Define:</b> LLM = predicts the next word; hallucination = confident but false.</li><li><b>Opportunities (4):</b> tutor, feedback, accessibility, teacher time.</li><li><b>Threats (6):</b> integrity, hallucination, over-reliance, bias, privacy, digital divide.</li><li><b>Detector case:</b> 61% of non-native essays wrongly flagged; a detector score is not proof.</li><li><b>Principles:</b> transparency, fairness, privacy, human accountability.</li><li><b>Golden rule:</b> follow policy, declare use, verify facts, you are responsible.</li></ul>`),
      `Close your notes and name the six threats. Then try the likely questions.`],
-    fig:{label:`Likely exam questions`, build:el=>W.practice(el,[
+    fig:{mindmap:{center:'LLMs in education',branches:[{t:'LLM basics',items:['Predicts the next word','Hallucination: confident but false']},{t:'Opportunities',items:['24/7 tutor','Instant feedback','Accessibility','Teacher time']},{t:'Threats',items:['Integrity · hallucination','Over-reliance · bias','Privacy · digital divide']},{t:'Detector case',items:['61% of non-native essays flagged','A clue, not proof']},{t:'Principles',items:['Transparency · fairness','Privacy · accountability']},{t:'Golden rules',items:['Follow policy · declare use','Verify facts','You are responsible']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain two opportunities and two threats of LLMs in education.`,hint:`e.g. 24/7 tutor and instant feedback; hallucination and over-reliance; give one example each and the condition (“if students still think”).`},
       {q:`Why are AI detectors unreliable? Give an example.`,hint:`They judge predictability; non-native writers flagged (Stanford: 61% average); a score is a clue, not proof.`},
       {q:`Compare learning with AI vs outsourcing to AI.`,hint:`Explain → quiz → check my answer vs write → copy → submit; the question is who did the thinking.`},

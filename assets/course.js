@@ -112,6 +112,45 @@
         else { miss++; b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); }
       }));
     },
+    video(el, v){
+      const embed=/github\.io$|^localhost$|^127\./.test(location.hostname);
+      const url=`https://www.youtube.com/watch?v=${v.id}${v.start?`&t=${v.start}s`:''}`;
+      const box=h('div',{class:'video'});
+      box.innerHTML=(embed?`<div class="vframe"><iframe src="https://www.youtube-nocookie.com/embed/${v.id}${v.start?`?start=${v.start}`:''}" title="${esc(v.title)}" loading="lazy" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`
+        :`<a class="vcard" href="${url}" target="_blank" rel="noopener"><span class="vplay">▶</span><span><b>Watch on YouTube ↗</b><small>Opens in a new tab</small></span></a>`)
+        +`<div class="vmeta"><span class="eyebrow">Watch · ${esc(v.by)}</span><b>${esc(v.title)}</b>${v.why?`<p>${v.why}</p>`:''}${embed?`<a href="${url}" target="_blank" rel="noopener">Open on YouTube ↗</a>`:''}</div>`;
+      el.appendChild(box);
+    },
+    flow(el, steps, opts={}){
+      const wrap=h('div',{class:'flow ui'});
+      wrap.innerHTML=`<div class="fsteps">${steps.map((s,i)=>`<button type="button" class="fstep" data-i="${i}"><span class="fn">${i+1}</span><b>${s.t}</b>${s.s?`<small>${s.s}</small>`:''}</button>`).join('<span class="farrow" aria-hidden="true">→</span>')}</div>
+        <div class="row" style="margin-top:10px"><button type="button" class="btn fplay">▶ Play the flow</button>${opts.note?`<span class="mono" style="color:var(--muted)">${opts.note}</span>`:''}</div><div class="fdetail feedback" style="margin-top:8px">Press play, or click any step.</div>`;
+      const bs=[...wrap.querySelectorAll('.fstep')], d=wrap.querySelector('.fdetail'); let timer=null;
+      const show=i=>{ bs.forEach((b,j)=>{ b.classList.toggle('on',j===i); b.classList.toggle('done',j<i); }); d.innerHTML=`<b>Step ${i+1} · ${steps[i].t}.</b> ${steps[i].d||''}`; };
+      bs.forEach((b,i)=>b.addEventListener('click',()=>{ clearInterval(timer); timer=null; show(i); }));
+      wrap.querySelector('.fplay').addEventListener('click',()=>{ clearInterval(timer); let i=0; show(0); timer=setInterval(()=>{ i++; if(i>=steps.length){ clearInterval(timer); timer=null; return; } show(i); },2200); });
+      el.appendChild(wrap);
+    },
+    mindmap(el, {center, branches}){
+      const wrap=h('div',{class:'mmap'}); el.appendChild(wrap); let sel=0;
+      const narrow=()=> (el.clientWidth||600) < 560;
+      const draw=()=>{
+        if(narrow()){
+          wrap.innerHTML=`<div class="mm-center">${esc(center)}</div><div class="acc">${branches.map((b,i)=>`<details ${i===sel?'open':''}><summary>${esc(b.t)}</summary><ul>${b.items.map(x=>`<li>${x}</li>`).join('')}</ul></details>`).join('')}</div>`; return; }
+        const W0=660, n=branches.length, H=Math.max(300, n*58+40), cy=H/2;
+        const by=i=>40+(H-80)*(n===1?.5:i/(n-1));
+        const leaves=branches[sel].items, m=leaves.length, ly=j=>cy+(j-(m-1)/2)*Math.min(46,(H-40)/Math.max(m,1));
+        let svg=`<svg viewBox="0 0 ${W0} ${H}" role="img" aria-label="Mind map: ${esc(center)}">`;
+        branches.forEach((b,i)=>{ svg+=`<path d="M150 ${cy} C200 ${cy} 190 ${by(i)} 240 ${by(i)}" fill="none" stroke="${i===sel?'var(--wk)':'var(--line)'}" stroke-width="${i===sel?3:2}"/>`; });
+        leaves.forEach((x,j)=>{ svg+=`<path d="M410 ${by(sel)} C440 ${by(sel)} 430 ${ly(j)} 462 ${ly(j)}" fill="none" stroke="var(--wk)" stroke-width="1.5" opacity=".7"/>`; });
+        svg+=`<rect x="14" y="${cy-34}" width="136" height="68" rx="34" fill="var(--wk)"/><foreignObject x="20" y="${cy-30}" width="124" height="60"><div xmlns="http://www.w3.org/1999/xhtml" class="mm-c">${esc(center)}</div></foreignObject>`;
+        branches.forEach((b,i)=>{ svg+=`<g class="mm-b" data-i="${i}" tabindex="0" role="button" aria-pressed="${i===sel}"><rect x="240" y="${by(i)-20}" width="170" height="40" rx="10" fill="${i===sel?'var(--wk-soft)':'var(--bg)'}" stroke="${i===sel?'var(--wk)':'var(--line)'}" stroke-width="1.5"/><foreignObject x="246" y="${by(i)-18}" width="158" height="36"><div xmlns="http://www.w3.org/1999/xhtml" class="mm-t">${esc(b.t)}</div></foreignObject></g>`; });
+        leaves.forEach((x,j)=>{ svg+=`<circle cx="466" cy="${ly(j)}" r="4" fill="var(--wk)"/><foreignObject x="474" y="${ly(j)-21}" width="182" height="42"><div xmlns="http://www.w3.org/1999/xhtml" class="mm-l">${x}</div></foreignObject>`; });
+        svg+='</svg>'; wrap.innerHTML=svg+`<p class="mono" style="color:var(--muted);margin:4px 0 0">Click a branch to open it.</p>`;
+        wrap.querySelectorAll('.mm-b').forEach(g=>{ const go=()=>{ sel=+g.dataset.i; draw(); }; g.addEventListener('click',go); g.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();go();} }); });
+      };
+      draw(); requestAnimationFrame(draw); let rt; addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{ if(document.body.contains(wrap)) draw(); },150); });
+    },
     poll(el, {q, opts, reveal}){
       const wrap=h('div',{class:'poll ui'}); wrap.appendChild(h('p',{style:'margin:0 0 4px;font-weight:600'},esc(q)));
       const msg=h('div',{class:'feedback',hidden:''});
@@ -196,14 +235,18 @@
       head.innerHTML=`<div><div class="eyebrow">Scene ${cur} of ${S.length-1}</div><h2>${s.title}</h2></div>
         <div class="chips"><span class="chip k-${s.kind||'lecture'}">${kindLabel}</span>${s.minutes?`<span class="chip">${s.minutes} min</span>`:''}</div>`;
       stage.appendChild(head);
-      const split=h('div',{class:'split'+(s.fig?'':' nofig')+(s.wide?' wide':'')});
+      const split=h('div',{class:'split'+(s.fig?'':' nofig')+(s.wide?' wide':'')+(s.full?' full':'')});
       const narr=h('div',{class:'narr'});
       (s.narration||[]).forEach((p,i)=>{ const isList=/^\s*<(ul|div|table)/.test(p); const d=h('div',{class:'para'+(i===0&&!isList?' lead':'')}); d.innerHTML=p; narr.appendChild(d); });
       if(s.think) narr.appendChild(h('div',{class:'think'},`<span class="eyebrow">Pause and think</span>${s.think}`));
+      if(s.video){ const vd=h('div',{class:'videos'}); [].concat(s.video).forEach(v=>W.video(vd,v)); narr.appendChild(vd); }
       if(s.src) narr.appendChild(h('div',{class:'src'},s.src));
       if(s.notes) narr.appendChild(h('div',{class:'notes'},`<span class="eyebrow">Teacher notes${s.minutes?` · ${s.minutes} min`:''}</span><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`));
       split.appendChild(narr);
-      if(s.fig){ const f=h('figure',{class:'fig',style:'margin:0'}); if(s.fig.label) f.appendChild(h('span',{class:'eyebrow'},esc(s.fig.label))); const body=h('div'); if(s.fig.html) body.innerHTML=s.fig.html; f.appendChild(body); if(s.fig.caption) f.appendChild(h('figcaption',{class:'caption'},s.fig.caption)); split.appendChild(f); if(s.fig.build) s.fig.build(body,W); }
+      if(s.fig){ const f=h('figure',{class:'fig',style:'margin:0'}); if(s.fig.label) f.appendChild(h('span',{class:'eyebrow'},esc(s.fig.label)));
+        if(s.fig.mindmap){ const mm=h('div',{style:'margin-bottom:18px'}); f.appendChild(mm); W.mindmap(mm,s.fig.mindmap); }
+        if(s.fig.flow){ const fl=h('div',{style:'margin-bottom:18px'}); f.appendChild(fl); W.flow(fl,s.fig.flow,{note:s.fig.flowNote}); }
+        const body=h('div'); if(s.fig.html) body.innerHTML=s.fig.html; f.appendChild(body); if(s.fig.caption) f.appendChild(h('figcaption',{class:'caption'},s.fig.caption)); split.appendChild(f); if(s.fig.build) s.fig.build(body,W); }
       stage.appendChild(split);
       const pager=h('div',{class:'pager'});
       const prev=h('button',{type:'button',class:'prev'},`<small>← Previous</small>${cur>0?esc(S[cur-1].nav||S[cur-1].title):'Start'}`); prev.disabled=cur===0; prev.addEventListener('click',()=>go(cur-1));

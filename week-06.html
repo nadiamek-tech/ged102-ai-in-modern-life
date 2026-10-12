@@ -194,7 +194,7 @@ Lecture.mount({
      `The screening flow on the right ends with a person. Think of airport security: a machine scans every bag and flags suspicious ones; a person opens only the flagged bags and makes the final call.`,
      B.exam(`Labelled data → trained model → prediction. Risk: <b>generalisation failure</b> on new populations. The pattern “AI suggests, a qualified human decides” is called <b>human-in-the-loop</b>.`)],
     notes:[`Connect to Week 3: supervised learning and CNNs. The model only knows what it was shown.`],
-    fig:{label:`Train once · use many times · human decides`, html:PIPE} },
+    fig:{flow:[{t:'Capture',s:'camera or scanner',d:'A camera or scanner takes the image.'},{t:'Model',s:'AI scores it',d:'The trained model gives the image a score.'},{t:'Confidence',s:'“92% likely disease”',d:'A threshold turns the score into a flag.'},{t:'Human check',s:'clinician reviews',d:'A qualified clinician reviews the flagged cases.'},{t:'Action',s:'refer · treat · monitor',d:'The human decides what happens next: human-in-the-loop.'}],label:`Train once · use many times · human decides`, html:PIPE} },
 
   { nav:'Set the threshold', title:'Activity · Missed cases or false alarms?', kind:'activity', minutes:20, wide:true,
     narration:[
@@ -206,7 +206,7 @@ Lecture.mount({
     notes:[`Data are illustrative.`,`Expected: lower threshold for screening, higher for risky treatment. MTH 105 link: Type I and Type II errors.`],
     fig:{label:`40 illustrative patients`, build:threshold} },
 
-  { nav:'Drugs and personalised care', title:'Drug discovery and personalised medicine', minutes:10,
+  { nav:'Drugs and personalised care', fig:{label:'From target to medicine', flow:[{t:'Disease target',s:'what to block',d:'Scientists choose the protein or process a drug should act on.'},{t:'AI predicts',s:'likely molecules',d:'Models such as AlphaFold-style structure prediction help guess which molecules could fit.'},{t:'Shortlist',s:'the best 20 keys',d:'Only the most promising candidates go forward.'},{t:'Lab tests',s:'check reality',d:'Experiments test whether the predictions hold.'},{t:'Clinical trials',s:'test in people',d:'Humans and regulators decide whether the drug is safe and works.'}]}, video:{id:'gg7WjuFs8F4',title:'AlphaFold: The making of a scientific breakthrough',by:'Google DeepMind',why:'How the team behind AlphaFold cracked protein structure prediction.'}, title:'Drug discovery and personalised medicine', minutes:10,
     narration:[
      `<b>Drug discovery.</b> Old way: test thousands of molecules in a lab, over 10 years and billions of dollars. AI way: predict which molecules are likely to work and test only the best. Famous case: DeepMind's AlphaFold predicts the 3D shape of proteins from their sequence; its creators Demis Hassabis and John Jumper shared the 2024 Nobel Prize in Chemistry.`,
      `<b>Personalised medicine.</b> Same disease, different patients, different best treatment. AI finds patterns in genes, history and lab results to suggest the likely best option. It needs very large, high-quality, private data.`,
@@ -260,11 +260,11 @@ Lecture.mount({
       {l:'Who could be harmed, and how?',rows:2},
       {l:'Where is the human in the loop?',rows:2}]})} },
 
-  { nav:'Exam takeaways', title:'Exam takeaways · Week 6', kind:'exam', minutes:15,
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 6', kind:'exam', minutes:15,
     narration:[
      B.exam(`<b>If you remember only this…</b><ul><li><b>Areas:</b> diagnosis, treatment, drug discovery, patient care and hospital operations.</li><li><b>Diagnostics:</b> supervised learning + CNN on labelled images.</li><li><b>Examples:</b> IDx-DR eye screening (2018), AlphaFold proteins, MASAI screening trial.</li><li><b>Case:</b> Epic Sepsis Model missed 67% of cases and over-alerted.</li><li><b>Key terms:</b> false positive, false negative, alert fatigue, human-in-the-loop.</li><li><b>Ethics pillars:</b> privacy, bias, accountability, explainability.</li></ul>`),
      `Recall game: split the room in two. One side names a benefit, the other a risk; alternate until one side runs out.`],
-    fig:{label:`Likely exam questions`, build:el=>W.practice(el,[
+    fig:{mindmap:{center:'AI in healthcare',branches:[{t:'Uses',items:['Diagnosis · treatment','Drug discovery · patient care','Hospital operations']},{t:'Diagnostics',items:['Supervised learning + CNN','IDx-DR (2018)','MASAI: 20% more cancers found']},{t:'Errors',items:['False positive: false alarm','False negative: missed disease','Threshold = trade-off']},{t:'Sepsis case',items:['Missed 67% of cases','Alerts on 18% of patients','Alert fatigue']},{t:'Ethics pillars',items:['Privacy · bias','Accountability · explainability']},{t:'Human-in-the-loop',items:['AI suggests','Clinician decides']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain how AI helps diagnose disease. Give an example.`,hint:`Supervised learning on labelled images (CNN) → score → human check; IDx-DR or MASAI.`},
       {q:`What is human-in-the-loop and why does it matter?`,hint:`AI suggests, a qualified human decides; handles unusual cases, explains, stays accountable.`},
       {q:`Discuss two risks of AI in healthcare.`,hint:`e.g. false negatives, bias in training data, privacy, automation bias; give an example each.`},

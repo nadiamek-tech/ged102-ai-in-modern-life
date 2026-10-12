@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Midterm Review · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#5B3FA8;--wk-soft:rgba(91,63,168,.10);--wk-d:#B9A3F5;--wk-soft-d:rgba(185,163,245,.14)}
+.scroll{overflow-x:auto}
+.formula{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-family:var(--f-display);font-weight:700}
+.formula span{border:1px solid var(--wk);background:var(--wk-soft);border-radius:999px;padding:6px 12px}
+.formula i{font-style:normal;color:var(--muted)}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+const FORMULA=`<div class="formula"><span>Define</span><i>→</i><span>Example</span><i>→</i><span>Benefit</span><i>→</i><span>Risk</span><i>→</i><span>Human oversight</span></div>`;
+const T14=`<div class="scroll"><table class="tbl"><thead><tr><th></th><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th></tr></thead><tbody>
+<tr><td>Question</td><td>What is AI?</td><td>Where did it come from?</td><td>How does it work?</td><td>Who does it affect?</td></tr>
+<tr><td>Key idea</td><td>Narrow AI, not general</td><td>Hype, winters, springs</td><td>Learning from data</td><td>Impact depends on choices</td></tr>
+<tr><td>Key terms</td><td>ANI/AGI, Turing Test</td><td>Dartmouth, AI winter, deep learning</td><td>ML types, transformer, RLHF</td><td>Bias, equity, filter bubble</td></tr>
+<tr><td>Key example</td><td>Chess vs tea-making</td><td>Deep Blue vs AlphaGo</td><td>Spam filter, ChatGPT</td><td>COMPAS, ATMs</td></tr></tbody></table></div>`;
+const T57=`<div class="scroll"><table class="tbl"><thead><tr><th></th><th>Education (Wk 5)</th><th>Healthcare (Wk 6)</th><th>Finance (Wk 7)</th></tr></thead><tbody>
+<tr><td>Main AI use</td><td>Tutoring, feedback, admin</td><td>Diagnosis, drug discovery, care</td><td>Fraud, credit, trading, advice</td></tr>
+<tr><td>Type of AI</td><td>LLMs (language)</td><td>Image models, prediction</td><td>Anomaly detection, prediction</td></tr>
+<tr><td>Biggest benefit</td><td>Personal learning at scale</td><td>Earlier, faster detection</td><td>Speed, lower cost, access</td></tr>
+<tr><td>Biggest risk</td><td>Integrity, over-reliance</td><td>Wrong or biased diagnosis</td><td>Systemic and herding risk</td></tr>
+<tr><td>Case study</td><td>AI detector bias</td><td>Epic Sepsis Model</td><td>Flash Crash / Knight Capital</td></tr>
+<tr><td>Human role</td><td>Teacher + student judge</td><td>Clinician decides</td><td>Risk and compliance oversight</td></tr></tbody></table></div>`;
+const CARDS=[
+ ['AI','Systems doing tasks that normally need human intelligence'],['Narrow / General AI','One task only (all AI today) / any task like a human (not yet)'],['Turing Test','If you cannot tell it from a human in chat, it passes'],['Chinese Room','Searle: correct answers do not prove understanding'],['Symbolic AI','Hand-written IF-THEN rules'],['AI winter','Period of cut funding after over-hyped promises'],['Machine learning','Learns patterns from data instead of fixed rules'],['Supervised / Unsupervised / Reinforcement','Labels / no labels, finds groups / rewards'],['Neural network · weights','Layered units · adjustable connection strengths'],['Transformer · token','Model using attention · piece of text'],['Attention','Lets each word weigh which other words matter'],['RLHF','Learning from human ranking of answers'],['Filter bubble','The more you click, the narrower your feed'],['Algorithmic bias','Systematically unfair results from skewed data or design'],['LLM','Model that predicts the next word from huge text data'],['Hallucination','Confident output that is false'],['False positive / negative','False alarm / missed real case'],['Human-in-the-loop','AI suggests, a human decides'],['Alert fatigue','Too many false alarms, so people ignore them'],['Anomaly detection','Learn what is normal; flag what is not'],['Diversification','Spread investments to lower risk'],['Systemic risk','One failure threatens the whole system'],['Proxy variable','Neutral-looking feature that stands in for a sensitive one']];
+
+Lecture.mount({
+  id:'rev', week:'1–7', clo:'1, 2', short:'Midterm review · Weeks 1–7',
+  title:'Midterm Review',
+  meta:'Weeks 1–7 · Midterm 30%',
+  scenes:[
+  { nav:'How to revise', title:'How to revise for the midterm', kind:'review',
+    narration:[
+     `The midterm covers <strong>Weeks 1 to 7</strong> and is worth <strong>30%</strong> of your grade. This page collects everything you need: two summary tables, the four themes that repeat, flashcards for every key term, and practice questions with hints.`,
+     B.exam(`<b>The answer formula</b> for almost any question: define the term, give a real example, name a benefit, name a risk, and finish with human oversight. Marking rewards this structure.`),
+     `<ul><li><b>Revise</b> each week's Exam takeaways scene and the two tables here.</li><li><b>Self-test</b> with the flashcards until you know them all.</li><li><b>Practise</b> the 14 questions aloud with a partner, then check the hints.</li><li><b>Retake</b> each week's exit check.</li></ul>`],
+    fig:{label:`The answer formula`, html:FORMULA+`<p class="ui" style="margin:14px 0 0;color:var(--muted)">Essay storyline for Weeks 1–4: define AI → trace its history → explain how it learns → assess who benefits and who is at risk.<br><br>Pattern for any “AI in field X” essay (Weeks 5–7): use → benefit → risk → example → human oversight.</p>`} },
+
+  { nav:'Weeks 1–4 table', title:'Weeks 1–4 in one table', kind:'review', wide:true,
+    narration:[`If you can fill in this table from memory, you are ready for Weeks 1–4. Cover a column and test yourself.`],
+    fig:{label:`Foundations of AI`, html:T14} },
+
+  { nav:'Weeks 5–7 table', title:'Comparing the three fields', kind:'review', wide:true,
+    narration:[`Your master memory aid for comparison questions. Practise saying one row across all three fields.`],
+    fig:{label:`Education · Healthcare · Finance`, html:T57} },
+
+  { nav:'Four themes', title:'Four themes that repeat in every field', kind:'review',
+    narration:[
+     B.exam(`Exam trick: for <b>any</b> application question, finish with these four themes. They fit education, health and finance.`)],
+    fig:{label:`Click each theme`, build:el=>W.picker(el,{'Themes':[[`1 · Bias`,`Training data reflects the past: essay detectors (Wk 5), skin-tone gaps and the Obermeyer cost proxy (Wk 6), credit scoring and Amazon (Wk 4, 7), COMPAS (Wk 4).`],[`2 · Privacy`,`Student data, patient records and financial history are sensitive and need consent.`],[`3 · Accountability`,`A human or organisation must be responsible; “the AI decided” is not enough.`],[`4 · Human oversight`,`AI suggests; people decide in high-stakes cases (human-in-the-loop).`]]})} },
+
+  { nav:'Flashcards', title:'Cheat sheet: key terms to memorise', kind:'review', wide:true,
+    narration:[`Read the cards first. Then switch on <strong>Self-test</strong>: tap a card to reveal the meaning, and tap again to mark it as known. Aim for all of them.`],
+    fig:{label:`${CARDS.length} key terms · Weeks 1–7`, build:el=>W.flashcards(el,CARDS)} },
+
+  { nav:'Practice: Weeks 1–4', title:'Practice questions · Weeks 1–4', kind:'review',
+    narration:[`Try each question without notes, aloud or on paper. Then open the hint and compare.`],
+    fig:{label:`Seven questions`, build:el=>W.practice(el,[
+      {type:'short',q:`Define AI and name its four ways of being defined.`,hint:`Systems performing tasks needing human intelligence; thinking/acting × humanly/rationally.`},
+      {type:'short',q:`Distinguish traditional programming from machine learning with an example.`,hint:`Rules + data → answers vs data + answers → rules; spam filter example.`},
+      {type:'short',q:`What caused the AI winters?`,hint:`Over-hype, weak computers, little data, brittle rule systems; 1970s and late 1980s.`},
+      {type:'short',q:`Draw the AI, ML, DL nesting and give an example for each ring.`,hint:`Deep learning ⊂ ML ⊂ AI; rule-based chess / spam filter / ChatGPT.`},
+      {type:'discuss',q:`Does ChatGPT “understand”? Use the Turing Test and Chinese Room.`,hint:`Turing: behaviour counts; Searle: symbol manipulation is not understanding; give your own view with reasons.`},
+      {type:'apply',q:`A hiring model rejects more women than men. Explain why and how to fix it.`,hint:`Biased past hiring data; proxy features; audit, rebalance data, human review.`},
+      {type:'essay',q:`Trace AI from 1956 to ChatGPT and discuss who benefits from today's AI.`,hint:`1956, 1986, 2012, 2016, 2017, 2022; benefits to those with data, skills, access; risks to others; choices matter.`}])} },
+
+  { nav:'Practice: Weeks 5–7', title:'Practice questions · Weeks 5–7', kind:'review',
+    narration:[`Same method. For the discuss and essay questions, use the answer formula.`],
+    fig:{label:`Seven questions`, build:el=>W.practice(el,[
+      {type:'short',q:`Define hallucination and give one example in education.`,hint:`Confident but false output; e.g. AI invents a reference for an essay.`},
+      {type:'short',q:`Explain false positive vs false negative with a medical example.`,hint:`False positive = false alarm (healthy flagged); false negative = disease missed, more dangerous.`},
+      {type:'short',q:`What is anomaly detection? Give a bank example.`,hint:`Learn normal, flag unusual; e.g. a sudden large foreign payment at 3 a.m. blocked.`},
+      {type:'discuss',q:`“AI detectors solve cheating.” Agree or disagree using the Stanford study.`,hint:`Disagree: 61% of non-native essays wrongly flagged; detectors biased and not proof; use process and drafts.`},
+      {type:'discuss',q:`Should a hospital use an AI model it cannot inspect? Use the sepsis case.`,hint:`Risky: black box, 67% missed, alert fatigue; require external validation, transparency, human oversight.`},
+      {type:'apply',q:`A bank's loan model rejects more applicants from one area. Explain a possible cause and a fix.`,hint:`Biased past data or a proxy variable such as postcode; audit, remove proxies, test fairness, human review.`},
+      {type:'essay',q:`Compare risks of AI in education, healthcare and finance. Give an example for each and one common theme.`,hint:`Education integrity, healthcare misdiagnosis, finance systemic risk; common themes: bias, privacy, accountability, oversight.`}])} },
+
+  { nav:'Mixed quiz', title:'Mixed quiz · Weeks 1–7', kind:'check',
+    narration:[`Ten questions across all seven weeks. Note the ones you miss and revisit that week's takeaways.`],
+    fig:{label:`Ten questions`, build:el=>W.quiz(el,[
+      {q:`Machine learning can be summarised as…`,o:[`rules + data → answers`,`data + answers → rules`,`answers → rules`,`rules → data`],a:1,why:`Week 1.`},
+      {q:`AI was named as a field at…`,o:[`Dartmouth, 1956`,`Turing's paper, 1950`,`Deep Blue, 1997`,`ImageNet, 2012`],a:0,why:`Week 2: John McCarthy.`},
+      {q:`The deep learning boom after 2012 came from…`,o:[`rules and logic`,`big data + GPUs + better algorithms`,`quantum computers`,`expert systems`],a:1,why:`Week 2.`},
+      {q:`“Attention” in a transformer…`,o:[`weighs which words matter for each word`,`counts tokens`,`checks facts online`,`stops hallucinations`],a:0,why:`Week 3.`},
+      {q:`Pre-training → fine-tuning → …`,o:[`RLHF`,`ImageNet`,`backup`,`k-means`],a:0,why:`Week 3: Reinforcement Learning from Human Feedback.`},
+      {q:`The four equity lenses are access, representation, outcomes and…`,o:[`speed`,`power`,`price`,`privacy`],a:1,why:`Week 4.`},
+      {q:`Which is NOT one of the six education threats?`,o:[`Over-reliance`,`Digital divide`,`Alert fatigue`,`Hallucination`],a:2,why:`Alert fatigue is from healthcare (Week 6).`},
+      {q:`A false negative in medical AI is…`,o:[`a false alarm`,`a missed real disease`,`a slow result`,`a privacy breach`],a:1,why:`Week 6: the more dangerous error.`},
+      {q:`Diversification lowers risk most when assets…`,o:[`move together`,`have low or negative correlation`,`have the same return`,`are all bonds`],a:1,why:`Week 7.`},
+      {q:`Removing a sensitive column (e.g. gender) from a credit model…`,o:[`always removes bias`,`may not remove bias because of proxy variables`,`is illegal`,`makes the model a black box`],a:1,why:`Week 7: proxies like postcode can bring bias back.`}])} },
+
+  { nav:'Before the midterm', title:'Before the midterm', kind:'review',
+    narration:[
+     `<ul><li><b>Revise:</b> each week's Exam takeaways and the two tables.</li><li><b>Practise:</b> the 14 questions aloud with a partner.</li><li><b>Remember the formula:</b> define → example → benefit → risk → human oversight.</li><li><b>Reminder:</b> the midterm covers Weeks 1–7 and is worth 30% of the course grade.</li></ul>`,
+     `Questions? Bring them to office hours before the exam.`],
+    notes:[`Offer office hours before the midterm.`] }
+  ]
+});
+</script>
+</body>
+</html>

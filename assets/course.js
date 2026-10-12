@@ -72,6 +72,46 @@
       wrap.append(h('div',{class:'row'}),out); wrap.children[wrap.children.length-2].appendChild(copy);
       el.appendChild(wrap);
     },
+    agenda(el, rows){
+      const total=rows.reduce((a,r)=>a+r[1],0); let acc=0;
+      const col=k=>k==='a'?'var(--wk)':k==='b'?'var(--line)':k==='c'?'var(--good)':'var(--muted)';
+      el.innerHTML=`<div class="stack ui">${rows.map(([t,m,k])=>{ const s=acc; acc+=m; return `<div style="display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;align-items:center"><div><div style="font-size:.86rem;margin-bottom:3px">${t}</div><div style="height:10px;background:var(--sunk);border-radius:3px;position:relative"><div style="position:absolute;left:${s/total*100}%;width:${m/total*100}%;top:0;bottom:0;border-radius:3px;background:${col(k)}"></div></div></div><span class="mono" style="text-align:right">${m}′</span></div>`; }).join('')}
+       <div class="legend" style="margin-top:4px"><span><i style="background:var(--muted)"></i>lecture</span><span><i style="background:var(--wk)"></i>activity</span><span><i style="background:var(--good)"></i>check</span><span>Total ${total} min</span></div></div>`;
+    },
+    picker(el, groups, hint='Select any item to see a real example.'){
+      const keys=Object.keys(groups);
+      el.innerHTML=`<div class="picker">${keys.map(k=>`<div><h4>${k}</h4>${groups[k].map((x,i)=>`<button type="button" data-k="${esc(k)}" data-i="${i}" aria-pressed="false">${x[0]}</button>`).join('')}</div>`).join('')}</div><div class="pick-detail">${hint}</div>`;
+      const bs=el.querySelectorAll('.picker button'), d=el.querySelector('.pick-detail');
+      bs.forEach(b=>b.addEventListener('click',()=>{ bs.forEach(x=>x.setAttribute('aria-pressed',x===b)); const [t,body]=groups[b.dataset.k][+b.dataset.i]; d.innerHTML=`<b>${t}</b>${keys.length>1?` · <span class="tag">${b.dataset.k}</span>`:''}<p>${body}</p>`; }));
+      if(bs[0]) bs[0].click();
+    },
+    accordion(el, items){
+      el.innerHTML=`<div class="acc">${items.map((it,i)=>`<details ${i===0?'open':''}><summary>${it.t}</summary>${it.s?`<p class="mono" style="color:var(--muted)">${it.s}</p>`:''}<p>${it.d}</p>${it.l?`<p><span class="tag good">Lesson</span> ${it.l}</p>`:''}</details>`).join('')}</div>`;
+    },
+    practice(el, items, opts={}){
+      const label=opts.label||'Show hint', prefix=opts.prefix===undefined?'<b>A strong answer includes:</b> ':opts.prefix, qn=opts.numbered===false?'':'Q';
+      el.innerHTML=`<div class="prac">${items.map((it,i)=>`<div class="pq"><div class="row"><span>${qn?`<b>Q${i+1}</b> `:''}${it.type?`<span class="tag">${it.type}</span> `:''}${it.q}</span><button type="button" class="btn ghost" data-i="${i}">${label}</button></div><div class="hint" hidden>${prefix}${it.hint}</div></div>`).join('')}</div>`;
+      el.querySelectorAll('.pq button').forEach(b=>b.addEventListener('click',()=>{ const h=b.closest('.pq').querySelector('.hint'); h.hidden=!h.hidden; b.textContent=h.hidden?label:'Hide'; }));
+    },
+    flashcards(el, cards){
+      el.innerHTML=`<div class="fc-tools"><label style="display:flex;gap:6px;align-items:center"><input type="checkbox" class="fc-mode"> Self-test: hide the meanings</label><span class="mono fc-score"></span></div><div class="fc">${cards.map(([t,d])=>`<button type="button"><b>${t}</b><span>${d}</span></button>`).join('')}</div>`;
+      const grid=el.querySelector('.fc'), score=el.querySelector('.fc-score');
+      const upd=()=>{ const k=grid.querySelectorAll('.known').length; score.textContent=grid.classList.contains('test')?`${k} / ${cards.length} known`:''; };
+      el.querySelector('.fc-mode').addEventListener('change',e=>{ grid.classList.toggle('test',e.target.checked); grid.querySelectorAll('button').forEach(b=>b.classList.remove('open','known')); upd(); });
+      grid.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ if(!grid.classList.contains('test')) return; if(b.classList.contains('open')) b.classList.toggle('known'); else b.classList.add('open'); upd(); }));
+    },
+    order(el, items, prompt='Click the events in the order they happened, oldest first.'){
+      const sorted=[...items].sort((a,b)=>a.y-b.y); let next=0;
+      const shuffled=[...items].sort(()=>Math.random()-.5);
+      el.innerHTML=`<p class="ui" style="margin:0 0 8px">${prompt}</p><div class="order">${shuffled.map(it=>`<button type="button" data-y="${it.y}">${it.t}</button>`).join('')}</div><div class="feedback" style="margin-top:10px"></div>`;
+      const fb=el.querySelector('.feedback'); let miss=0;
+      fb.textContent=`0 of ${items.length} placed`;
+      el.querySelectorAll('.order button').forEach(b=>b.addEventListener('click',()=>{
+        if(b.classList.contains('done')) return;
+        if(+b.dataset.y===sorted[next].y){ b.classList.add('done'); b.innerHTML=`<span class="yr">${b.dataset.y}</span> · ${b.innerHTML}`; next++; fb.textContent= next===items.length?`Done with ${miss} wrong click${miss===1?'':'s'}.`:`${next} of ${items.length} placed`; }
+        else { miss++; b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); }
+      }));
+    },
     poll(el, {q, opts, reveal}){
       const wrap=h('div',{class:'poll ui'}); wrap.appendChild(h('p',{style:'margin:0 0 4px;font-weight:600'},esc(q)));
       const msg=h('div',{class:'feedback',hidden:''});
@@ -89,7 +129,9 @@
   if(synth){ pickVoice(); synth.onvoiceschanged=pickVoice; }
 
   /* ---------- mount ---------- */
-  window.Lecture = { W, mount(cfg){
+  const box=(cls,lbl)=>html=>`<div class="box ${cls}"><b class="lbl">${lbl}</b>${html}</div>`;
+  const B = { plain:box('plain','In plain words'), ex:box('ex','Simple example'), exam:box('exam','Remember for the exam'), risk:box('plain','Risks and ethics') };
+  window.Lecture = { W, B, mount(cfg){
     document.title = cfg.pageTitle || document.title;
     const S = cfg.scenes; let cur = 0;
     const seen = new Set(JSON.parse(store.get('ged102-seen-'+cfg.id)||'[]'));
@@ -115,7 +157,7 @@
     toc.innerHTML=`<div class="eyebrow">Week ${cfg.week} · CLO ${cfg.clo}</div><h1>${esc(cfg.title)}</h1>
       <div class="meta">${esc(cfg.meta)}</div>`;
     const ol=h('ol'); toc.appendChild(ol);
-    S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${s.kind==='check'?'quiz':s.kind}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
+    S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
     const stage=h('main',{class:'stage',id:'stage'});
     shell.append(toc,stage); document.body.appendChild(shell);
 
@@ -149,14 +191,14 @@
 
     function render(){
       const s=S[cur]; stop(); stage.innerHTML='';
-      const kindLabel={lecture:'Lecture',activity:'In-class activity',check:'Check your understanding'}[s.kind||'lecture'];
+      const kindLabel={lecture:'Lecture',activity:'In-class activity',check:'Check your understanding',exam:'Exam takeaways',review:'Review'}[s.kind||'lecture'];
       const head=h('div',{class:'scene-head'});
       head.innerHTML=`<div><div class="eyebrow">Scene ${cur} of ${S.length-1}</div><h2>${s.title}</h2></div>
         <div class="chips"><span class="chip k-${s.kind||'lecture'}">${kindLabel}</span>${s.minutes?`<span class="chip">${s.minutes} min</span>`:''}</div>`;
       stage.appendChild(head);
       const split=h('div',{class:'split'+(s.fig?'':' nofig')+(s.wide?' wide':'')});
       const narr=h('div',{class:'narr'});
-      (s.narration||[]).forEach((p,i)=>{ const isList=/^\s*<ul/.test(p); const d=h('div',{class:'para'+(i===0&&!isList?' lead':'')}); d.innerHTML=p; narr.appendChild(d); });
+      (s.narration||[]).forEach((p,i)=>{ const isList=/^\s*<(ul|div|table)/.test(p); const d=h('div',{class:'para'+(i===0&&!isList?' lead':'')}); d.innerHTML=p; narr.appendChild(d); });
       if(s.think) narr.appendChild(h('div',{class:'think'},`<span class="eyebrow">Pause and think</span>${s.think}`));
       if(s.src) narr.appendChild(h('div',{class:'src'},s.src));
       if(s.notes) narr.appendChild(h('div',{class:'notes'},`<span class="eyebrow">Teacher notes${s.minutes?` · ${s.minutes} min`:''}</span><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`));

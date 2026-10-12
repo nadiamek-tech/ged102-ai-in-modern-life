@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 6 · AI in Healthcare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#0B7F6A;--wk-soft:rgba(11,127,106,.10);--wk-d:#4FD1B0;--wk-soft-d:rgba(79,209,176,.14)}
+.journey{display:flex;flex-wrap:wrap;gap:6px}
+.journey button{flex:1 1 120px;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;cursor:pointer;font-family:var(--f-display);font-size:.86rem;text-align:left;position:relative}
+.journey button small{display:block;font-family:var(--f-mono);font-size:.66rem;color:var(--muted);letter-spacing:.06em}
+.journey button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.jd{margin-top:12px;font-family:var(--f-display);font-size:.92rem;display:grid;gap:10px}
+.jd .ex{border-left:3px solid var(--wk);padding:2px 0 2px 12px}
+.jd .ex b{display:block}
+.stat{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:12px}
+.stat div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg)}
+.stat b{display:block;font-family:var(--f-display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.cases{display:grid;gap:8px}
+.cases details{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px 12px;font-family:var(--f-display);font-size:.92rem}
+.cases summary{cursor:pointer;font-weight:650}
+.cases p{margin:.45em 0 0}
+.resp .r{display:grid;grid-template-columns:120px minmax(0,1fr) 44px;gap:10px;align-items:center;font-family:var(--f-display);font-size:.9rem;margin-bottom:6px}
+.stackbar{display:flex;height:26px;border-radius:6px;overflow:hidden;margin-top:12px;border:1px solid var(--line)}
+.stackbar div{transition:width .2s;display:flex;align-items:center;justify-content:center;font-family:var(--f-mono);font-size:.66rem;color:var(--surface);overflow:hidden;white-space:nowrap}
+@media (max-width:560px){.stat{grid-template-columns:repeat(2,minmax(0,1fr))}.resp .r{grid-template-columns:90px minmax(0,1fr) 40px}}
+</style>
+</head>
+<body>
+<script src="assets/course.js"></script>
+<script>
+const {W} = Lecture;
+
+function agenda(el, rows){
+  const total=rows.reduce((a,r)=>a+r[1],0); let acc=0;
+  el.innerHTML=`<div class="stack ui">${rows.map(([t,m,k])=>{ const s=acc; acc+=m; return `<div style="display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;align-items:center"><div><div style="font-size:.86rem;margin-bottom:3px">${t}</div><div style="height:10px;background:var(--sunk);border-radius:3px;position:relative"><div style="position:absolute;left:${s/total*100}%;width:${m/total*100}%;top:0;bottom:0;border-radius:3px;background:${k==='a'?'var(--wk)':k==='b'?'var(--line)':k==='c'?'var(--good)':'var(--muted)'}"></div></div></div><span class="mono" style="text-align:right">${m}′</span></div>`; }).join('')}
+   <div class="row mono" style="gap:14px;margin-top:4px"><span><i style="display:inline-block;width:10px;height:10px;background:var(--muted);border-radius:2px"></i> lecture</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--wk);border-radius:2px"></i> activity</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--good);border-radius:2px"></i> check</span><span>Total ${total} min</span></div></div>`;
+}
+
+/* ---------- patient journey ---------- */
+const STAGES=[
+ ['Screening','prevent',[
+   ['Breast cancer screening, Sweden','In the MASAI randomised trial (Lancet Oncology, 2023), AI-supported mammography screening detected 20% more cancers than standard double reading by two radiologists, and cut radiologists\' screen-reading workload by 44%.'],
+   ['Diabetic eye disease','In 2018 the US FDA authorised IDx-DR, the first autonomous AI diagnostic system: it screens retinal photos for diabetic retinopathy without a specialist reading the image.']]],
+ ['Diagnosis','detect',[
+   ['Medical imaging','Most AI-enabled medical devices authorised by the US FDA are in radiology: X-ray, CT, MRI and mammography. Image reading is where AI in medicine is most mature.'],
+   ['Skin and pathology','Models classify skin lesions and tissue slides. Their accuracy depends heavily on whether the training images represent all skin tones and populations.']]],
+ ['Treatment','decide',[
+   ['Planning support','AI helps outline organs on scans for radiotherapy planning and suggests options drawn from guidelines. The clinician makes the decision.'],
+   ['Drug interactions','Decision-support systems warn prescribers about dangerous combinations, a long-standing and less glamorous form of AI.']]],
+ ['Monitoring','follow',[
+   ['Wearables','The Apple Heart Study (NEJM, 2019) enrolled more than 400,000 participants to test whether a smartwatch could flag irregular heart rhythm. Only a small share received alerts, and the study showed both the promise and the follow-up burden.'],
+   ['Hospital early warning','Models watch vital signs to predict deterioration, such as sepsis. These are useful only if validated in the hospital where they are used (see the case in Scene 7).']]],
+ ['Operations','run',[
+   ['AI scribes','“Ambient” documentation tools listen to a consultation and draft the clinical note for the doctor to check, returning time to the patient.'],
+   ['Connected records, Abu Dhabi','Malaffi, Abu Dhabi\'s health information exchange, links patient records across hospitals and clinics. Shared, well-governed data is the foundation every health AI depends on.']]],
+ ['Research','discover',[
+   ['Protein structures','DeepMind\'s AlphaFold predicted the 3D structures of more than 200 million proteins. Demis Hassabis and John Jumper shared the 2024 Nobel Prize in Chemistry for this work.'],
+   ['Genomics, UAE','The Emirati Genome Programme sequences citizens\' genomes to support preventive and personalised medicine. AI is needed to find patterns in data of that size.']]]
+];
+function journey(el){
+  el.innerHTML=`<div class="journey">${STAGES.map((s,i)=>`<button type="button" data-i="${i}" aria-pressed="false"><small>${String(i+1).padStart(2,'0')} · ${s[1]}</small>${s[0]}</button>`).join('')}</div><div class="jd" id="jd"></div>`;
+  const bs=el.querySelectorAll('.journey button');
+  bs.forEach(b=>b.addEventListener('click',()=>{ bs.forEach(x=>x.setAttribute('aria-pressed',x===b)); el.querySelector('#jd').innerHTML=STAGES[+b.dataset.i][2].map(([t,d])=>`<div class="ex"><b>${t}</b>${d}</div>`).join(''); }));
+  bs[0].click();
+}
+
+/* ---------- how a model learns (static svg) ---------- */
+const PIPE=`<svg viewBox="0 0 600 300" role="img" aria-label="Training: labelled scans feed a model. Use: a new scan gets a probability, a threshold turns it into a flag, and a doctor makes the decision.">
+ <text x="10" y="18" font-size="11" class="t-muted t-mono">1 · TRAINING (once, on past data)</text>
+ <g>${[0,1,2,3].map(i=>`<rect x="${14+i*7}" y="${34+i*7}" width="78" height="62" rx="6" fill="var(--sunk)" stroke="var(--line)"/>`).join('')}
+ <text x="72" y="140" text-anchor="middle" font-size="12">Thousands of scans</text>
+ <text x="72" y="155" text-anchor="middle" font-size="11" class="t-muted">each labelled by experts</text></g>
+ <path d="M140 80 H215" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+ <rect x="222" y="44" width="130" height="72" rx="10" fill="var(--wk-soft)" stroke="var(--wk)" stroke-width="1.5"/>
+ <text x="287" y="76" text-anchor="middle" font-size="14" font-weight="700">Model</text>
+ <text x="287" y="95" text-anchor="middle" font-size="11" class="t-muted">learns patterns</text>
+ <line x1="10" x2="590" y1="182" y2="182" stroke="var(--line)" stroke-dasharray="4 4"/>
+ <text x="10" y="202" font-size="11" class="t-muted t-mono">2 · USE (every new patient)</text>
+ <rect x="14" y="214" width="78" height="62" rx="6" fill="var(--sunk)" stroke="var(--line)"/>
+ <text x="53" y="292" text-anchor="middle" font-size="11">New scan</text>
+ <path d="M98 245 H130 Q287 245 287 125" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)" stroke-dasharray="0"/>
+ <path d="M352 80 Q410 80 410 210" fill="none" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+ <rect x="360" y="214" width="100" height="62" rx="8" fill="var(--surface)" stroke="var(--line)"/>
+ <text x="410" y="242" text-anchor="middle" font-size="18" font-weight="700" class="t-mono">0.72</text>
+ <text x="410" y="262" text-anchor="middle" font-size="10" class="t-muted">score: likely disease</text>
+ <path d="M462 245 H486" stroke="var(--muted)" stroke-width="2" marker-end="url(#ar)"/>
+ <rect x="492" y="214" width="98" height="62" rx="8" fill="var(--surface)" stroke="var(--wk)" stroke-width="1.5"/>
+ <text x="541" y="238" text-anchor="middle" font-size="11">score ≥ threshold</text>
+ <text x="541" y="256" text-anchor="middle" font-size="12" font-weight="700">→ flag</text>
+ <text x="541" y="270" text-anchor="middle" font-size="10" class="t-muted">doctor decides</text>
+ <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs>
+</svg>`;
+
+/* ---------- threshold explorer ---------- */
+// 40 illustrative patients: [AI score, actually has disease]
+const PTS=[[.04,0],[.07,0],[.09,0],[.11,0],[.13,0],[.15,0],[.17,0],[.19,0],[.21,0],[.22,1],[.24,0],[.26,0],[.28,0],[.31,0],[.33,0],[.35,0],[.37,1],[.39,0],[.42,0],[.44,0],[.46,0],[.48,1],[.51,0],[.53,0],[.56,1],[.58,0],[.61,0],[.63,1],[.66,1],[.68,0],[.71,1],[.74,1],[.77,0],[.8,1],[.83,1],[.86,1],[.9,1],[.93,0],[.95,1],[.97,1]];
+function threshold(el){
+  el.innerHTML=`<div class="ui stack"><svg viewBox="0 0 600 150" id="th-svg" role="img" aria-label="Forty patients placed by AI score from 0 to 1, with a movable threshold line"></svg>
+   <label for="th">Threshold: flag a patient if the AI score is at least <span class="mono" id="thv">0.50</span></label>
+   <input id="th" type="range" min="0.05" max="0.95" step="0.01" value="0.5">
+   <div class="stat" id="th-stat"></div><div class="feedback" id="th-msg"></div></div>`;
+  const svg=el.querySelector('#th-svg'), s=el.querySelector('#th');
+  const X=v=>30+v*540;
+  const draw=()=>{ const t=+s.value; el.querySelector('#thv').textContent=t.toFixed(2);
+    let TP=0,FN=0,FP=0,TN=0; let dots='';
+    PTS.forEach(([v,d],i)=>{ const flag=v>=t; if(d&&flag)TP++; else if(d)FN++; else if(flag)FP++; else TN++;
+      const y=d?44:96; dots+= d?`<circle cx="${X(v)}" cy="${y}" r="8" fill="var(--bad)" opacity="${flag?1:.45}"/>${!flag?`<circle cx="${X(v)}" cy="${y}" r="12" fill="none" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="2 2"/>`:''}`
+                 : `<circle cx="${X(v)}" cy="${y}" r="8" fill="${flag?'var(--warn)':'var(--muted)'}" opacity="${flag?1:.4}"/>`; });
+    svg.innerHTML=`<rect x="${X(t)}" y="18" width="${X(1)-X(t)}" height="104" fill="var(--wk-soft)"/>
+     <text x="0" y="48" font-size="11" class="t-muted">sick</text><text x="0" y="100" font-size="11" class="t-muted">well</text>
+     ${dots}<line x1="${X(t)}" x2="${X(t)}" y1="14" y2="126" stroke="var(--wk)" stroke-width="2.5"/>
+     <text x="${Math.min(X(t)+6,520)}" y="14" font-size="11" font-weight="700" style="fill:var(--wk)">flagged →</text>
+     <line x1="${X(0)}" x2="${X(1)}" y1="130" y2="130" stroke="var(--line)"/>
+     ${[0,.25,.5,.75,1].map(v=>`<text x="${X(v)}" y="145" font-size="10" text-anchor="middle" class="t-muted t-mono">${v}</text>`).join('')}`;
+    const sens=TP/(TP+FN), spec=TN/(TN+FP);
+    el.querySelector('#th-stat').innerHTML=`<div><b>${TP}</b><span>sick, caught</span></div><div><b style="color:var(--bad)">${FN}</b><span>sick, missed</span></div><div><b style="color:var(--warn)">${FP}</b><span>false alarms</span></div><div><b>${TN}</b><span>well, cleared</span></div>`;
+    el.querySelector('#th-msg').innerHTML=`<b>Sensitivity ${(sens*100).toFixed(0)}%</b> (share of sick patients caught) · <b>Specificity ${(spec*100).toFixed(0)}%</b> (share of well patients cleared). ${FN===0?'No one sick is missed, but look at the false alarms.':FP===0?'No false alarms, but sick patients are going home.':'Moving the line trades missed cases for false alarms.'}`; };
+  s.addEventListener('input',draw); draw();
+}
+
+/* ---------- responsibility ---------- */
+function responsibility(el){
+  const who=[['Developer','var(--wk)',30],['Hospital','var(--warn)',25],['Doctor','var(--bad)',30],['Regulator','var(--muted)',15]];
+  el.innerHTML=`<div class="ui"><div class="tutor" style="font-family:var(--f-body);padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;margin-bottom:12px"><span class="mono" style="display:block;color:var(--muted);margin-bottom:4px">CASE · FICTIONAL</span>A hospital uses an approved AI tool to pre-read chest X-rays. The tool marks Mr. Haddad's scan “low risk”. The radiologist, with 60 scans waiting, signs off without a close look. Six months later he is diagnosed with lung cancer that was visible on the original scan. The tool was trained mostly on scans from a different country and older machines.</div>
+   <div class="resp">${who.map(([n,c,v],i)=>`<div class="r"><label for="rs${i}">${n}</label><input type="range" id="rs${i}" min="0" max="100" value="${v}"><span class="mono" id="rv${i}"></span></div>`).join('')}</div>
+   <div class="stackbar" id="sb"></div><p class="mono" style="color:var(--muted);margin:6px 0 0">Shares are normalised to 100%.</p></div>`;
+  const upd=()=>{ const v=who.map((w,i)=>+el.querySelector('#rs'+i).value); const s=v.reduce((a,b)=>a+b,0)||1;
+    el.querySelector('#sb').innerHTML=who.map((w,i)=>`<div style="width:${v[i]/s*100}%;background:${w[1]}">${v[i]/s>.1?w[0]:''}</div>`).join('');
+    who.forEach((w,i)=>el.querySelector('#rv'+i).textContent=Math.round(v[i]/s*100)+'%'); };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',upd)); upd();
+}
+
+const CASES=[
+ ['A hidden proxy: cost instead of need','Obermeyer et al., Science (2019)','A widely used US algorithm decided which patients got extra care by predicting future healthcare <em>costs</em>. Because less money had historically been spent on Black patients with the same level of illness, the algorithm judged them healthier than they were. Correcting it would have raised the share of Black patients selected for extra help from 17.7% to 46.5%.','The bias was not in a “race” variable. It was in the choice of what to predict.'],
+ ['A sepsis alarm that missed most sepsis','Wong et al., JAMA Internal Medicine (2021)','An external check of a proprietary sepsis-prediction model used in many US hospitals found it missed about two-thirds of patients who developed sepsis, while alerting on many who did not.','A model that works where it was built may not work where it is used. Local validation matters.'],
+ ['Who is in the training images?','Dermatology AI, multiple studies','Public skin-image datasets contain few images of darker skin tones. A model can score well overall and still perform worse for the patients least represented in its data.','Ask “accurate for whom?” as well as “how accurate?”'],
+ ['Automation bias','A human factor','When people work with an automated aid, they tend to over-trust it, especially when tired or busy. A tool meant as a second reader can quietly become the only reader.','Workflow design, workload and training are part of AI safety.']
+];
+function cases(el){ el.innerHTML=`<div class="cases">${CASES.map(([t,s,d,l],i)=>`<details ${i===0?'open':''}><summary>${t}</summary><p class="mono" style="color:var(--muted)">${s}</p><p>${d}</p><p><span class="tag good">Lesson</span> ${l}</p></details>`).join('')}</div>`; }
+
+Lecture.mount({
+  id:'w6', week:6, clo:2, short:'Week 6 · AI in Healthcare',
+  title:'Applications of AI: AI in Healthcare',
+  meta:'TB Chapter 3 · 3-hour session',
+  scenes:[
+  { nav:'Start here', title:'When the AI is wrong, someone gets hurt', minutes:10,
+    narration:[
+     'Last week a wrong answer from AI cost a student a grade. This week a wrong answer can cost a patient their health. Healthcare is where AI\'s promise is largest and where its mistakes matter most.',
+     'Our syllabus topic is <strong>“Artificial Intelligence in Healthcare”</strong>, connected to <strong>CLO 2</strong>: identify how AI technologies are applied in different aspects of daily life.',
+     '<ul><li>Trace where AI enters a patient\'s journey, with real examples.</li><li>Explain how a diagnostic model is trained and used.</li><li>Use the ideas of missed cases and false alarms to judge a medical AI.</li><li>Analyse real failures and decide who is responsible when AI gets it wrong.</li></ul>'],
+    think:'Have you, or someone in your family, already been touched by healthcare AI? Think about apps, smartwatches, hospital scans.',
+    src:'Reading: Moutinho, L., Cavique, L., & Bigné, E. (2023). <em>Philosophy of artificial intelligence and its place in society</em>. IGI Global. Chapter 3.',
+    notes:['Recap Week 5 in two minutes: next-word prediction, hallucination, over-reliance. All three return today in a medical setting.'],
+    fig:{label:'Today\'s session · 180 minutes', build:el=>agenda(el,[['Start here',10,'l'],['Hook: who reads your scan?',10,'a'],['The patient journey',20,'l'],['How a diagnostic model works',15,'l'],['Activity: set the threshold',20,'a'],['Break',10,'b'],['Benefits',10,'l'],['When it goes wrong: four cases',20,'l'],['Activity: who is responsible?',25,'a'],['Activity: case analysis',25,'a'],['Exit check',15,'c']])} },
+
+  { nav:'Who reads your scan?', title:'Who should read your scan?', kind:'activity', minutes:10,
+    narration:[
+     'Imagine you have a mammogram or a chest X-ray next month. Who would you want to read it?',
+     'Vote, then compare with what a large randomised trial in Sweden found.'],
+    think:'Would your answer change if the AI were better than the average doctor on average, but you could not ask it why?',
+    notes:['Hands up first. Most classes split between “doctor alone” and “both”.','Keep “why” questions for the black-box week (Week 10).'],
+    fig:{label:'Vote', build:el=>W.poll(el,{q:'Your scan should be read by…',opts:['A doctor alone','The AI alone','The AI plus a doctor','It depends on the evidence'],reveal:i=>`${['Many patients feel this way. Doctors also miss things, especially when tired.','Few health systems allow fully autonomous reading, and most patients are uncomfortable with it.','This is how most systems use AI today: as a second reader.','A scientist\'s answer.'][i]}<br><br><b>Evidence:</b> In the Swedish MASAI trial (Lancet Oncology, 2023), AI-supported screening found 20% more cancers than two radiologists reading independently, and reduced radiologists\' reading workload by 44%.`})} },
+
+  { nav:'The patient journey', title:'Where AI enters a patient\'s journey', minutes:20,
+    narration:[
+     'Healthcare AI is not one technology. It appears at almost every stage of care: <strong>screening</strong> people before they feel ill, <strong>diagnosing</strong>, supporting <strong>treatment</strong> decisions, <strong>monitoring</strong> patients, <strong>running</strong> the hospital, and <strong>discovering</strong> new medicine.',
+     'Click each stage on the right. Every example is real. Notice that the most mature uses involve <em>images</em>, the same pattern-recognition skill behind face unlock on your phone.',
+     'Notice the UAE examples too. Malaffi and the Emirati Genome Programme are about <em>data</em> rather than algorithms. Without connected, well-governed data, health AI has nothing to learn from.'],
+    think:'Which stage would you trust AI with most? Which stage least? Why?',
+    notes:['Assign one stage per row of students; each row reports one example back in a sentence.'],
+    fig:{label:'Six stages · click each', build:journey} },
+
+  { nav:'How it works', title:'How a diagnostic model learns, and how it is used', minutes:15,
+    narration:[
+     'A diagnostic model is trained once, on past cases. It sees thousands of scans that experts have already labelled “disease” or “no disease”, and adjusts itself until its guesses match the labels as often as possible.',
+     'After training it is used on new patients. For each scan it outputs a <strong>score</strong> between 0 and 1. The score is not a diagnosis. A hospital chooses a <strong>threshold</strong>, and every scan above the threshold is flagged for a doctor\'s attention.',
+     'Two questions follow. Were the training scans similar to <em>our</em> patients and <em>our</em> machines? And where should the threshold go? The next activity tackles the second question.'],
+    think:'The model learned from experts\' labels. What happens if the experts were sometimes wrong?',
+    notes:['Bridge to MTH 105: the threshold is the same idea as a decision rule in hypothesis testing (Type I vs Type II error).'],
+    fig:{label:'Train once · use many times', html:PIPE} },
+
+  { nav:'Set the threshold', title:'Activity · Missed cases or false alarms?', kind:'activity', minutes:20, wide:true,
+    narration:[
+     'On the right are 40 patients. Red dots are patients who really have the disease; grey dots are well. Each dot sits at the score the AI gave that patient.',
+     'Drag the threshold. Everyone to the right of the line is flagged. A red dot left of the line is a <strong>missed case</strong>: a sick person sent home. An orange dot right of the line is a <strong>false alarm</strong>: a well person sent for more tests, worry and cost.',
+     'There is no setting that gets everyone right. In groups, choose a threshold for two situations: (1) screening for an aggressive cancer, (2) deciding who gets an expensive, risky treatment. Write down your threshold and your reason.'],
+    think:'Who should choose the threshold: the developer, the doctors, the hospital managers, or patients?',
+    notes:['Data are illustrative, not from a real model.','Expected insight: for screening, lower threshold (catch more, accept false alarms); for a risky treatment, higher threshold.','Introduce the words sensitivity and specificity, but the plain-language labels are enough for the exam.'],
+    fig:{label:'40 illustrative patients', build:threshold} },
+
+  { nav:'Benefits', title:'What AI brings to healthcare', minutes:10,
+    narration:[
+     '<ul><li><strong>Speed:</strong> a scan can be pre-read in seconds, so urgent cases rise to the top of the list.</li><li><strong>Scale and access:</strong> there are not enough specialists anywhere. Screening programmes for eye disease or cancer can reach more people.</li><li><strong>Consistency:</strong> a model does not get tired at the end of a night shift.</li><li><strong>Earlier detection:</strong> patterns in vital signs or images may be spotted before symptoms appear.</li><li><strong>Time back to patients:</strong> AI scribes and admin tools reduce paperwork.</li><li><strong>Discovery:</strong> AlphaFold changed how biologists study proteins.</li></ul>',
+     'Each benefit depends on conditions: good data, local testing, clinicians who stay engaged, and patients who are told how AI is used in their care.'],
+    think:'Which benefit matters most in a fast-growing city like Dubai? Which matters most in a rural area with no specialist?',
+    notes:['Short scene; keep momentum after the break.'] },
+
+  { nav:'When it goes wrong', title:'When it goes wrong: four cases', minutes:20,
+    narration:[
+     'Healthcare AI failures are rarely dramatic robot errors. They are quiet design choices that hurt some patients more than others.',
+     'Open each case. For each one, identify <em>where</em> the problem entered: the data, the target the model was told to predict, the place it was used, or the people using it.',
+     'Keep these cases for Assignment 2 and the midterm. They are the kind of real example the rubric rewards.'],
+    think:'Which of these four problems could a better algorithm fix, and which need a human or institutional fix?',
+    src:'Obermeyer, Z., Powers, B., Vogeli, C., & Mullainathan, S. (2019). Dissecting racial bias in an algorithm used to manage the health of populations. <em>Science</em>, 366(6464). · Wong, A., et al. (2021). External validation of a widely implemented proprietary sepsis prediction model. <em>JAMA Internal Medicine</em>, 181(8).',
+    notes:['Students tend to say “fix the algorithm”. Push them: in the Obermeyer case the fix was choosing a different target to predict.'],
+    fig:{label:'Real cases · open each', build:cases} },
+
+  { nav:'Who is responsible?', title:'Activity · Who is responsible?', kind:'activity', minutes:25,
+    narration:[
+     'Read the fictional case on the right. Then, in groups of four, divide responsibility for the missed cancer among the developer, the hospital, the doctor and the regulator.',
+     'Each group presents its split in one minute and gives one reason for its largest share. Expect disagreement. That disagreement is the legal and ethical debate happening right now in many countries.',
+     'This links forward to Week 11 (AI Ethics and Responsible AI) and Week 12 (privacy and data).'],
+    think:'Should the patient have been told that AI was involved in reading his scan? Would it have changed anything?',
+    notes:['Groups photograph their bar and post it on Moodle forum (optional).','Steer towards “shared responsibility” only after groups commit to a split.'],
+    fig:{label:'Divide the responsibility', build:responsibility} },
+
+  { nav:'Case analysis', title:'Activity · Analyse one healthcare AI', kind:'activity', minutes:25,
+    narration:[
+     'Pick one example from <em>the patient journey</em> scene. In your group, complete the worksheet. Short answers are fine.',
+     'This is a rehearsal for Assignment 2, “AI in my world”, which asks you to describe an AI application\'s benefits, challenges and real examples. If healthcare is your chosen field, this worksheet is a head start.',
+     'Press <strong>Copy my answers</strong> and paste the result into the Moodle activity.'],
+    notes:['Answers save in each student\'s browser, so a refresh does not lose work.','Circulate; push for a concrete safeguard rather than “be careful”.'],
+    fig:{label:'Worksheet', build:el=>W.worksheet(el,{id:'w6case',title:'GED 102 · Week 6 · Healthcare AI case analysis',fields:[
+      {l:'Which AI application did you choose?',ph:'e.g. AI-supported mammography screening (MASAI trial)'},
+      {l:'What does the AI actually do?',hint:'Input → output. What does it see, and what does it produce?',rows:2},
+      {l:'What data was it trained on?',hint:'Whose data? Could some patients be under-represented?',rows:2},
+      {l:'Who benefits?',rows:2},
+      {l:'Who could be harmed, and how?',rows:2},
+      {l:'One concrete safeguard',hint:'Who does what, when?',rows:2}]})} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:15,
+    narration:[
+     'Six questions on today. Feedback appears after each answer.',
+     '<strong>Before Week 7:</strong> read RB c, Chapter 1 (Dunis et al., <em>Artificial Intelligence in Financial Markets</em>). Next week Assignment 2 is set. Choose your field now: education, healthcare, finance and business, or another field that interests you.'],
+    fig:{label:'Six questions', build:el=>W.quiz(el,[
+      {q:'In the MASAI breast-screening trial, AI-supported screening…',o:['replaced radiologists entirely','found more cancers and reduced reading workload','found fewer cancers but saved money','was stopped for safety reasons'],a:1,why:'About 20% more cancers detected and 44% less screen-reading workload (Lancet Oncology, 2023).'},
+      {q:'A diagnostic model outputs a score of 0.72. What turns that into a “flag”?',o:['The doctor\'s signature','A threshold chosen by people','The patient\'s consent','Nothing; 0.72 is a diagnosis'],a:1,why:'People choose a threshold; scores above it are flagged.'},
+      {q:'Lowering the threshold usually…',o:['reduces both missed cases and false alarms','catches more sick patients but creates more false alarms','creates fewer false alarms','has no effect on accuracy'],a:1,why:'It is a trade-off: higher sensitivity, lower specificity.'},
+      {q:'In the Obermeyer (2019) study, the source of the bias was…',o:['a race variable in the model','predicting healthcare cost instead of health need','bad hospital hardware','doctors overriding the algorithm'],a:1,why:'Cost was a biased proxy for need.'},
+      {q:'“Automation bias” means…',o:['algorithms are biased against automation','people over-trust automated aids','robots replace nurses','models get slower over time'],a:1,why:'Busy humans tend to accept the machine\'s output without checking.'},
+      {q:'Malaffi and the Emirati Genome Programme mainly show that health AI depends on…',o:['faster computers','connected, well-governed data','robot surgeons','social media'],a:1,why:'Data infrastructure comes before algorithms.'}])} }
+  ]
+});
+</script>
+</body>
+</html>

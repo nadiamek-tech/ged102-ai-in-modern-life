@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>GED 102 · AI in Modern Life</title>
+<meta name="description" content="Narrated, visual lectures for GED 102 – AI in Modern Life, Canadian University Dubai.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+/* Hub layout: masthead with course identity, a 4-step "how it works" strip, then the 16-week map as a ledger grouped by CLO. */
+:root{--c1:#5B6B7F;--c2:#2F55C8;--c3:#B4362F;--c4:#6B4FB8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--c1:#A3B1C2;--c2:#8AA6FF;--c3:#F0837A;--c4:#B9A3F5}}
+:root[data-theme="dark"]{--c1:#A3B1C2;--c2:#8AA6FF;--c3:#F0837A;--c4:#B9A3F5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 56px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:16px;border-bottom:1px solid var(--line)}
+.top .mono{color:var(--muted)}
+.mast{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:40px;padding-block:48px 36px;align-items:end}
+.mast h1{font-size:clamp(2.6rem,7vw,5.4rem);font-weight:800;letter-spacing:-.035em;line-height:.95}
+.mast h1 span{display:block;color:var(--muted);font-weight:600}
+.mast .code{font-family:var(--f-mono);font-size:.8rem;letter-spacing:.1em;color:var(--muted);margin-bottom:14px;display:block}
+.mast p{margin:0 0 12px;max-width:52ch}
+.byline{font-family:var(--f-display);font-size:.92rem;color:var(--muted)}
+.byline b{color:var(--ink)}
+.start{display:inline-flex;align-items:center;gap:10px;margin-top:10px;background:var(--ink);color:var(--bg);text-decoration:none;padding:11px 18px;border-radius:10px;font-family:var(--f-display);font-weight:700}
+.how{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-block:1px solid var(--line);margin-bottom:44px}
+.how div{padding:16px 18px;border-left:1px solid var(--line);font-family:var(--f-display);font-size:.9rem}
+.how div:first-child{border-left:0;padding-left:0}
+.how b{display:block;font-size:1rem;margin-bottom:4px}
+.how .k{font-family:var(--f-mono);font-size:.7rem;border:1px solid var(--line);border-radius:4px;padding:1px 5px;background:var(--surface)}
+h2.sec{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+.sub{font-family:var(--f-display);color:var(--muted);margin:0 0 18px;font-size:.95rem}
+.clos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:26px}
+.clos div{font-family:var(--f-display);font-size:.88rem;border-top:3px solid var(--cc);padding-top:8px}
+.clos b{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.06em;color:var(--cc);display:block;margin-bottom:2px}
+.ledger{display:grid;gap:0;border-top:1px solid var(--line)}
+.wk{display:grid;grid-template-columns:64px minmax(0,1fr) 150px 130px 110px;gap:16px;align-items:start;padding:14px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);position:relative}
+.wk .no{font-family:var(--f-display);font-weight:800;font-size:1.6rem;line-height:1;color:var(--cc);font-variant-numeric:tabular-nums}
+.wk h3{font-size:1.04rem;font-weight:700;margin-bottom:3px}
+.wk ul{margin:0;padding-left:1.05em;font-size:.88rem;color:var(--muted);font-family:var(--f-display)}
+.wk .meta{font-family:var(--f-display);font-size:.84rem;color:var(--muted)}
+.wk .meta b{display:block;font-family:var(--f-mono);font-size:.64rem;letter-spacing:.08em;text-transform:uppercase;font-weight:400}
+.wk .st{justify-self:end;text-align:right}
+.wk.ready{background:linear-gradient(90deg,color-mix(in srgb,var(--cc) 8%,transparent),transparent 70%)}
+.wk.ready:hover h3{text-decoration:underline;text-decoration-color:var(--cc)}
+.wk.ready .open{font-family:var(--f-display);font-weight:700;color:var(--cc);font-size:.9rem;white-space:nowrap}
+.wk:not(.ready) h3{color:var(--muted)}
+.foot{margin-top:28px;font-family:var(--f-display);font-size:.84rem;color:var(--muted)}
+@media (max-width:900px){
+  .mast{grid-template-columns:minmax(0,1fr);gap:20px;padding-block:32px 24px}
+  .how{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .how div:nth-child(3){border-left:0;padding-left:0}
+  .how div{border-top:1px solid var(--line)} .how div:nth-child(-n+2){border-top:0}
+  .clos{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .wk{grid-template-columns:48px minmax(0,1fr);gap:6px 12px}
+  .wk .meta,.wk .st{grid-column:2;justify-self:start;text-align:left}
+}
+@media (max-width:480px){.how{grid-template-columns:minmax(0,1fr)}.how div{border-left:0!important;padding-left:0;border-top:1px solid var(--line)!important}.how div:first-child{border-top:0!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top"><span class="mono">CANADIAN UNIVERSITY DUBAI · GENERAL EDUCATION</span><button type="button" class="pill" id="theme">◐ Theme</button></div>
+
+  <section class="mast">
+    <div>
+      <span class="code">GED 102 · 3 CREDIT HOURS · NO PREREQUISITES</span>
+      <h1>AI in Modern Life<span>explained, week by week</span></h1>
+    </div>
+    <div>
+      <p>Narrated, visual lectures for students from every discipline. Each week is a sequence of short scenes: read or listen, explore the diagram, then try it in a class activity. No technical background is required.</p>
+      <div class="byline">Course lecturer <b>Nadia Mekhfi</b></div>
+      <a class="start" href="week-05.html">Start with Week 5 →</a>
+    </div>
+  </section>
+
+  <section class="how" aria-label="How the lectures work">
+    <div><b>Scenes</b>Each lecture is a short sequence of scenes. Move with the buttons or the <span class="k">←</span> <span class="k">→</span> keys.</div>
+    <div><b>Layout</b>Choose <em>Text</em> to read, <em>Diagram</em> to explore, or <em>Even</em> for both side by side.</div>
+    <div><b>Listen</b>Press <em>Listen</em> and the scene is read aloud, highlighting each paragraph as it goes.</div>
+    <div><b>Do</b>Activities and exit checks run in the page. Worksheets save in your browser and copy into Moodle.</div>
+  </section>
+
+  <h2 class="sec">Course map</h2>
+  <p class="sub">Topics as written in the 2025–26 syllabus. Lectures open as they are released.</p>
+  <div class="clos">
+    <div style="--cc:var(--c1)"><b>CLO 1</b>Explain the fundamental concepts, history, and development of artificial intelligence</div>
+    <div style="--cc:var(--c2)"><b>CLO 2</b>Identify how AI technologies are applied in different aspects of daily life.</div>
+    <div style="--cc:var(--c3)"><b>CLO 3</b>Discuss the ethical, legal, and social issues surrounding the use of AI.</div>
+    <div style="--cc:var(--c4)"><b>CLO 4</b>Assess the potential future of AI and its implications for humanity.</div>
+  </div>
+  <div class="ledger" id="ledger"></div>
+  <p class="foot">Assessment: Assignment 1 (5%), Assignment 2 (5%), Assignment 3 (10%), Assignment 4 (10%), Midterm Examination (30%), Final Examination (40%). Reading codes refer to the syllabus: TB = Moutinho, Cavique &amp; Bigné (2023); RB a–f = reference books.</p>
+</div>
+
+<script src="assets/course.js"></script>
+<script>
+document.getElementById('theme').addEventListener('click',()=>GED102Theme.toggle());
+const WEEKS=[
+ [1,'Introduction to AI',['What is AI?','The Foundations of Artificial Intelligence','Is AI a real science?','Can a computer ever really be smarter than a human being?'],1,'RB b Chapter 1',''],
+ [2,'The History of AI',['The History of Artificial Intelligence','The Roots of Artificial Intelligence','Neural Networks and the Ascent of Machine Learning','AI Spring'],1,'RB a Chapters 1-3',''],
+ [3,'How AI Thinks – Smart Tools, Not Magic',['The State of the Art','What Are the Leading AI and ML Technologies and Algorithms?','ChatGPT and the Leading AI and ML Technologies: Exploring Capabilities and Applications'],1,'RB f Chapter 2','Assignment 1'],
+ [4,'AI in Everyday Life',['Ask Me Anything','The Impact of AI on Social Equity','Who\'s going to benefit from this technological revolution?','Are the disruptive effects inevitable?'],2,'RB a Chapter 13 · RB b Chapter 7',''],
+ [5,'Applications of AI: Education and Learning',['The Incorporation of Large Language Models (LLMs) in the Field of Education: Ethical Possibilities, Threats, and Opportunities'],2,'TB Chapter 5','','week-05.html'],
+ [6,'Applications of AI: AI in Healthcare',['Artificial Intelligence in Healthcare'],2,'TB Chapter 3','','week-06.html'],
+ [7,'Applications of AI: AI in Finances and Business',['Artificial Intelligence in Financial Markets Cutting Edge Applications for Risk Management, Portfolio Optimization and Economics'],2,'RB c Chapter 1','Assignment 2','week-07.html'],
+ [8,'Applications of AI: AI in Art, Entertainment and Creativity',['Three Types of Creativity','Painting by Numbers','Learning from the Masters'],2,'RB d Chapters 2, 7, 8','Midterm'],
+ [9,'Applications of AI: AI in Architecture and Design',['AI Concepts in Architectural Design'],2,'AI Concepts in Architectural Design, WEI Likai',''],
+ [10,'What AI Can\'t Do (Yet): Limits, Bias, and the "Black Box"',['Going through the Challenges of Artificial Intelligence: Gray Eminences, Algocracy, Automated Unconsciousness','The Neurocomputational Becoming of Intelligence: Philosophical Challenges','Transparency and the Black Box Problem: Why We Do Not Trust AI'],3,'RB e Chapters 2 and 6 · von Eschenbach',''],
+ [11,'AI Ethics and Responsible AI',['Ethical Issues of Artificial Intelligence (AI): Strategic Solutions','Risks and Benefits of AI'],3,'TB Chapter 13',''],
+ [12,'AI and Privacy – Data, Surveillance, and Security',['Privacy and Ethics: Navigating Privacy and Ethics in an AI-Infused World','The Dark Side of AI and ChatGPT: Privacy Concerns and Ethical Implications','Data Collection and Data Storage in AI Algorithms: Potential Risks and Ethical Privacy Concerns','The Moral Tapestry of AI and ChatGPT'],3,'RB f Chapter 7','Assignment 3'],
+ [13,'AI and Autonomous Systems',['The Impact of Artificial Intelligence on Human Labor','Are there alternatives to a labor-based society?','Why should people go to work if they could live comfortably without doing so?'],4,'RB b Chapters 6 and 7',''],
+ [14,'AI and Human Collaboration',['Intelligence Augmentation via Human-AI Symbiosis: Formulating Wise Systems for a Metasociety'],4,'TB Chapter 14','Assignment 4'],
+ [15,'Tomorrow\'s AI: Hopes, Fears, and Human Identity',['Possible Future Impacts of Artificial Intelligence'],4,'RB b Chapter 8',''],
+ [16,'Final Exam',[],0,'','Final Exam']
+];
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+document.getElementById('ledger').innerHTML=WEEKS.map(([n,t,subs,clo,ref,ass,href])=>{
+  const tag=href?'a':'div'; const cc=clo?`var(--c${clo})`:'var(--muted)';
+  return `<${tag} class="wk${href?' ready':''}" ${href?`href="${href}"`:''} style="--cc:${cc}">
+    <span class="no">${String(n).padStart(2,'0')}</span>
+    <div><h3>${esc(t)}</h3>${subs.length?`<ul>${subs.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}</div>
+    <div class="meta">${ref?`<b>Reading</b>${esc(ref)}`:''}</div>
+    <div class="meta">${clo?`<b>CLO</b>${clo}`:''}${ass?`<b style="margin-top:6px">Assessment</b>${ass}`:''}</div>
+    <div class="st">${href?'<span class="open">Open lecture →</span>':'<span class="tag">In preparation</span>'}</div></${tag}>`; }).join('');
+</script>
+</body>
+</html>

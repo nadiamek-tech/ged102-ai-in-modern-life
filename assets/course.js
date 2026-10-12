@@ -210,18 +210,45 @@
     bar.querySelector('#theme').addEventListener('click',toggleTheme);
     const listen=bar.querySelector('#listen');
     listen.addEventListener('click',()=>{ speaking?stop():speak(); });
+    // Continuous mode: when a scene's narration ends, move to the next scene and keep narrating.
+    const cont=h('button',{type:'button',class:'pill',id:'cont','aria-pressed':store.get('ged102-cont')==='1'?'true':'false',title:'Keep narrating scene after scene'},'Auto-continue');
+    listen.after(cont);
+    cont.addEventListener('click',()=>{ const on=cont.getAttribute('aria-pressed')!=='true'; cont.setAttribute('aria-pressed',on); store.set('ged102-cont',on?'1':'0'); });
 
-    function stop(){ speaking=false; if(synth) synth.cancel(); listen.setAttribute('aria-pressed','false'); listen.textContent='▶ Listen'; stage.querySelectorAll('.speaking').forEach(e=>e.classList.remove('speaking')); }
+    // Natural recorded narration (Kokoro TTS, pre-generated into audio/) with browser speech as fallback.
+    const pageKey=(location.pathname.split('/').pop()||'index').replace(/\.html$/,'');
+    let rec=null, player=null;
+    fetch('audio/manifest.json').then(r=>r.ok?r.json():null).then(m=>{ if(m&&m.pages&&m.pages[pageKey]){ rec=m.pages[pageKey]; listen.title='Natural narration'; } }).catch(()=>{});
+    const paras=()=>[...stage.querySelectorAll('.narr .para, .narr .think')].filter(e=>!e.querySelector('table'));
+    const clear=()=>stage.querySelectorAll('.speaking').forEach(e=>e.classList.remove('speaking'));
+
+    function stop(){ speaking=false; if(synth) synth.cancel(); if(player){ player.pause(); player.onended=null; player=null; } listen.setAttribute('aria-pressed','false'); listen.textContent='▶ Listen'; clear(); }
     function speak(){
-      if(!synth){ listen.textContent='Narration not supported in this browser'; return; }
-      synth.cancel(); speaking=true; listen.setAttribute('aria-pressed','true'); listen.textContent='❚❚ Pause';
+      const files=rec&&rec[cur];
+      if(!files&&!synth){ listen.textContent='Narration not supported in this browser'; return; }
+      if(synth) synth.cancel(); speaking=true; listen.setAttribute('aria-pressed','true'); listen.textContent='❚❚ Pause';
       if(document.body.dataset.layout==='diagram') setLayout('even');
-      queue=[...stage.querySelectorAll('.narr .para, .narr .think')]; qi=0; next();
+      queue=paras(); qi=0;
+      (files&&files.length===queue.length) ? nextRec(files) : next();
+    }
+    function finish(){
+      clear();
+      if(cont.getAttribute('aria-pressed')==='true' && cur<S.length-1){ go(cur+1); setTimeout(speak,500); }
+      else stop();
+    }
+    function nextRec(files){
+      clear(); if(!speaking) return;
+      if(qi>=queue.length){ finish(); return; }
+      const el=queue[qi]; const src='audio/'+files[qi]; qi++;
+      el.classList.add('speaking'); el.scrollIntoView({block:'nearest',behavior:'smooth'});
+      player=new Audio(src); player.onended=()=>{ if(speaking) nextRec(files); };
+      player.play().catch(()=>{ player=null; qi--; next(); });
     }
     function next(){
-      stage.querySelectorAll('.speaking').forEach(e=>e.classList.remove('speaking'));
+      clear();
       if(!speaking) return;
-      if(qi>=queue.length){ stop(); return; }
+      if(qi>=queue.length){ finish(); return; }
+      if(!synth){ stop(); return; }
       const el=queue[qi++]; el.classList.add('speaking'); el.scrollIntoView({block:'nearest',behavior:'smooth'});
       const u=new SpeechSynthesisUtterance(el.innerText.replace(/^Pause and think\s*/i,'Pause and think. ')); if(voice) u.voice=voice; u.rate=0.98;
       u.onend=()=>{ if(speaking) next(); }; u.onerror=()=>{ if(speaking) next(); };

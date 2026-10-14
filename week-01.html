@@ -104,27 +104,9 @@ const TESTS=`<svg viewBox="0 0 580 250" role="img" aria-label="Left: a judge cha
  <text x="445" y="226" text-anchor="middle" font-size="11">Right answers, zero understanding?</text>
  <defs><marker id="a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="var(--muted)"/></marker></defs></svg>`;
 
-Lecture.mount({
-  id:'w1', week:1, clo:1, short:'Week 1 · Introduction to AI',
-  title:'Introduction to AI',
-  meta:'RB b Chapter 1 · 3-hour session',
-  scenes:[
-  { nav:'Start here', title:'What is AI, and can machines out-think us?', minutes:10,
-    narration:[
-     `This week asks the first question of the course: what exactly is artificial intelligence? By the end you will have a clear definition, four ways of thinking about AI, and an answer to the question every student secretly wants to ask: can a computer ever really be smarter than a human being?`,
-     `Our syllabus topics: <strong>What is AI? · The Foundations of Artificial Intelligence · Is AI a real science? · Can a computer ever really be smarter than a human being?</strong> This week builds <strong>CLO 1</strong>: explain the fundamental concepts, history, and development of artificial intelligence.`,
-     B.plain(`Every topic follows the same four steps: <b>what is it</b>, a <b>simple example</b>, the <b>risks</b>, and <b>what to remember for the exam</b>. Purple boxes explain in plain words. Blue boxes give everyday examples. Amber boxes are for the exam.`)],
-    think:`Write a one-sentence definition of AI on paper, before you read anything else. We will compare it with the textbook definitions later.`,
-    src:`Reading: Kaplan, J. (2016). <em>Artificial intelligence: What everyone needs to know</em>. Oxford University Press. Chapter 1.`,
-    notes:[`Hook: students write their one-sentence definition. Keep the papers; return to them in Scene 2.`,`Explain the colour code once. It is the same in every week and in the midterm review page.`],
-    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: is it AI?`,10,'a'],[`What is AI?`,15,'l'],[`Four ways to define AI`,15,'l'],[`AI vs ordinary software`,20,'a'],[`The foundations`,10,'l'],[`Break`,10,'b'],[`Is AI a real science?`,15,'l'],[`Machine or human: who wins?`,20,'a'],[`Turing Test vs Chinese Room`,25,'a'],[`Exam takeaways`,15,'l'],[`Exit check`,15,'c']])} },
-
-  { nav:'Is it AI?', title:'Activity · Is it AI or not?', kind:'activity', minutes:10,
-    narration:[
-     `Before any definitions, use your instinct. For each item, decide: is it AI, not AI, or does it depend?`,
-     `Then reveal the suggested answers. Pay attention to <em>why</em> each one is or is not AI. The reasons are this week's definition in disguise.`],
-    notes:[`Pairs, 6 minutes. Then ask: what did all the “AI” items have in common? Expected answer: they learn from data or adapt.`],
-    fig:{label:`Sort the items`, build:el=>W.sort(el,{buckets:['AI','Not AI','Depends'],items:[
+/* ---------- figures and videos kept from the original lecture ---------- */
+const FIG={
+ 'Is it AI?':{label:`Sort the items`, build:el=>W.sort(el,{buckets:['AI','Not AI','Depends'],items:[
       {t:`Face unlock on your phone`,a:0,why:`It learned to recognise faces from many examples.`},
       {t:`A calculator`,a:1,why:`It follows fixed rules; 2 + 2 is always 4.`},
       {t:`Your email spam filter`,a:0,why:`Modern filters learn what spam looks like.`},
@@ -132,105 +114,100 @@ Lecture.mount({
       {t:`Google Maps predicting traffic`,a:0,why:`It predicts from patterns in huge amounts of location data.`},
       {t:`A chess program`,a:2,why:`Old programs used hand-written rules and search (still AI, but no learning). Modern ones learn from self-play.`},
       {t:`ChatGPT`,a:0,why:`A large language model trained on huge amounts of text.`},
-      {t:`A TV remote control`,a:1,why:`Buttons send fixed signals. No intelligence involved.`}]})} },
-
-  { nav:'What is AI?', video:{id:'a0_lo_GDcFw',title:'What Is Artificial Intelligence? Crash Course AI #1',by:'CrashCourse',why:'A friendly overview of what AI is, and where it already shows up in daily life.'}, title:'What is AI?', minutes:15,
-    narration:[
-     `Artificial intelligence is not one gadget. It is a goal, a field of study, and a family of very different tools.`,
-     B.plain(`<b>Artificial Intelligence (AI)</b> is the field of building computer systems that do tasks which normally need human intelligence: understanding language, recognising images, making decisions, learning from experience.<ul><li><b>AI is a goal:</b> machines that behave intelligently.</li><li><b>AI is a field:</b> computer science plus maths, statistics, linguistics and psychology.</li><li><b>AI is not one thing:</b> spam filters, chatbots and self-driving cars are all AI.</li></ul>`),
-     B.ex(`Your phone unlocks with your face. Your email hides spam. Maps predict traffic. Nobody wrote a rule for every face, spam word or road: the systems learned patterns. That is everyday AI.`),
-     B.exam(`<b>Exam definition:</b> AI = computer systems performing tasks that normally require human intelligence.`)],
-    think:`Compare your one-sentence definition with the one above. What did you include that the textbook left out, or the other way round?`,
-    notes:[`Stress: AI is a goal (intelligent behaviour) and a field, not one single technology.`],
-    fig:{label:`Everyday AI · what did it learn?`, build:el=>W.picker(el,{'On your phone':[[`Face unlock`,`Learned what your face looks like from different angles and lighting, so it can recognise you without a rule for every pixel.`],[`Autocorrect`,`Learned which words usually follow each other, so it can guess what you meant to type.`],[`Photo search`,`Search your gallery for “beach” or “cat” because a model learned what those look like.`]],'Online':[[`Spam filter`,`Learned the patterns of spam from millions of emails that people marked as spam.`],[`Maps traffic`,`Learned how traffic usually moves at each time of day from location data, and predicts your arrival time.`],[`Recommendations`,`Learned what people like you watched next. We study this in Week 4.`]]})} },
-
-  { nav:'Four definitions', title:'Four ways to define AI', minutes:15,
-    narration:[
-     `Researchers disagree about what AI should aim for. Should it copy humans, or do the ideal, logical thing? Should we judge its <em>thinking</em> or its <em>behaviour</em>? Two questions give four views.`,
-     B.plain(`<ul><li><b>Thinking humanly:</b> copy how the human mind works.</li><li><b>Acting humanly:</b> behave so a person cannot tell the difference (the Turing Test idea).</li><li><b>Thinking rationally:</b> reason with correct logic, like a maths proof.</li><li><b>Acting rationally:</b> pick the best action to reach a goal. Most modern AI follows this view.</li></ul>`),
-     B.exam(`Memorise the 2×2: <b>Human vs Rational × Thinking vs Acting</b>. Modern AI mostly = acting rationally.`)],
-    think:`Which of the four views do you personally believe is “real” AI? Why?`,
-    src:`Framework from Russell, S., & Norvig, P. <em>Artificial Intelligence: A Modern Approach</em>.`,
-    notes:[`Ask students which one they believe in. Modern engineering mostly follows “acting rationally”: do the right thing to reach a goal.`],
-    fig:{label:`The 2×2 · click each view`, build:quad} },
-
-  { nav:'AI vs software', title:'AI vs ordinary software', kind:'activity', minutes:20, wide:true,
-    narration:[
-     `Ordinary software follows rules a programmer wrote. Machine learning finds the rules itself, from examples. This is the most important distinction in the whole course.`,
-     `<table class="tbl"><thead><tr><th></th><th>Ordinary software</th><th>AI (machine learning)</th></tr></thead><tbody><tr><td>How it works</td><td>Programmer writes exact rules</td><td>Learns patterns from examples</td></tr><tr><td>Input → output</td><td>Rules + data → answers</td><td>Data + answers → rules</td></tr><tr><td>New cases?</td><td>Only if a rule exists</td><td>Often yes, by generalising</td></tr><tr><td>Example</td><td>Calculator</td><td>Spam filter</td></tr></tbody></table>`,
-     `Try it on the right. Change the rule and watch what happens. Can you write one rule that catches all the spam without blocking the free pizza announcement?`,
-     B.exam(`<b>Traditional programming:</b> rules + data → answers. <b>Machine learning:</b> data + answers → rules.`)],
-    think:`Spammers change their spelling every week. Which filter keeps working, and why?`,
-    notes:[`Students try “free”: it catches more spam but blocks the pizza email. That is the brittleness of rules.`,`The learned weights are illustrative, not from a real filter.`],
-    fig:{label:`Rule filter vs learning filter`, build:spam} },
-
-  { nav:'Foundations', title:'The foundations: which fields built AI?', minutes:10,
-    narration:[
-     `AI did not come from computer science alone. Philosophers, mathematicians, statisticians, brain scientists, linguists, psychologists and economists all contributed.`,
-     B.ex(`ChatGPT needs <b>statistics</b> (learning from data), <b>computer science</b> (chips and algorithms), <b>linguistics</b> (how language works) and <b>philosophy</b> (what “understanding” means).`),
-     B.exam(`AI is <b>interdisciplinary</b>. Be ready to name at least four foundation fields with one contribution each.`)],
-    think:`Which field does your own major connect to? Every student in this room has a link to AI.`,
-    notes:[`Syllabus item: The Foundations of Artificial Intelligence. Ask which field matters most for ChatGPT (answer: all, especially statistics, CS and linguistics).`],
-    fig:{label:`Eight foundation fields`, build:el=>W.picker(el,FIELDS,'Select a field.')} },
-
-  { nav:'A real science?', title:'Is AI a real science?', minutes:15,
-    narration:[
-     `Some people say AI is “just engineering”: building things that work without knowing why. Others say it is a science of intelligence. The honest answer is that it is both, and it has open problems.`,
-     `<table class="tbl"><tbody><tr><td>Yes: scientific side</td><td>Tests hypotheses, runs experiments, measures results on shared benchmarks, publishes reproducible methods.</td></tr><tr><td>Also: engineering side</td><td>Builds useful systems. Success is “does it work?”, not always “why does it work?”.</td></tr><tr><td>But: open problems</td><td>Models are often black boxes; benchmarks can be gamed; results can be hard to reproduce.</td></tr></tbody></table>`,
-     B.ex(`Physics asks “why does an apple fall?” Engineering asks “how do we build a bridge?” AI does both: it studies intelligence and builds intelligent tools.`),
-     B.exam(`Good exam answer: AI is both <b>science</b> (understand intelligence) and <b>engineering</b> (build tools). Give one point on each side.`)],
-    notes:[`Balanced answer expected. Reproducibility and benchmark gaming are good “open problem” examples.`],
-    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Is AI a real science?`,opts:[`Yes, it is a science`,`No, it is engineering`,`Both`,`Neither, it is a business`],reveal:i=>[`Partly right: it tests hypotheses and measures results.`,`Partly right: much of AI is building things that work.`,`This is the strongest exam answer, if you give one reason for each side.`,`Business drives much AI today, but that is about funding, not method.`][i]+` Now name one open problem that makes AI a less “clean” science.`})} },
-
-  { nav:'Machine or human?', title:'Can a computer be smarter than a human?', kind:'activity', minutes:20,
-    narration:[
-     `It depends on what you mean by “smart”. Machines already beat us at some things. At others, a four-year-old still wins easily.`,
-     B.plain(`<b>Narrow AI (ANI):</b> does one task very well. This is <b>all</b> AI that exists today. <b>General AI (AGI):</b> would learn and reason across any task like a human; it does not exist yet. <b>Super AI (ASI):</b> would surpass humans in everything; theoretical and debated.`),
-     B.plain(`<b>Moravec's paradox:</b> tasks that are hard for people (chess, big sums) are easy for computers. Tasks that are easy for a child (walking, recognising a friend) are very hard for machines.`),
-     B.ex(`A chess program beats every human, but cannot make a cup of tea or explain “why did you move there?” like a person. Superhuman at one thing, helpless at everything else.`),
-     `Sort the tasks in the activity below the diagram: who wins today, the machine or the human?`,
-     B.exam(`Today = <b>Narrow AI only</b>. Even ChatGPT is narrow: it works on language, not general understanding.`)],
-    think:`If a machine beats you at chess but cannot tie its shoes, is it smarter than you?`,
-    notes:[`Do not give a date for AGI; experts disagree on timelines.`,`Chess: Deep Blue 1997. Go: AlphaGo 2016. Both return in Week 2.`],
-    fig:{label:`Three kinds of AI · then sort the tasks`, build:el=>{ el.innerHTML=LADDER+'<div id="mh" style="margin-top:14px"></div>'; W.sort(el.querySelector('#mh'),{buckets:['Machine wins','Human wins'],items:[
+      {t:`A TV remote control`,a:1,why:`Buttons send fixed signals. No intelligence involved.`}]})},
+ 'Four definitions':{label:`The 2×2 · click each view`, build:quad},
+ 'AI vs software':{label:`Rule filter vs learning filter`, build:spam},
+ 'Foundations':{label:`Eight foundation fields`, build:el=>W.picker(el,FIELDS,'Select a field.')},
+ 'A real science?':{label:`Vote`, build:el=>W.poll(el,{q:`Is AI a real science?`,opts:[`Yes, it is a science`,`No, it is engineering`,`Both`,`Neither, it is a business`],reveal:i=>[`Partly right: it tests hypotheses and measures results.`,`Partly right: much of AI is building things that work.`,`This is the strongest exam answer, if you give one reason for each side.`,`Business drives much AI today, but that is about funding, not method.`][i]+` Now name one open problem that makes AI a less “clean” science.`})},
+ 'Machine or human?':{label:`Three kinds of AI · then sort the tasks`, build:el=>{ el.innerHTML=LADDER+'<div id="mh" style="margin-top:14px"></div>'; W.sort(el.querySelector('#mh'),{buckets:['Machine wins','Human wins'],items:[
       {t:`Playing chess or Go`,a:0,why:`Deep Blue beat Kasparov in 1997; AlphaGo beat Lee Sedol in 2016.`},
       {t:`Recognising a friend's face in a crowd from behind`,a:1,why:`Humans use context: walk, clothes, where they usually are.`},
       {t:`Scanning a million records in a second`,a:0,why:`Speed and memory are machine strengths.`},
       {t:`Knowing a wet floor is slippery without being told`,a:1,why:`Common sense is still a human strength.`},
       {t:`Learning a new card game from one explanation`,a:1,why:`Humans learn from very few examples.`},
-      {t:`Spotting some diseases in medical images`,a:0,why:`In narrow, well-tested tasks AI can match or beat specialists (Week 6).`}]}); }} },
-
-  { nav:'Turing vs Searle', title:'Two famous tests of “real intelligence”', kind:'activity', minutes:25,
-    narration:[
-     `How would we know if a machine is intelligent? Two famous thought experiments give opposite answers.`,
-     B.plain(`<b>Turing Test (1950):</b> a judge chats with a hidden human and a hidden machine. If the judge cannot tell which is which, the machine passes. It tests <b>behaviour</b>, not inner thoughts.`),
-     B.plain(`<b>Chinese Room (Searle, 1980):</b> a person who knows no Chinese follows a rule book to answer Chinese questions. The answers are correct, but the person understands nothing. Searle's point: correct answers do not prove <b>understanding</b>.`),
-     `Debate in groups: does ChatGPT understand what it writes? Use one of the two tests to support your answer, then vote.`,
-     B.exam(`<b>Turing</b> = behaviour counts. <b>Searle</b> = behaviour is not understanding. Both appear in “Can machines think?” essays.`)],
-    think:`Is your own understanding of a language anything more than a very good rule book? How would you prove it?`,
-    notes:[`Groups of four, 10 minutes debate, two groups present for 2 minutes each, then vote.`,`Link forward: Week 3 shows how ChatGPT actually produces text.`],
-    fig:{label:`Turing Test vs Chinese Room`, build:el=>{ el.innerHTML=TESTS+'<div id="tv" style="margin-top:12px"></div>'; W.poll(el.querySelector('#tv'),{q:`Does ChatGPT understand what it writes?`,opts:[`Yes: it passes a Turing-style test`,`No: it is a Chinese Room`,`Partly, in some sense`,`We cannot know`],reveal:i=>[`That is Turing's position: judge by behaviour. Searle would reply that fluent output does not show understanding.`,`That is Searle's position. A Turing supporter would ask: what extra test would prove understanding?`,`Many researchers sit here: some useful internal model of language, but not human understanding.`,`A serious philosophical position: we cannot observe understanding directly, even in other people.`][i]+` For the exam, name both tests and give your own view with a reason.`}); }} },
-
-  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 1', kind:'exam', minutes:15,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Define:</b> AI = systems doing tasks that need human intelligence.</li><li><b>Four views:</b> thinking/acting × humanly/rationally.</li><li><b>AI vs software:</b> rules + data → answers vs data + answers → rules.</li><li><b>Foundations:</b> philosophy, maths, statistics, neuroscience, CS, linguistics, psychology, economics.</li><li><b>Types:</b> narrow (all today), general, super.</li><li><b>Tests:</b> Turing Test (behaviour) vs Chinese Room (understanding).</li></ul>`),
-     `Try the likely exam questions on the right. Answer aloud or on paper first, then open the hint.`],
-    notes:[`Quick recall: ask students to name the four ways to define AI without looking.`],
-    fig:{mindmap:{center:'What is AI?',branches:[{t:'Definition',items:['Tasks that need human intelligence','A goal · a field · many tools']},{t:'Four views',items:['Thinking humanly','Acting humanly (Turing)','Thinking rationally','Acting rationally = modern AI']},{t:'AI vs software',items:['Rules + data → answers','Data + answers → rules','Spam filter example']},{t:'Foundations',items:['Philosophy · maths · statistics','Neuroscience · CS · linguistics','Psychology · economics']},{t:'Kinds of AI',items:['Narrow: all AI today','General: not yet','Super: theoretical']},{t:'Tests',items:['Turing 1950: behaviour','Searle 1980: understanding','Moravec’s paradox']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {t:`Spotting some diseases in medical images`,a:0,why:`In narrow, well-tested tasks AI can match or beat specialists (Week 6).`}]}); }},
+ 'Turing vs Searle':{label:`Turing Test vs Chinese Room`, build:el=>{ el.innerHTML=TESTS+'<div id="tv" style="margin-top:12px"></div>'; W.poll(el.querySelector('#tv'),{q:`Does ChatGPT understand what it writes?`,opts:[`Yes: it passes a Turing-style test`,`No: it is a Chinese Room`,`Partly, in some sense`,`We cannot know`],reveal:i=>[`That is Turing's position: judge by behaviour. Searle would reply that fluent output does not show understanding.`,`That is Searle's position. A Turing supporter would ask: what extra test would prove understanding?`,`Many researchers sit here: some useful internal model of language, but not human understanding.`,`A serious philosophical position: we cannot observe understanding directly, even in other people.`][i]+` For the exam, name both tests and give your own view with a reason.`}); }},
+ 'Exam takeaways':{mindmap:{center:'What is AI?',branches:[{t:'Definition',items:['Tasks that need human intelligence','A goal · a field · many tools']},{t:'Four views',items:['Thinking humanly','Acting humanly (Turing)','Thinking rationally','Acting rationally = modern AI']},{t:'AI vs software',items:['Rules + data → answers','Data + answers → rules','Spam filter example']},{t:'Foundations',items:['Philosophy · maths · statistics','Neuroscience · CS · linguistics','Psychology · economics']},{t:'Kinds of AI',items:['Narrow: all AI today','General: not yet','Super: theoretical']},{t:'Tests',items:['Turing 1950: behaviour','Searle 1980: understanding','Moravec’s paradox']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Define AI and give two everyday examples.`,hint:`Systems doing tasks that normally need human intelligence; e.g. face unlock, spam filter, maps traffic.`},
       {q:`Distinguish narrow from general AI.`,hint:`Narrow = one task, all AI today (chess, ChatGPT); general = any task like a human, does not exist yet.`},
       {q:`Is AI a real science? Argue both sides.`,hint:`Science: hypotheses, experiments, benchmarks. Engineering: builds tools that work. Open problems: black boxes, reproducibility.`},
-      {q:`Explain the Turing Test and one criticism.`,hint:`Judge cannot tell machine from human = pass; Searle's Chinese Room: right answers without understanding.`}])} },
-
-  { nav:'Exit check', title:'Exit check', kind:'check', minutes:15,
-    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 2:</strong> read RB a, Chapters 1–3 (Mitchell, <em>Artificial Intelligence: A Guide for Thinking Humans</em>). Think about one moment in AI history that interests you: it could become Assignment 1.`],
-    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Explain the Turing Test and one criticism.`,hint:`Judge cannot tell machine from human = pass; Searle's Chinese Room: right answers without understanding.`}])},
+ 'Exit check':{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`Which is the best exam definition of AI?`,o:[`Any computer program`,`Computer systems performing tasks that normally require human intelligence`,`Robots that look like humans`,`Software connected to the internet`],a:1,why:`AI is defined by the kind of task, not by robots or the internet.`},
       {q:`In machine learning, what goes in and what comes out?`,o:[`Rules + data → answers`,`Data + answers → rules`,`Answers → data`,`Rules → rules`],a:1,why:`The system learns the rules from examples with answers.`},
       {q:`Most modern AI follows which of the four views?`,o:[`Thinking humanly`,`Acting humanly`,`Thinking rationally`,`Acting rationally`],a:3,why:`Rational agents choose the best action to reach a goal.`},
       {q:`All AI that exists today is…`,o:[`Narrow AI`,`General AI`,`Super AI`,`Conscious AI`],a:0,why:`Even ChatGPT is narrow: it works on language only.`},
       {q:`Searle's Chinese Room argues that…`,o:[`machines can never pass the Turing Test`,`correct answers do not prove understanding`,`Chinese is too hard for computers`,`AI is a real science`],a:1,why:`Symbol manipulation is not understanding.`},
-      {q:`Moravec's paradox says that…`,o:[`what is easy for a child can be very hard for a machine`,`computers double in speed every two years`,`AI always beats humans`,`humans are bad at chess`],a:0,why:`Walking and recognising faces were far harder to build than chess.`}])} }
+      {q:`Moravec's paradox says that…`,o:[`what is easy for a child can be very hard for a machine`,`computers double in speed every two years`,`AI always beats humans`,`humans are bad at chess`],a:0,why:`Walking and recognising faces were far harder to build than chess.`}])}
+};
+const V={
+ 'What is AI?':{id:'a0_lo_GDcFw',title:'What Is Artificial Intelligence? Crash Course AI #1',by:'CrashCourse',why:'A friendly overview of what AI is, and where it already shows up in daily life.'}
+};
+
+Lecture.mount({
+  id:'w1', week:1, clo:1, short:'Week 1 · Introduction to AI',
+  title:'Introduction to AI',
+  meta:'RB b Chapter 1 · 3 hours',
+  scenes:[
+  { part:1, nav:'What is AI?', title:'What is AI?',
+    narration:[`Artificial intelligence is the field of building computer systems that do tasks which normally need human intelligence: understanding language, recognising images, making decisions and learning from experience. It is a goal, a field of study and a family of very different tools, from your spam filter to ChatGPT.`],
+    fig:{label:`Watch`, build:el=>W.video(el,V['What is AI?'])} },
+
+  { part:1, nav:'Is it AI?', title:'Is it AI or not?',
+    narration:[`Sort each item, then reveal the answers. Notice the pattern: the items that count as AI learn from data or adapt, while the others follow one fixed rule.`],
+    fig:FIG['Is it AI?'] },
+
+  { part:1, nav:'Four definitions', title:'Four ways to define AI',
+    narration:[`Russell and Norvig sort definitions of AI by two questions: should a machine think or act, and should it copy humans or be ideally rational? That gives four views. Most modern AI follows the fourth, acting rationally: choosing the best action to reach a goal.`],
+    fig:FIG['Four definitions'] },
+
+  { part:1, nav:'AI vs software', title:'AI vs ordinary software', wide:true,
+    narration:[`Ordinary software follows rules a programmer wrote: rules plus data give answers. Machine learning turns this around: data plus answers give the rules. Change the rule filter on the right and try to catch every spam email without blocking the free pizza announcement.`],
+    fig:FIG['AI vs software'] },
+
+  { part:1, nav:'Foundations', title:'Which fields built AI?',
+    narration:[`AI did not come from computer science alone. Philosophy, mathematics, statistics, neuroscience, linguistics, psychology and economics each gave it a key idea, which is why AI is called interdisciplinary.`],
+    fig:FIG['Foundations'] },
+
+  { part:1, nav:'A real science?', title:'Is AI a real science?',
+    narration:[`AI is both a science and an engineering discipline. It tests hypotheses and measures results on shared benchmarks, but much of it is building tools that work before we fully understand why, and black-box models make some results hard to explain or reproduce.`],
+    fig:FIG['A real science?'] },
+
+  { part:1, nav:'Smarter than us?', title:'Can a computer be smarter than a human?',
+    narration:[`All AI today is narrow: superhuman at one task and helpless at everything else. General AI does not exist yet, and super AI is theoretical. Moravec's paradox explains the gap: what is hard for us, like chess, is easy for machines, and what is easy for a child, like recognising a friend, is hard for them.`],
+    fig:FIG['Machine or human?'] },
+
+  { part:2, nav:'Teachable Machine', title:'Train your own AI in five minutes',
+    narration:[`Teachable Machine lets you train an image model in the browser with your webcam. Teach it two objects, test it with a third it has never seen, and watch it still pick one of the two with confidence: it only knows what its data showed it.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Teachable Machine',by:'Google',url:'https://teachablemachine.withgoogle.com/',steps:[
+      {t:'Start',s:'Image project',d:'Open the tool, choose Get Started, then Image Project and Standard image model.'},
+      {t:'Collect',s:'two classes',d:'Rename the classes (for example Pen and Phone). Hold each object to the webcam and record about 50 images per class.'},
+      {t:'Train',s:'one click',d:'Press Train Model and wait. Keep the tab open.'},
+      {t:'Test',s:'new objects',d:'Show each object from new angles and watch the confidence bars in Preview.'},
+      {t:'Trick it',s:'something else',d:'Show an object from neither class. The model still picks one: it cannot say “I don\'t know”.'}]})} },
+
+  { part:2, nav:'Quick, Draw!', title:'Can a neural network guess your doodle?',
+    narration:[`Quick, Draw! asks you to sketch six objects in 20 seconds each while a neural network guesses what you are drawing. It learned from millions of doodles drawn by players around the world. At the end, open a drawing it missed and compare yours with the examples it learned from.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Quick, Draw!',by:'Google Creative Lab',url:'https://quickdraw.withgoogle.com/',steps:[
+      {t:'Play',s:'six doodles',d:'Press Let\'s Draw and sketch each word before the 20 seconds run out.'},
+      {t:'Listen',s:'live guesses',d:'The model says its guesses aloud as your lines appear.'},
+      {t:'Inspect',s:'what it saw',d:'On the results page, click a doodle it missed to see what it thought instead.'},
+      {t:'Compare',s:'the training data',d:'Look at how other people drew the same word. Is your style different from the data?'}]})} },
+
+  { part:3, nav:'Alan Turing', title:'Case: Alan Turing asks “Can machines think?”',
+    narration:[`In 1950 the British mathematician Alan Turing published “Computing Machinery and Intelligence”. Instead of defining thinking, he proposed a test: if a judge chatting by text cannot tell the machine from a human, the machine passes. The question still drives debates about ChatGPT today.`],
+    fig:{label:`Alan Turing, aged 16`, build:el=>W.photo(el,{src:'https://commons.wikimedia.org/wiki/Special:FilePath/Alan_Turing_Aged_16.jpg?width=640',alt:'Black-and-white portrait of Alan Turing as a teenager',credit:'Alan Turing aged 16 (c. 1928). Public domain, via Wikimedia Commons.',href:'https://commons.wikimedia.org/wiki/File:Alan_Turing_Aged_16.jpg'})} },
+
+  { part:3, nav:'Turing vs Searle', title:'Behaviour or understanding?',
+    narration:[`In 1980 the philosopher John Searle replied with the Chinese Room: a person who knows no Chinese follows a rule book and gives perfect Chinese answers, yet understands nothing. Turing judges behaviour; Searle says behaviour is not understanding. Vote, then defend your answer with one of the two.`],
+    fig:FIG['Turing vs Searle'] },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`This week's ideas continue in IBM's free Introduction to Artificial Intelligence course, the first step towards the AI Fundamentals badge. Finish it, keep your proof, and send it for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open each branch of the mind map, then answer the six questions. Before Week 2, read RB a, Chapters 1–3 (Mitchell), and pick one moment in AI history that interests you: it could become Assignment 1.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:FIG['Exam takeaways'].mindmap, build:FIG['Exit check'].build} }
   ]
 });
 </script>

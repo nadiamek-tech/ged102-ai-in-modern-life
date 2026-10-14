@@ -179,136 +179,99 @@ const RISKS=[
  {t:`Bias`,d:`Unfair credit, pricing or hiring decisions for some groups.`,l:`Amazon's recruiting tool (Reuters, 2018) learned to downgrade women's CVs.`},
  {t:`Cost and skills`,d:`Needs expensive data, computing and rare expertise.`,l:`Big institutions gain first (Week 4: who benefits?).`}];
 
-Lecture.mount({
-  id:'w7', week:7, clo:2, short:'Week 7 · Finance and Business',
-  title:'Applications of AI: AI in Finances and Business',
-  meta:'RB c Chapter 1 · 3-hour session · Assignment 2 set',
-  scenes:[
-  { nav:'Start here', title:'Can AI manage money and risk better than people?', minutes:10,
-    narration:[
-     `Every time you tap your card, an AI model has already decided whether to let the payment through. Banks use AI to lend, trade and catch criminals; businesses use it to decide what you see, what you pay, and whether you get the interview.`,
-     `Our syllabus topic: <strong>“Artificial Intelligence in Financial Markets Cutting Edge Applications for Risk Management, Portfolio Optimization and Economics”</strong>, building <strong>CLO 2</strong>.`,
-     B.plain(`The key idea this week: <b>speed and scale vs systemic risk</b>. Finance was among the earliest and heaviest users of AI because data is plentiful, goals are numeric and decisions must be fast.`)],
-    src:`Reading: Dunis, C. L., Middleton, P. W., Karathanasopolous, A., & Theofilatos, K. (2017). <em>Artificial intelligence in financial markets</em>. Palgrave Macmillan. Chapter 1.`,
-    notes:[`Last content week before the Week 8 midterm (Weeks 1–7). Assignment 2 is set today.`],
-    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: card blocked`,5,'a'],[`Where AI is used in finance`,10,'l'],[`Fraud = anomaly detection`,20,'a'],[`Credit scoring and bias`,15,'l'],[`Portfolio optimisation`,20,'a'],[`Break`,10,'b'],[`Robo-advisors and trading`,10,'l'],[`When algorithms go wrong`,10,'l'],[`AI and economics`,10,'l'],[`Risks and limits`,10,'l'],[`Activity: AI for a UAE business`,15,'a'],[`Assignment 2 brief`,10,'l'],[`Exam takeaways`,15,'l'],[`Exit check`,10,'c']])} },
-
-  { nav:'Card blocked', title:'2:47 a.m. Your card has been blocked', kind:'activity', minutes:5,
-    narration:[`You wake up to an SMS: <em>“A payment of AED 4,850 at an overseas electronics website was declined. Reply Y if this was you.”</em> You were asleep in Dubai. No human at the bank saw that payment. What made the system suspicious?`],
-    notes:[`Ask who has had a card blocked while travelling. That block was probably an AI decision.`],
-    fig:{label:`Vote`, build:el=>W.poll(el,{q:`What most likely triggered the block?`,opts:[`The amount alone`,`The time of night alone`,`A combination of unusual signals`,`A bank employee checked it`],reveal:i=>(i===2?'<b>Yes.</b> ':'<b>Most likely a combination.</b> ')+`Fraud models combine many signals: amount, place, time, merchant type, device. You will build a mini version in two scenes.`})} },
-
-  { nav:'Where AI is used', title:'Where AI is used in finance and business', minutes:10,
-    narration:[
-     `In <strong>finance</strong>, AI protects (fraud, anti-money-laundering), lends (credit scoring), invests (trading, portfolio optimisation, robo-advice) and measures danger (risk management). In everyday <strong>business</strong>, it recommends, forecasts, prices, answers customers and screens applicants. Click the tiles for real examples.`,
-     B.exam(`Why finance? Lots of data, clear numeric goals, decisions needed fast. <b>AI = prediction + pattern spotting + automation.</b>`)],
-    notes:[`Every tile is prediction, pattern spotting or automation; ask students to label each.`],
-    fig:{label:`Finance · Business`, build:el=>W.picker(el,MAP)} },
-
-  { nav:'Fraud detection', title:'Risk management 1: fraud detection = anomaly detection', kind:'activity', minutes:20, wide:true,
-    narration:[
-     B.plain(`The AI learns your normal behaviour. When something does not fit your pattern, it raises a flag. This is called <b>anomaly detection</b>. Inputs: amount, place, time, device, merchant type. Output: a risk score, then approve, block, or ask.`),
-     B.ex(`Normal: Sara spends AED 50–300 per purchase in Dubai. Suddenly: AED 12,000 at 3 a.m. in another country. The system blocks the payment and texts: “Was this you?”`),
-     `Now build a detector on the right using one week of Sara's (fictional) payments. Choose which signals to watch and how many must appear before blocking. Block too easily and her real hotel in Istanbul and her new sofa get declined; block too rarely and criminals spend her money.`,
-     B.exam(`<b>Fraud detection = anomaly detection.</b> Trade-off: false alarms vs missed fraud (the same trade-off as Week 6's threshold).`)],
-    think:`Is it fair that a customer who travels or shops at night gets declined more often?`,
-    notes:[`With all four signals at ≥2, all fraud is blocked but so are the hotel and sofa. Turning off “Amount far above usual” at ≥2 gives a perfect week. Then ask whether that rule would work next month (overfitting in plain words).`,`Anomaly detection is unsupervised or semi-supervised learning (Week 3).`],
-    fig:{flow:[{t:'Inputs',s:'amount, place, time…',d:'Amount, place, time, device and merchant type for each payment.'},{t:'Compare',s:'with your normal',d:'The model compares the payment with your usual pattern and known fraud patterns.'},{t:'Risk score',s:'0 to 1',d:'Unusual combinations push the score up.'},{t:'Decide',s:'approve · block · ask',d:'Above the threshold the payment is blocked or you get a “Was this you?” text.'}],label:`Fictional card · 12 payments`, build:fraud} },
-
-  { nav:'Credit scoring', title:'Risk management 2: credit scoring and its bias risk', minutes:15,
-    narration:[
-     B.plain(`Banks use models to predict whether you will repay a loan. The model learns from past loan decisions and outcomes. It gives a score; the bank approves or rejects.`),
-     `Follow the bias loop on the right. If past decisions were unfair, what does a model trained on them learn? And because its decisions become new data, the unfairness can repeat itself.`,
-     B.ex(`A model is not told the applicant's gender or nationality, but it uses postcode. If a postcode strongly matches a group, postcode acts as a <b>proxy variable</b> and the bias comes back in.`),
-     B.exam(`Removing a sensitive column does <b>not</b> remove bias. <b>Proxy variables</b> can recreate it.`)],
-    think:`Alternative data (phone-bill or utility payments) can give a first loan to someone with no credit history. When does that help, and when does it become surveillance?`,
-    notes:[`Introduce “proxy variable” with the postcode example. It links back to Obermeyer (Week 6) and Amazon (Week 4).`],
-    fig:{label:`The bias loop`, html:LOOP} },
-
-  { nav:'Portfolio optimisation', title:'Portfolio optimisation: don\'t put all your eggs in one basket', kind:'activity', minutes:20, wide:true,
-    narration:[
-     B.plain(`A <b>portfolio</b> is your mix of investments. <b>Portfolio optimisation</b> means choosing the mix that gives the best return for the risk you accept. Core idea: <b>diversification</b> (Harry Markowitz, 1952).`),
-     UMB,
-     `Holding both gives a steady +7.5% whatever the weather. Now try two real-world-style funds on the right: move the mix, then change how closely they move together (correlation). When they move together, the protection disappears.`,
-     B.plain(`<b>Where AI helps:</b> it scans thousands of assets, estimates how they move together, searches for the best mix under your limits, and can rebalance automatically. The reading covers methods such as neural networks and evolutionary algorithms for this.`),
-     B.exam(`Return vs risk trade-off. Diversification lowers risk without giving up all return. AI makes the search <b>faster, not guaranteed</b>.`)],
-    think:`In a crisis, many assets fall together and correlations jump. What happens to diversification exactly when you need it?`,
-    notes:[`Markowitz: Modern Portfolio Theory (1952), Nobel Memorial Prize in Economic Sciences 1990. Walk the numbers: 0.5 × 20 + 0.5 × (−5) = 7.5.`,`Fund numbers in the widget are illustrative.`],
-    fig:{label:`Two funds · illustrative numbers`, build:diversify} },
-
-  { nav:'Robo-advisors and trading', fig:{label:'How a robo-advisor works', flow:[{t:'Questionnaire',s:'goals and risk',d:'Age, savings goal, time horizon, comfort with risk.'},{t:'Portfolio',s:'e.g. 80/20',d:'The app proposes a mix, e.g. 80% shares and 20% bonds for a 20-year-old.'},{t:'Rebalance',s:'automatically',d:'When markets move the mix drifts; the app sells and buys to restore it.'},{t:'Review',s:'human check',d:'Special situations still need a human adviser.'}]}, title:'Robo-advisors and algorithmic trading', minutes:10,
-    narration:[
-     `<table class="tbl"><thead><tr><th></th><th>Robo-advisor</th><th>Algorithmic trading</th></tr></thead><tbody><tr><td>What</td><td>An app that builds and rebalances your portfolio from your goals and risk comfort</td><td>Programs place orders automatically using rules or learned patterns; high-frequency trading sends thousands of orders per second</td></tr><tr><td>Benefit</td><td>Low fees, low minimums, always on</td><td>Speed, lower cost, no emotion</td></tr><tr><td>Limit</td><td>Not a human; weak on special situations</td><td>Errors spread at machine speed</td></tr></tbody></table>`,
-     B.ex(`Robo-advisor: “I am 20, saving for 30 years, medium risk.” The app proposes about 80% shares and 20% bonds and rebalances each year.`)],
-    notes:[`Robo-advisors serve ordinary customers; algorithmic trading is mostly institutional. Keep the definitions crisp.`] },
-
-  { nav:'When algorithms go wrong', video:{id:'TDaFwnOiKVE',title:'How algorithms shape our world',by:'TED · Kevin Slavin',why:'Trading algorithms, the Flash Crash, and what happens when machines act faster than people can follow.'}, title:'When algorithms go wrong: Flash Crash and Knight Capital', minutes:10,
-    narration:[
-     `<b>Flash Crash, 6 May 2010:</b> US stocks fell about 9% within minutes, then largely recovered. Automated trading amplified a large sell order. Markets can move faster than humans can react.`,
-     `<b>Knight Capital, 1 August 2012:</b> a software error sent unintended orders; about US$440 million was lost in around 45 minutes. No one could stop it fast enough. Testing and “kill switches” are essential.`,
-     B.plain(`Automation brings speed. Speed turns small mistakes into big losses before humans notice.`),
-     B.exam(`Exam link: <b>operational risk, systemic risk</b>, and the need for human oversight and kill switches.`)],
-    think:`Should there be a speed limit on trading algorithms, the way there is on Sheikh Zayed Road?`,
-    notes:[`SEC/CFTC report linked the Flash Crash to a large automated sell order interacting with high-frequency trading. Regulators added circuit breakers.`],
-    fig:{label:`Flash Crash · sketch`, html:CRASH} },
-
-  { nav:'AI and economics', title:'AI and economics: markets, jobs and productivity', minutes:10,
-    narration:[
-     `The syllabus title ends with “economics”. Click the six effects on the right.`,
-     B.exam(`Balanced exam answer: gains in <b>efficiency and access</b> vs concerns about <b>jobs, concentration and fairness</b>.`)],
-    notes:[`Link to Week 4 (who benefits, IMF 40%).`],
-    fig:{label:`Six economic effects`, build:el=>W.picker(el,{'Economy':[[`Forecasting`,`AI analyses news, prices and data to predict inflation, demand and trends.`],[`Productivity`,`Automation can lower costs and raise output in banks and firms.`],[`Jobs`,`Routine tasks (data entry, simple analysis) shrink; new roles (AI risk, data) grow.`],[`Inequality`,`Firms and countries with data and capital may gain most; others fall behind.`],[`Competition`,`Fintech start-ups challenge banks with AI-based services.`],[`Regulation`,`Regulators ask for explainability and fairness in credit and trading.`]]})} },
-
-  { nav:'Risks and limits', title:'Risks and limits of AI in finance', minutes:10,
-    narration:[
-     `Six risks summarise the week. Open each one and match it to a case from today or earlier weeks.`,
-     B.exam(`<b>Systemic risk</b> = the failure of one part threatens the whole system. <b>Herding</b> = many act the same way at once.`)],
-    notes:[`On Apple Card, be precise: the regulator found no fair-lending violation. The lesson is explanation, not proven discrimination.`],
-    fig:{label:`Six risks · open each`, build:el=>W.accordion(el,RISKS)} },
-
-  { nav:'AI for a UAE business', title:'Activity · Design AI for a UAE business', kind:'activity', minutes:15,
-    narration:[
-     `In groups of three, choose a business: a karak café chain with eight branches, a Dubai last-mile delivery start-up, or an online abaya store selling across the GCC. Or a family business you know.`,
-     `Complete the canvas: one AI use from today that solves a real problem, the data, the benefit, the risk, and where a human stays in charge. Two groups present in 90 seconds; classmates each ask “Who could be harmed?”`],
-    notes:[`Hints: café → demand forecasting to cut food waste; delivery → route optimisation; abaya store → recommendations or an Arabic chatbot.`,`This canvas can become the outline of Assignment 2.`],
-    fig:{label:`AI opportunity canvas`, build:el=>W.worksheet(el,{id:'w7canvas',title:'GED 102 · Week 7 · AI opportunity canvas',fields:[
-      {l:'Business and its problem',ph:'e.g. Karak café chain throws away 15% of pastries daily'},
-      {l:'Which AI application?',hint:'Forecasting, recommendations, chatbot, fraud, pricing…'},
-      {l:'What data would it learn from?',rows:2},
-      {l:'How would you measure success?'},
-      {l:'Main risk, and who is affected',rows:2},
-      {l:'Where does a human stay in charge?',rows:2}]})} },
-
-  { nav:'Assignment 2', title:'Assignment 2 · AI in my world', minutes:10, wide:true,
-    narration:[
-     `Assignment 2 brings Weeks 4 to 7 together. Choose one field and investigate how AI is used there, with real examples like this week's and the last two weeks'.`,
-     `<ul><li>Use at least two real, checkable examples, and cite them.</li><li>Cover benefits <b>and</b> challenges; one-sided answers cannot meet expectations for critical reflection.</li><li>Use the essay pattern: <b>use → benefit → risk → example → human oversight</b>.</li><li>Follow the Week 5 class AI policy and declare any AI use.</li></ul>`],
-    notes:[`Students post their chosen field on Moodle before leaving.`],
-    fig:{label:`Brief and rubric · from the syllabus`, html:A2} },
-
-  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 7', kind:'exam', minutes:15,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Uses:</b> fraud detection, credit scoring, risk management, portfolio optimisation, trading, robo-advice.</li><li><b>Fraud:</b> anomaly detection; trade-off between false alarms and missed fraud.</li><li><b>Portfolio:</b> diversification lowers risk (Markowitz). Return vs risk.</li><li><b>Algorithmic trading:</b> fast and cheap, but errors spread (Flash Crash, Knight Capital).</li><li><b>Credit bias:</b> past unfair data and proxy variables recreate bias.</li><li><b>Risks:</b> herding, black box, systemic risk, data quality, cost.</li></ul>`),
-     `Which of the three fields (education, healthcare, finance) worries you most, and why? Then open the <a href="review.html">Midterm review</a> page.`],
-    fig:{mindmap:{center:'AI in finance',branches:[{t:'Uses',items:['Fraud · credit · risk','Portfolio · trading · robo-advice']},{t:'Fraud',items:['Anomaly detection','False alarms vs missed fraud']},{t:'Credit',items:['The bias loop','Proxy variables (postcode)']},{t:'Portfolio',items:['Diversification (Markowitz 1952)','Return vs risk']},{t:'Trading risks',items:['Flash Crash 2010','Knight Capital 2012','Kill switches']},{t:'Big risks',items:['Herding · black box','Systemic risk · data quality']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+/* ---------- figures and videos kept from the original lecture ---------- */
+const FIG={
+ 'Card blocked':{label:`Vote`, build:el=>W.poll(el,{q:`What most likely triggered the block?`,opts:[`The amount alone`,`The time of night alone`,`A combination of unusual signals`,`A bank employee checked it`],reveal:i=>(i===2?'<b>Yes.</b> ':'<b>Most likely a combination.</b> ')+`Fraud models combine many signals: amount, place, time, merchant type, device. You will build a mini version in two scenes.`})},
+ 'Where AI is used':{label:`Finance · Business`, build:el=>W.picker(el,MAP)},
+ 'Fraud detection':{flow:[{t:'Inputs',s:'amount, place, time…',d:'Amount, place, time, device and merchant type for each payment.'},{t:'Compare',s:'with your normal',d:'The model compares the payment with your usual pattern and known fraud patterns.'},{t:'Risk score',s:'0 to 1',d:'Unusual combinations push the score up.'},{t:'Decide',s:'approve · block · ask',d:'Above the threshold the payment is blocked or you get a “Was this you?” text.'}],label:`Fictional card · 12 payments`, build:fraud},
+ 'Credit scoring':{label:`The bias loop`, html:LOOP},
+ 'Portfolio optimisation':{label:`Two funds · illustrative numbers`, build:diversify},
+ 'Robo-advisors and trading':{label:'How a robo-advisor works', flow:[{t:'Questionnaire',s:'goals and risk',d:'Age, savings goal, time horizon, comfort with risk.'},{t:'Portfolio',s:'e.g. 80/20',d:'The app proposes a mix, e.g. 80% shares and 20% bonds for a 20-year-old.'},{t:'Rebalance',s:'automatically',d:'When markets move the mix drifts; the app sells and buys to restore it.'},{t:'Review',s:'human check',d:'Special situations still need a human adviser.'}]},
+ 'When algorithms go wrong':{label:`Flash Crash · sketch`, html:CRASH},
+ 'Risks and limits':{label:`Six risks · open each`, build:el=>W.accordion(el,RISKS)},
+ 'Exam takeaways':{mindmap:{center:'AI in finance',branches:[{t:'Uses',items:['Fraud · credit · risk','Portfolio · trading · robo-advice']},{t:'Fraud',items:['Anomaly detection','False alarms vs missed fraud']},{t:'Credit',items:['The bias loop','Proxy variables (postcode)']},{t:'Portfolio',items:['Diversification (Markowitz 1952)','Return vs risk']},{t:'Trading risks',items:['Flash Crash 2010','Knight Capital 2012','Kill switches']},{t:'Big risks',items:['Herding · black box','Systemic risk · data quality']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain how AI detects fraud, with an example.`,hint:`Learn normal behaviour, flag what does not fit (anomaly detection); Sara's AED 12,000 at 3 a.m. abroad; trade-off of false alarms vs missed fraud.`},
       {q:`What is diversification and how can AI help?`,hint:`Spread investments to lower risk (umbrella + sunscreen = steady 7.5%); AI estimates co-movement across thousands of assets and searches for the best mix.`},
       {q:`Discuss two risks of algorithmic trading.`,hint:`Errors at machine speed (Knight Capital, US$440m in 45 min); herding and systemic risk (Flash Crash); need kill switches and oversight.`},
-      {q:`How can a credit-scoring model be biased?`,hint:`Biased past decisions (bias loop) and proxy variables such as postcode; fix by auditing, removing proxies, fairness testing, human review.`}])} },
-
-  { nav:'Exit check', title:'Exit check and midterm preparation', kind:'check', minutes:10,
-    narration:[
-     `The <strong>midterm in Week 8 covers Weeks 1 to 7</strong> (30% of the grade). Use the <a href="review.html">Midterm review</a> page: comparison tables, the four themes, flashcards and practice questions with hints.`],
-    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`How can a credit-scoring model be biased?`,hint:`Biased past decisions (bias loop) and proxy variables such as postcode; fix by auditing, removing proxies, fairness testing, human review.`}])},
+ 'Exit check':{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`Fraud detection is an example of…`,o:[`anomaly detection`,`image generation`,`RLHF`,`symbolic AI`],a:0,why:`Learn what is normal, flag what is not.`},
       {q:`Making a fraud detector stricter will usually…`,o:[`catch more fraud and decline more genuine payments`,`catch less fraud`,`have no side effects`,`make payments faster`],a:0,why:`False alarms vs missed fraud.`},
       {q:`A “proxy variable” is…`,o:[`a backup server`,`a neutral-looking feature that stands in for a sensitive one`,`a type of loan`,`a robo-advisor`],a:1,why:`e.g. postcode standing in for nationality or ethnicity.`},
       {q:`A 50/50 mix of the umbrella and sunscreen companies returns…`,o:[`+20% every year`,`−5% every year`,`+7.5% in both rainy and sunny years`,`nothing`],a:2,why:`0.5 × 20 + 0.5 × (−5) = 7.5.`},
       {q:`“Systemic risk” means…`,o:[`one customer's loan defaults`,`the failure of one part threatens the whole system`,`a system update`,`risk from bad passwords`],a:1,why:`Flash Crash and Knight Capital show how failures spread.`},
-      {q:`Assignment 2 is assessed on relevance, examples and…`,o:[`word count`,`critical reflection on benefits and challenges`,`use of AI tools`,`presentation software`],a:1,why:`The third indicator is critical reflection (CLO 2).`}])} }
+      {q:`Assignment 2 is assessed on relevance, examples and…`,o:[`word count`,`critical reflection on benefits and challenges`,`use of AI tools`,`presentation software`],a:1,why:`The third indicator is critical reflection (CLO 2).`}])}
+};
+const V={
+ 'When algorithms go wrong':{id:'TDaFwnOiKVE',title:'How algorithms shape our world',by:'TED · Kevin Slavin',why:'Trading algorithms, the Flash Crash, and what happens when machines act faster than people can follow.'}
+};
+
+Lecture.mount({
+  id:'w7', week:7, clo:2, short:'Week 7 · Finance and Business',
+  title:'Applications of AI: AI in Finances and Business',
+  meta:'RB c Chapter 1 · 3 hours',
+  scenes:[
+  { part:1, nav:'Card blocked', title:'2:47 a.m. Your card has been blocked',
+    narration:[`Your bank has just blocked your card and sent you a message. No person looked at it: a model did. Vote on what triggered the block.`],
+    fig:FIG['Card blocked'] },
+
+  { part:1, nav:'Where AI is used', title:'Where AI works in finance and business',
+    narration:[`Banks use AI to detect fraud, score credit and manage risk. Investors use it to build portfolios and trade. Businesses use it to forecast demand, set prices and answer customers. Click each use for an example.`],
+    fig:FIG['Where AI is used'] },
+
+  { part:1, nav:'Fraud detection', title:'Fraud detection is anomaly detection', wide:true,
+    narration:[`A fraud model learns your normal pattern: usual amounts, places, times and shops. A payment that breaks several patterns at once gets a high score and is blocked. Change the signals on the right and watch the score.`],
+    fig:FIG['Fraud detection'] },
+
+  { part:1, nav:'Credit scoring', title:'Credit scoring and the bias loop',
+    narration:[`Credit models predict who will repay a loan from past data. If past lending was unfair, the model learns that unfairness, approves fewer people from the same groups, and creates new data that confirms it. That is the bias loop.`],
+    fig:FIG['Credit scoring'] },
+
+  { part:1, nav:'Portfolio optimisation', title:'Don\'t put all your eggs in one basket', wide:true,
+    narration:[`Portfolio optimisation chooses a mix of investments that balances return and risk. Mixing assets that do not move together lowers risk without giving up much return. Move the slider between the two funds and find the safest mix.`],
+    fig:FIG['Portfolio optimisation'] },
+
+  { part:1, nav:'Robo-advisors', title:'How a robo-advisor works',
+    narration:[`A robo-advisor asks about your goals and comfort with risk, proposes a portfolio, and rebalances it automatically when markets move. It is cheap and consistent, but special situations still need a human adviser.`],
+    fig:FIG['Robo-advisors and trading'] },
+
+  { part:2, nav:'Google Trends', title:'Read demand like a data analyst',
+    narration:[`Businesses forecast demand from search data. In Google Trends, compare searches for “umbrella” and “sunscreen” in the United Arab Emirates over five years, and describe the seasonal pattern a shop could plan for.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Google Trends',by:'Google',url:'https://trends.google.com/trends/',steps:[
+      {t:'Search',s:'two terms',d:'Compare “umbrella” and “sunscreen”.'},
+      {t:'Filter',s:'UAE · 5 years',d:'Set the region to United Arab Emirates and the time to the past five years.'},
+      {t:'Read',s:'the seasons',d:'When does each term peak every year?'},
+      {t:'Decide',s:'as a shop owner',d:'When would you order stock for each product? Write one sentence.'}]})} },
+
+  { part:2, nav:'Forecast in Sheets', title:'Make your first forecast',
+    narration:[`Open a new Google Sheet, enter twelve months of sales, and let the FORECAST.LINEAR function predict month thirteen. Then add one unusual month and see how much a single outlier moves the prediction.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Google Sheets',by:'Google',account:'Google account',url:'https://sheets.new',steps:[
+      {t:'Data',s:'12 months',d:'In A2:A13 type 1 to 12; in B2:B13 type monthly sales, for example 100, 104, 110…'},
+      {t:'Forecast',s:'month 13',d:'In B14 type =FORECAST.LINEAR(13, B2:B13, A2:A13).'},
+      {t:'Chart',s:'see the trend',d:'Select the data and insert a line chart.'},
+      {t:'Outlier',s:'one bad month',d:'Change one month to 400. How far does the forecast move? What should an analyst do?'}]})} },
+
+  { part:3, nav:'Case: Flash Crash', title:'Case: the Flash Crash of 6 May 2010',
+    narration:[`On 6 May 2010 US stock prices plunged and recovered within about half an hour. The official SEC and CFTC report found that one large automated sell order, executed fast and without regard to price, triggered a chain reaction among trading algorithms.`],
+    src:`Source: SEC & CFTC (2010). <a href="https://www.sec.gov/news/studies/2010/marketevents-report.pdf" target="_blank" rel="noopener">Findings regarding the market events of May 6, 2010</a>.`,
+    fig:FIG['When algorithms go wrong'] },
+
+  { part:3, nav:'Watch: Slavin', title:'Watch: how algorithms shape our world',
+    narration:[`Kevin Slavin shows how trading and pricing algorithms already run much of the economy, sometimes in ways nobody fully understands. Watch and note one example that surprised you.`],
+    fig:{label:`Watch`, build:el=>W.video(el,V['When algorithms go wrong'])} },
+
+  { part:3, nav:'Risks and limits', title:'Risks and limits of AI in finance',
+    narration:[`Finance AI can be biased, opaque, fooled by situations missing from its data, and dangerous when many firms use similar models at once. Open each risk and name one way to reduce it.`],
+    fig:FIG['Risks and limits'] },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Microsoft Learn's Fundamentals of machine learning module explains regression, classification and clustering, the models behind today's fraud, credit and forecasting examples. Finish it and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open each branch of the mind map, then answer the six questions. Assignment 2, “AI in my world”, is set this week: the brief, rubric and submission button are on the course page. The midterm is next week and covers Weeks 1 to 7.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:FIG['Exam takeaways'].mindmap, build:FIG['Exit check'].build} }
   ]
 });
-
 </script>
 </body>
 </html>

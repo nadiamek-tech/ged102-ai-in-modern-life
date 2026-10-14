@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 4 · AI in Everyday Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#A8336B;--wk-soft:rgba(168,51,107,.10);--wk-d:#F08DBD;--wk-soft-d:rgba(240,141,189,.14)}
+.hunt{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;font-family:var(--f-display);font-size:.9rem}
+.hunt label{display:flex;gap:8px;align-items:flex-start;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);font-weight:400;cursor:pointer}
+.hunt label:has(input:checked){border-color:var(--wk);background:var(--wk-soft)}
+.feed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.feed button{border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--bg);cursor:pointer;text-align:left;font-family:var(--f-display);font-size:.84rem;min-height:70px}
+.feed button b{display:block;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.wbars{display:grid;gap:4px;font-family:var(--f-display);font-size:.8rem}
+.wbars div{display:grid;grid-template-columns:80px minmax(0,1fr) 34px;gap:6px;align-items:center}
+.wbars i{display:block;height:10px;border-radius:3px}
+@media (max-width:520px){.feed{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- phone hunt ---------- */
+const HUNT=['Face or fingerprint unlock','Voice assistant','Autocorrect / predictive text','Photo search (“beach”, “cat”)','Maps arrival time','Spam or unknown-caller filter','“Recommended for you” feed','Camera night mode or portrait blur','Translate app or camera translation','Suspicious-login alert'];
+function hunt(el){
+  el.innerHTML=`<div class="hunt">${HUNT.map((h,i)=>`<label><input type="checkbox" id="h${i}"> ${h}</label>`).join('')}</div><div class="feedback" id="hc" style="margin-top:10px"></div>`;
+  const upd=()=>{ const n=el.querySelectorAll('input:checked').length; el.querySelector('#hc').innerHTML=`<b>${n} of ${HUNT.length}</b> found on your phone. ${n>=7?'Your phone is an AI device in your pocket.':n?'Keep looking: check your camera and keyboard settings.':'Open your phone and start ticking.'}`; };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('change',upd)); upd();
+}
+
+/* ---------- filter bubble ---------- */
+const CATS=[['Cooking','var(--warn)'],['Football','var(--good)'],['Science','var(--wk)'],['Music','var(--plain)'],['Travel','var(--ex)'],['Gaming','var(--bad)']];
+const TITLES={Cooking:['5-minute karak','Machboos at home','Easy kunafa'],Football:['Top 10 goals','Match highlights','Training drills'],Science:['How black holes form','Why the sky is blue','AI explained'],Music:['Oud covers','Studio session','Live concert'],Travel:['48 hours in Muscat','Hidden Dubai','Hatta weekend'],Gaming:['Speedrun record','New release review','Boss fight guide']};
+function bubble(el){
+  let wts=CATS.map(()=>1), clicks=0;
+  el.innerHTML=`<div class="ui stack"><div class="feed" id="fd"></div><div class="row"><span class="mono" id="fs"></span><button class="btn ghost" id="fr" type="button">Reset feed</button></div><div class="wbars" id="fw"></div></div>`;
+  const pickFeed=()=>{ const out=[]; const pw=wts.map(w=>w*w); for(let k=0;k<6;k++){ const s=pw.reduce((a,b)=>a+b,0); let r=Math.random()*s, i=0; for(;i<pw.length;i++){ r-=pw[i]; if(r<=0) break; } i=Math.min(i,pw.length-1); out.push(i); } return out; };
+  const draw=()=>{ const f=pickFeed(); const kinds=new Set(f).size;
+    el.querySelector('#fd').innerHTML=f.map(i=>{ const [c,col]=CATS[i]; const t=TITLES[c][Math.floor(Math.random()*3)]; return `<button type="button" data-i="${i}"><b style="color:${col}">${c}</b>${t}</button>`; }).join('');
+    el.querySelectorAll('#fd button').forEach(b=>b.addEventListener('click',()=>{ wts[+b.dataset.i]+=1; clicks++; draw(); }));
+    const tot=wts.reduce((a,b)=>a+b*b,0);
+    el.querySelector('#fw').innerHTML=CATS.map(([c,col],i)=>`<div><span>${c}</span><span style="background:var(--sunk);border-radius:3px"><i style="width:${(wts[i]*wts[i]/tot*100).toFixed(0)}%;background:${col}"></i></span><span class="mono">${(wts[i]*wts[i]/tot*100).toFixed(0)}%</span></div>`).join('');
+    el.querySelector('#fs').textContent=`${clicks} clicks · ${kinds} of 6 topics in your feed`; };
+  el.querySelector('#fr').addEventListener('click',()=>{ wts=CATS.map(()=>1); clicks=0; draw(); });
+  draw();
+}
+
+/* ---------- COMPAS chart ---------- */
+const COMPAS=(()=>{ const Y=v=>190-v/50*160; const bars=[['Black defendants',44.9,'var(--bad)'],['White defendants',23.5,'var(--muted)']];
+ return `<svg viewBox="0 0 420 240" role="img" aria-label="Among defendants who did not reoffend, 44.9 percent of Black defendants and 23.5 percent of white defendants were labelled high risk">
+  ${[0,10,20,30,40,50].map(v=>`<line x1="60" x2="400" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width=".7"/><text x="52" y="${Y(v)+3}" text-anchor="end" font-size="10" class="t-muted t-mono">${v}%</text>`).join('')}
+  ${bars.map(([t,v,c],i)=>`<rect x="${100+i*150}" y="${Y(v)}" width="90" height="${Y(0)-Y(v)}" rx="4" fill="${c}"/><text x="${145+i*150}" y="${Y(v)-8}" text-anchor="middle" font-size="14" font-weight="700">${v}%</text><text x="${145+i*150}" y="210" text-anchor="middle" font-size="11">${t}</text>`).join('')}
+  <text x="230" y="234" text-anchor="middle" font-size="10" class="t-muted">Wrongly labelled high risk, among people who did not reoffend · ProPublica (2016)</text></svg>`; })();
+
+Lecture.mount({
+  id:'w4', week:4, clo:2, short:'Week 4 · AI in Everyday Life',
+  title:'AI in Everyday Life',
+  meta:'RB a Chapter 13 · RB b Chapter 7 · 3-hour session',
+  scenes:[
+  { nav:'Start here', title:'Who benefits, and who is at risk?', minutes:10,
+    narration:[
+     `Weeks 1 to 3 asked what AI is, where it came from and how it works. This week asks the question that matters most for society: <em>who does it affect?</em> AI is already in your pocket. The question is whether it narrows the gaps between people or widens them.`,
+     `Our syllabus topics: <strong>Ask Me Anything · The Impact of AI on Social Equity · Who's going to benefit from this technological revolution? · Are the disruptive effects inevitable?</strong> This week moves to <strong>CLO 2</strong>: identify how AI technologies are applied in different aspects of daily life.`,
+     B.plain(`The big idea of the week: <b>impact depends on human choices</b>. The same technology can help or harm, depending on who builds it, for whom, and with what data.`)],
+    think:`Write down one question about AI you have always wanted to ask. We will collect them in the “Ask me anything” scene.`,
+    src:`Reading: Mitchell (2020), RB a Chapter 13; Kaplan (2016), RB b Chapter 7.`,
+    notes:[`Collect five student questions on the board at the start; answer them at the end of the session.`],
+    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Activity: AI in your pocket`,15,'a'],[`How recommendations work`,20,'a'],[`Ask me anything`,15,'l'],[`Social equity`,15,'l'],[`Break`,10,'b'],[`Who benefits?`,15,'a'],[`Biased algorithms`,20,'l'],[`Debate: inevitable?`,20,'a'],[`What can we do?`,10,'l'],[`Exam takeaways`,15,'l'],[`Exit check`,15,'c']])} },
+
+  { nav:'AI in your pocket', title:'Activity · AI is already in your pocket', kind:'activity', minutes:15,
+    narration:[
+     `Open your phone. Find as many AI features as you can in five minutes and tick them on the right.`,
+     `For each one, ask: what does it predict, and what data did it learn from?`,
+     B.exam(`Most everyday AI is <b>narrow AI</b> built on <b>prediction from data</b>.`)],
+    notes:[`Students usually find more than they expect. Ask the top finder to present their list.`],
+    fig:{label:`Phone AI hunt`, build:hunt} },
+
+  { nav:'Recommendations', video:{id:'B8ofWFx525s',title:'Beware online “filter bubbles”',by:'TED · Eli Pariser',why:'The talk that named the filter bubble. Does it describe your feed?'}, title:'How recommendations work, and the filter bubble', kind:'activity', minutes:20, wide:true,
+    narration:[
+     `<b>1 · Collect</b> what you watch, like and skip. <b>2 · Compare</b> you with similar users. <b>3 · Predict</b> what you will click next. <b>4 · Show</b> a personalised feed.`,
+     B.ex(`You watch three cooking videos. The system finds others who watched those and also liked a baking channel, so it suggests baking to you.`),
+     `Try it on the right. Click only one kind of video, about ten times, and watch your feed. How many topics are left?`,
+     B.exam(`Risk: the <b>filter bubble</b>. The more you click, the narrower your feed becomes.`)],
+    think:`Who decides what you see on your feed: you, the algorithm, or the company that sets its goals?`,
+    notes:[`This is collaborative filtering in plain words: “people like you liked this”. The simulator is a simplified model.`],
+    fig:{flow:[{t:'Collect',s:'watch, like, skip',d:'The app records what you watch, like and skip.'},{t:'Compare',s:'people like you',d:'It finds users whose history looks like yours.'},{t:'Predict',s:'your next click',d:'It estimates what you are most likely to click next.'},{t:'Show',s:'your feed',d:'It fills your feed with those predictions. Your clicks feed step 1 again: a loop.'}],label:`Your feed · click what you like`, build:bubble} },
+
+  { nav:'Ask me anything', title:'Ask me anything: six common questions', minutes:15,
+    narration:[
+     `Here are six questions students ask most often, with short, honest answers. Guess the answer before you reveal it. Then add the questions your class wrote at the start.`,
+     B.plain(`Uncertainty is fine. Good answers about AI often begin with “it depends”, followed by <b>what</b> it depends on.`)],
+    notes:[`Replace or add the students' own questions from the opening round.`],
+    fig:{label:`Reveal each answer`, build:el=>W.practice(el,[
+      {q:`Will AI take my job?`,hint:`It will change many jobs; tasks automate more than whole jobs. Skills that combine AI use with human judgment gain value.`},
+      {q:`Is AI conscious?`,hint:`There is no evidence of that. Current AI predicts patterns and does not have feelings.`},
+      {q:`Is my data safe?`,hint:`It depends on the service. Read privacy settings and do not share sensitive data.`},
+      {q:`Can I trust what AI says?`,hint:`Verify. It can be confidently wrong (hallucination).`},
+      {q:`Is AI biased?`,hint:`It can be, because it learns from human data.`},
+      {q:`Should I learn AI?`,hint:`Yes. The skill is using it well and critically.`}],{label:'Answer',prefix:''})} },
+
+  { nav:'Social equity', title:'Social equity: what it means for AI', minutes:15,
+    narration:[
+     B.plain(`<b>Social equity</b> means fair access to opportunities and outcomes. The question for AI: does it reduce gaps between people, or make them wider?`),
+     `Equity is different from equality. Equality gives everyone the same; equity gives people what they need to reach a fair outcome.`,
+     B.exam(`Four lenses on equity: <b>Access · Representation · Outcomes · Power</b>.`)],
+    think:`Apply the four lenses to a chatbot that works well in English and poorly in Arabic. Which lens shows the problem most clearly?`,
+    notes:[`Ask students to pick one lens and give a UAE example.`],
+    fig:{label:`Four lenses · click each`, build:el=>W.picker(el,{'Lenses':[[`Access`,`Who has the devices, internet, English skills and training to use AI?`],[`Representation`,`Is the training data about everyone, or mostly one group?`],[`Outcomes`,`Does AI treat groups fairly in hiring, loans, justice and health?`],[`Power`,`Who owns the data, the models and the profits?`]]})} },
+
+  { nav:'Who benefits?', title:'Who is going to benefit from the AI revolution?', kind:'activity', minutes:15,
+    narration:[
+     `<table class="tbl"><thead><tr><th>Likely to benefit</th><th>At greater risk</th></tr></thead><tbody><tr><td>People with digital skills and access</td><td>People without devices, internet or training</td></tr><tr><td>Companies with data and capital</td><td>Small businesses that cannot afford AI</td></tr><tr><td>Workers who combine domain knowledge with AI</td><td>Workers in routine, easily automated tasks</td></tr><tr><td>Countries investing in skills and infrastructure</td><td>Countries that only import technology</td></tr><tr><td>Patients and students getting personalised help</td><td>Groups under-represented in training data</td></tr></tbody></table>`,
+     B.exam(`Benefit is <b>not automatic</b>. Gains flow to those with data, capital, skills and access, unless policy spreads them.`)],
+    notes:[`Encourage students to think about their own position honestly.`],
+    fig:{label:`Where do you stand?`, build:el=>W.poll(el,{q:`In your future career, where do you expect to stand?`,opts:[`Likely to benefit`,`At some risk`,`Both, depending on my choices`,`I don't know yet`],reveal:i=>[`What will you do to keep that advantage, and who could you help?`,`Which skill would move you to the other column? Assignment 4 later asks you to imagine this future.`,`The most realistic answer for most people. The choices are the point of this week.`,`An honest answer. This course is designed to help you find out.`][i]})} },
+
+  { nav:'Biased algorithms', video:{id:'UG_X_7g63rY',title:"How I'm fighting bias in algorithms",by:'TED · Joy Buolamwini',why:'A researcher discovers that face-analysis software failed to see her face, and asks why.'}, title:'Case: biased algorithms in the real world', minutes:20,
+    narration:[
+     B.plain(`Both cases below learned from historical human decisions. If history was unfair, the model copies it and makes it look objective.`),
+     `<b>COMPAS (US courts):</b> software predicting who might reoffend. ProPublica (2016) reported that Black defendants who did not reoffend were wrongly labelled high risk almost twice as often as white defendants (44.9% vs 23.5%). The vendor disputed the analysis.`,
+     `<b>Amazon recruiting tool:</b> an experimental CV-screening model trained on past hires, who were mostly men. It learned to downgrade CVs mentioning “women's”. Amazon scrapped it (Reuters, 2018).`,
+     B.exam(`<b>Algorithmic bias</b> = unfair results from biased data or design. Main cause: <b>biased training data</b>.`)],
+    think:`The COMPAS vendor said its scores were equally accurate for both groups. ProPublica said the mistakes fell unequally. Can both be true? (Yes, and that is why “fairness” needs a definition.)`,
+    src:`Angwin, J., Larson, J., Mattu, S., & Kirchner, L. (2016). Machine bias. ProPublica. · Dastin, J. (2018). Amazon scraps secret AI recruiting tool that showed bias against women. Reuters.`,
+    notes:[`Northpointe (the vendor) disputed the methodology. Present it as a contested case; the debate itself is the lesson.`,`These cases return in Weeks 6, 7 and 10.`],
+    fig:{label:`COMPAS · false “high risk” labels`, html:COMPAS} },
+
+  { nav:'Inevitable?', title:'Debate · Are the disruptive effects inevitable?', kind:'activity', minutes:20,
+    narration:[
+     `<b>View 1, inevitable:</b> technology drives change and society must adapt. Jobs disappear whatever we do. <b>View 2, a choice:</b> people, companies and governments decide how AI is used, taxed, regulated and taught.`,
+     B.ex(`When ATMs arrived, many feared bank tellers would vanish. For years teller numbers in the US actually grew, as banks opened more branches and the job shifted towards customer service. Disruption was real, but shaped by choices.`),
+     `Split the room: one side argues “inevitable”, the other “a choice”. Three minutes to prepare, then two speakers each. Vote at the end.`,
+     B.exam(`Balanced answer: AI will change work (IMF, 2024: about <b>40% of jobs worldwide</b> exposed to AI, about 60% in advanced economies), but the effects depend on choices: reskilling, policy, design.`)],
+    notes:[`Technological determinism vs social choice. ATM example: James Bessen's work. Not every worker transitions easily; acknowledge that.`],
+    fig:{label:`Vote after the debate`, build:el=>W.poll(el,{q:`Are the disruptive effects of AI inevitable?`,opts:[`Yes, technology decides`,`No, people decide`,`Partly: the change is coming, the shape is our choice`],reveal:i=>[`That is technological determinism. Your opponents will point to ATMs and to policy.`,`That is the social-choice view. Your opponents will point to how fast AI is spreading.`,`The strongest exam answer: name both views, then use evidence (IMF 40%, ATMs).`][i]})} },
+
+  { nav:'What can we do?', title:'Making AI work for everyone', minutes:10,
+    narration:[
+     `If impact depends on choices, whose choices? At least four levels share responsibility.`,
+     B.exam(`Impact depends on human choices at four levels: <b>individuals, organisations, governments, designers</b>.`)],
+    notes:[`Connect to Week 10 (limits, bias, black box) and the ethics weeks later in the course.`],
+    fig:{label:`Four levels · click each`, build:el=>W.picker(el,{'Who can act':[[`Individuals`,`Build AI skills, verify outputs, protect your data, question results.`],[`Organisations`,`Test for bias, be transparent, keep humans in the loop, retrain staff.`],[`Governments`,`Regulate high-risk uses, fund education and access, protect privacy.`],[`Designers`,`Use diverse data, explain decisions, include affected communities.`]]})} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 4', kind:'exam', minutes:15,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Everyday AI:</b> recommendations, maps, face unlock, spam filters; mostly narrow AI.</li><li><b>Recommendation:</b> collect, compare, predict, show; risk = filter bubble.</li><li><b>Equity lenses:</b> access, representation, outcomes, power.</li><li><b>Who benefits:</b> those with data, capital, skills, access; others at risk.</li><li><b>Cases:</b> COMPAS (justice) and the Amazon recruiting tool: biased past data.</li><li><b>Inevitable?</b> Determinism vs choice; IMF 2024: about 40% of jobs exposed.</li></ul>`),
+     `Return to the questions your class wrote at the start. Which ones can you now answer?`],
+    fig:{mindmap:{center:'Who does AI affect?',branches:[{t:'Everyday AI',items:['Face unlock · maps · spam','Mostly narrow AI','Prediction from data']},{t:'Recommendations',items:['Collect · compare · predict · show','Risk: filter bubble']},{t:'Equity lenses',items:['Access','Representation','Outcomes','Power']},{t:'Who benefits',items:['Data, capital, skills, access','At risk: routine jobs','At risk: under-represented groups']},{t:'Bias cases',items:['COMPAS: 44.9% vs 23.5%','Amazon recruiting tool (2018)']},{t:'Inevitable?',items:['Determinism vs choice','IMF 2024: ≈40% of jobs exposed','ATMs and bank tellers']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Give three examples of AI in everyday life.`,hint:`Recommendations, maps traffic, face unlock, spam filters, autocorrect; say what each predicts.`},
+      {q:`What is algorithmic bias? Give a real case.`,hint:`Unfair results from biased data or design; COMPAS (44.9% vs 23.5%) or the Amazon recruiting tool.`},
+      {q:`Who benefits from AI and who is at risk?`,hint:`Those with data, capital, skills and access vs those without; use the four equity lenses.`},
+      {q:`Are the disruptive effects of AI inevitable? Argue.`,hint:`Both views; evidence: IMF 2024 (≈40% of jobs exposed), ATMs and tellers; conclude that choices shape outcomes.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:15,
+    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 5:</strong> read TB Chapter 5 (Moutinho, Cavique & Bigné, 2023) on LLMs in education.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`A “filter bubble” happens when…`,o:[`your phone overheats`,`recommendations narrow what you see the more you click`,`an app blocks spam`,`you turn off personalisation`],a:1,why:`Feedback loops narrow the feed.`},
+      {q:`Which is NOT one of the four equity lenses?`,o:[`Access`,`Representation`,`Speed`,`Power`],a:2,why:`The lenses are access, representation, outcomes and power.`},
+      {q:`ProPublica's COMPAS analysis found that…`,o:[`the tool was perfectly fair`,`Black non-reoffenders were wrongly labelled high risk about twice as often`,`the tool was never used in courts`,`white defendants were always labelled high risk`],a:1,why:`44.9% vs 23.5%; the vendor disputed the analysis.`},
+      {q:`Why did Amazon's recruiting tool downgrade women's CVs?`,o:[`It was told to`,`It learned from past hires who were mostly men`,`Women applied less`,`A bug in the website`],a:1,why:`Biased training data.`},
+      {q:`The IMF (2024) estimated that about what share of jobs worldwide are exposed to AI?`,o:[`4%`,`40%`,`90%`,`100%`],a:1,why:`About 40% worldwide, about 60% in advanced economies.`},
+      {q:`The ATM example shows that…`,o:[`technology always destroys jobs`,`disruption is real but shaped by choices`,`banks stopped hiring`,`ATMs use AI`],a:1,why:`Teller jobs changed rather than vanished for years.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 2 · The History of AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#8A5A2B;--wk-soft:rgba(138,90,43,.10);--wk-d:#E0A86E;--wk-soft-d:rgba(224,168,110,.14)}
+.tl circle{cursor:pointer}
+.tl circle:focus-visible{outline:none;stroke:var(--ink);stroke-width:3}
+.symp{display:flex;flex-wrap:wrap;gap:6px 16px;font-family:var(--f-display);font-size:.92rem}
+.symp label{display:flex;gap:6px;align-items:center;font-weight:400}
+.rules{font-family:var(--f-mono);font-size:.78rem;display:grid;gap:4px;margin:10px 0}
+.rules div{padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.rules div.fire{border-color:var(--wk);background:var(--wk-soft)}
+.scroll{overflow-x:auto}
+.rubric{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.82rem}
+.rubric th,.rubric td{border:1px solid var(--line);padding:7px 8px;vertical-align:top;text-align:left}
+.rubric th{background:var(--sunk);font-weight:650}
+.rubric td:first-child{font-weight:650}
+.brief{font-family:var(--f-body);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.brief .mono{color:var(--muted);display:block;margin-bottom:4px}
+</style>
+</head>
+<body>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- hype-cycle timeline ---------- */
+const MS=[
+ [1943,`McCulloch and Pitts describe the first mathematical neuron: brain-like units can compute.`],
+ [1950,`Alan Turing publishes “Computing Machinery and Intelligence”, asking “Can machines think?” and proposing the imitation game (Turing Test).`],
+ [1956,`The Dartmouth workshop. John McCarthy's proposal names the field “artificial intelligence”. The birth of AI as a field.`],
+ [1958,`Frank Rosenblatt's perceptron: the first learning neural network machine.`],
+ [1966,`ELIZA, Joseph Weizenbaum's chatbot. Some people believed it understood them.`],
+ [1973,`The Lighthill Report criticises AI in the UK; funding cuts help start the first AI winter.`],
+ [1986,`Rumelhart, Hinton and Williams popularise backpropagation, the key method for training multi-layer neural networks.`],
+ [1987,`The expert-systems market collapses; the second AI winter begins (late 1980s to early 1990s).`],
+ [1997,`IBM's Deep Blue beats world chess champion Garry Kasparov, using brute-force search.`],
+ [2011,`IBM Watson wins the quiz show Jeopardy!, answering natural-language questions.`],
+ [2012,`AlexNet wins the ImageNet image contest by a wide margin. The deep learning boom starts.`],
+ [2016,`DeepMind's AlphaGo beats Go champion Lee Sedol, using learning rather than brute force.`],
+ [2017,`The paper “Attention Is All You Need” introduces the Transformer, the architecture behind modern chatbots.`],
+ [2022,`OpenAI releases ChatGPT on 30 November. Generative AI reaches the public.`]];
+function hype(el){
+  const X=y=>40+(y-1940)/(2026-1940)*520, Y=v=>200-v*150;
+  const curve=[[1940,.05],[1950,.12],[1956,.35],[1965,.6],[1970,.62],[1974,.3],[1980,.25],[1985,.55],[1987,.6],[1990,.25],[1995,.28],[2005,.35],[2011,.45],[2012,.55],[2016,.75],[2022,.95],[2026,1]];
+  let d=''; curve.forEach(([y,v],i)=>d+=(i?'L':'M')+X(y).toFixed(1)+','+Y(v).toFixed(1));
+  const val=y=>{ for(let i=1;i<curve.length;i++){ if(y<=curve[i][0]){ const [y0,v0]=curve[i-1],[y1,v1]=curve[i]; return v0+(v1-v0)*(y-y0)/(y1-y0);} } return 1; };
+  el.innerHTML=`<svg viewBox="0 0 580 240" class="tl" role="img" aria-label="Interest and funding in AI over time, with two winters in the 1970s and late 1980s and a boom after 2012">
+   <rect x="${X(1974)}" y="40" width="${X(1980)-X(1974)}" height="160" fill="var(--sunk)"/><rect x="${X(1987)}" y="40" width="${X(1993)-X(1987)}" height="160" fill="var(--sunk)"/>
+   <text x="${X(1977)}" y="56" text-anchor="middle" font-size="10" class="t-muted">winter 1</text><text x="${X(1990)}" y="56" text-anchor="middle" font-size="10" class="t-muted">winter 2</text>
+   <text x="${X(2019)}" y="36" text-anchor="middle" font-size="10" class="t-muted">AI spring</text>
+   <line x1="40" x2="560" y1="200" y2="200" stroke="var(--line)"/>
+   ${[1940,1960,1980,2000,2020].map(y=>`<text x="${X(y)}" y="216" text-anchor="middle" font-size="10" class="t-muted t-mono">${y}</text>`).join('')}
+   <text x="8" y="24" font-size="10" class="t-muted">interest and funding (shape illustrative)</text>
+   <path d="${d}" fill="none" stroke="var(--wk)" stroke-width="2.5"/>
+   ${MS.map(([y],i)=>`<circle cx="${X(y)}" cy="${Y(val(y))}" r="6" fill="var(--surface)" stroke="var(--wk)" stroke-width="2" data-i="${i}" tabindex="0" role="button" aria-label="${y}"/>`).join('')}
+  </svg><div class="pick-detail" id="tld"></div>`;
+  const cs=el.querySelectorAll('circle[data-i]');
+  const pick=c=>{ cs.forEach(x=>x.setAttribute('fill','var(--surface)')); c.setAttribute('fill','var(--wk)'); const [y,t]=MS[+c.dataset.i]; el.querySelector('#tld').innerHTML=`<b>${y}</b><p>${t}</p>`; };
+  cs.forEach(c=>{ c.addEventListener('click',()=>pick(c)); c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(c);} }); });
+  pick(cs[2]);
+}
+
+/* ---------- expert system ---------- */
+function expert(el){
+  const S=['Fever','Sore throat','White spots on tonsils','Cough','Runny nose'];
+  const R=[[[0,1,2],'IF fever AND sore throat AND white spots THEN suggest strep throat'],[[3,4],'IF cough AND runny nose THEN suggest common cold'],[[0,3],'IF fever AND cough THEN suggest flu']];
+  el.innerHTML=`<div class="ui"><p style="margin:0 0 6px"><b>A tiny expert system</b> · teaching example, not medical advice</p><div class="symp">${S.map((s,i)=>`<label><input type="checkbox" id="sy${i}"> ${s}</label>`).join('')}</div>
+   <div class="rules">${R.map((r,i)=>`<div id="r${i}">${r[1]}</div>`).join('')}</div><div class="feedback" id="xo"></div></div>`;
+  const run=()=>{ const on=S.map((_,i)=>el.querySelector('#sy'+i).checked); const fired=R.filter((r,i)=>{ const f=r[0].every(k=>on[k]); el.querySelector('#r'+i).classList.toggle('fire',f); return f; });
+    const any=on.some(Boolean); el.querySelector('#xo').innerHTML= !any?'Tick some symptoms.': fired.length===0?'<b>No rule matches.</b> The system has nothing to say. Real patients are often “unusual cases” like this.': fired.length===1?`<b>Suggestion:</b> ${fired[0][1].split('THEN ')[1]}.`:`<b>${fired.length} rules fire at once</b> and the system has no rule for choosing between them. Someone must write more rules… and more… and more.`; };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('change',run)); run();
+}
+
+/* ---------- three ingredients ---------- */
+const INGR=`<svg viewBox="0 0 560 200" role="img" aria-label="Big data, GPUs and better algorithms combine to produce the 2012 deep learning boom">
+ ${[['Big data','internet images, text, clicks'],['Powerful chips','GPUs made training fast'],['Better algorithms','backpropagation, deeper nets']].map(([t,s],i)=>`<rect x="10" y="${12+i*62}" width="190" height="50" rx="8" fill="var(--wk-soft)" stroke="var(--wk)"/><text x="105" y="${33+i*62}" text-anchor="middle" font-size="13" font-weight="700">${t}</text><text x="105" y="${50+i*62}" text-anchor="middle" font-size="10" class="t-muted">${s}</text><path d="M200 ${37+i*62} Q300 ${37+i*62} 340 100" fill="none" stroke="var(--muted)" stroke-width="1.5"/>`).join('')}
+ <circle cx="420" cy="100" r="74" fill="var(--wk)"/>
+ <text x="420" y="94" text-anchor="middle" font-size="22" font-weight="800" style="fill:var(--surface)">2012</text>
+ <text x="420" y="114" text-anchor="middle" font-size="12" style="fill:var(--surface)">deep learning boom</text></svg>`;
+
+/* ---------- chess vs go complexity ---------- */
+const CPLX=(()=>{ const rows=[['Chess · legal positions',44],['Atoms in the observable universe',80],['Go · legal positions',170]]; const X=v=>190+v/180*360;
+ return `<svg viewBox="0 0 570 170" role="img" aria-label="On a scale of powers of ten, chess has about 10 to the 44 positions, atoms in the universe about 10 to the 80, Go about 10 to the 170">
+  ${[0,40,80,120,160].map(v=>`<line x1="${X(v)}" x2="${X(v)}" y1="10" y2="130" stroke="var(--line)" stroke-width=".7"/><text x="${X(v)}" y="146" text-anchor="middle" font-size="10" class="t-muted t-mono">10^${v}</text>`).join('')}
+  ${rows.map(([t,v],i)=>`<text x="184" y="${36+i*38}" text-anchor="end" font-size="11">${t}</text><rect x="${X(0)}" y="${22+i*38}" width="${X(v)-X(0)}" height="22" rx="4" fill="${i===1?'var(--muted)':'var(--wk)'}"/><text x="${X(v)+6}" y="${38+i*38}" font-size="11" font-weight="700">≈10^${v}</text>`).join('')}
+  <text x="190" y="164" font-size="10" class="t-muted">Each step on the axis multiplies by 10^40. Bars show the exponent, not the number.</text></svg>`; })();
+
+const A1=`<div class="brief"><span class="mono">ASSIGNMENT 1 · WHERE IT ALL BEGAN · 5% · CLO 1</span>Choose one important moment, person, or invention in the history of AI and explain why it matters. You may write a short essay, create a timeline, or prepare a brief presentation to show how this milestone helped shape today's AI.</div>
+<div class="scroll"><table class="rubric"><thead><tr><th>Performance indicator</th><th>Unsatisfactory<br>&lt; 40</th><th>Needs improvement<br>40–60</th><th>Meets expectations<br>60–80</th><th>Exceeds expectations<br>80–100</th></tr></thead><tbody>
+<tr><td>Historical Understanding</td><td>No clear explanation; major facts missing or incorrect</td><td>Basic info provided, but lacks clarity or depth</td><td>Accurate description of a key event, person, or idea in AI history</td><td>Clear, engaging, and accurate explanation with thoughtful connections</td></tr>
+<tr><td>Clarity and Communication</td><td>Disorganized or hard to follow</td><td>Some structure but difficult to follow at times</td><td>Mostly clear and structured</td><td>Very clear, well-organized, and engaging</td></tr>
+<tr><td>Creativity/ Presentation</td><td>No effort to present visually or creatively</td><td>Minimal creativity or visual support</td><td>Some creativity shown through format or design</td><td>Highly creative format or presentation, adds depth and engagement</td></tr></tbody></table></div>
+<p class="mono" style="color:var(--muted);margin-top:8px">Listed under Week 3 in the syllabus. Due date: announced on Moodle. Submit through Turnitin (maximum similarity index 20%).</p>`;
+
+Lecture.mount({
+  id:'w2', week:2, clo:1, short:'Week 2 · The History of AI',
+  title:'The History of AI',
+  meta:'RB a Chapters 1-3 · 3-hour session',
+  scenes:[
+  { nav:'Start here', title:'How did we get here? Hype, winters and springs', minutes:10,
+    narration:[
+     `ChatGPT looks like it appeared overnight. In fact it is the latest chapter of an 80-year story, full of bold promises, painful failures and a few people who kept working when everyone else gave up.`,
+     `Our syllabus topics: <strong>The History of Artificial Intelligence · The Roots of Artificial Intelligence · Neural Networks and the Ascent of Machine Learning · AI Spring.</strong> This week builds <strong>CLO 1</strong>.`,
+     B.plain(`The big idea of the week: AI history moves in <b>cycles</b>. Hype brings money, reality disappoints, funding collapses (an “AI winter”), then new ideas bring a new spring.`)],
+    think:`In which year do you think AI began? Write down your guess before the next scene.`,
+    src:`Reading: Mitchell, M. (2020). <em>Artificial intelligence: A guide for thinking humans</em>. Penguin Books. Chapters 1–3.`,
+    notes:[`Assignment 1 (“Where it all began”) is introduced this week; the syllabus lists it in Week 3. See the brief scene.`],
+    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: when did AI begin?`,10,'a'],[`The roots, 1943–1969`,20,'l'],[`Early AI: rules and symbols`,15,'a'],[`AI winters`,15,'l'],[`Break`,10,'b'],[`Neural networks and ML`,15,'l'],[`AI spring milestones`,15,'l'],[`Activity: timeline game`,15,'a'],[`Deep Blue vs AlphaGo`,15,'l'],[`Assignment 1 brief`,15,'l'],[`Exam takeaways`,15,'l'],[`Exit check`,10,'c']])} },
+
+  { nav:'When did AI begin?', title:'When did AI begin?', kind:'activity', minutes:10,
+    narration:[`Vote for the year you think AI began. There is a defensible answer, and it is probably earlier than you expect.`],
+    notes:[`Collect guesses on the board first. Most students say 1990s or 2010s.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Which year did AI begin as a named field?`,opts:['1943','1950','1956','1997','2022'],reveal:i=>(i===2?'<b>Correct.</b> ':'<b>The usual answer is 1956.</b> ')+`At the Dartmouth workshop John McCarthy's proposal named the field “artificial intelligence”. The ideas are older: a mathematical neuron in 1943 and Turing's question “Can machines think?” in 1950.`})} },
+
+  { nav:'The roots', title:'The roots: from ideas to a named field (1943–1969)', minutes:20, wide:true,
+    narration:[
+     `The timeline on the right shows the whole story at once. The line is a rough picture of excitement and funding. Click the dots to see each milestone; we will return to it all session.`,
+     `<table class="tbl"><thead><tr><th>Year</th><th>Milestone</th><th>Why it matters</th></tr></thead><tbody><tr><td>1943</td><td>McCulloch and Pitts: first mathematical neuron</td><td>Brain-like units can compute</td></tr><tr><td>1950</td><td>Turing: “Computing Machinery and Intelligence”</td><td>Asks “Can machines think?”; the Turing Test</td></tr><tr><td>1956</td><td>Dartmouth workshop; McCarthy names “artificial intelligence”</td><td>Birth of AI as a field</td></tr><tr><td>1958</td><td>Rosenblatt's perceptron</td><td>First learning neural network machine</td></tr><tr><td>1966</td><td>ELIZA chatbot (Weizenbaum)</td><td>People believed it understood them</td></tr></tbody></table>`,
+     B.exam(`<b>1956 Dartmouth</b> = birth of AI as a named field (McCarthy). <b>Turing 1950</b> = the question and the test.`)],
+    think:`People believed ELIZA, a very simple program from 1966, understood them. Why do humans so easily see understanding in machines?`,
+    notes:[`Dates are standard textbook milestones. The hype curve shape is illustrative, not measured data.`],
+    fig:{label:`80 years of AI · click the dots`, build:hype} },
+
+  { nav:'Rules and symbols', title:'Early AI: rules and symbols', minutes:15,
+    narration:[
+     B.plain(`Early AI (1950s–80s) was <b>symbolic AI</b>: experts wrote explicit IF-THEN rules and the computer followed them. No learning from data.`),
+     B.ex(`A medical expert system: IF fever AND sore throat AND white spots THEN suggest strep throat. It works if the rules cover the case. It fails when a case is unusual or the rules conflict.`),
+     `Try it on the right. Tick “sore throat” only. Then tick fever, cough and runny nose together. What happens?`,
+     `<ul><li><b>Strength:</b> easy to explain; works in narrow domains.</li><li><b>Weakness:</b> rules are slow to write, brittle, and cannot cover real life.</li></ul>`,
+     B.exam(`<b>Symbolic AI</b> = hand-written rules. <b>Machine learning</b> = rules learned from data. This is the big shift in AI history.`)],
+    notes:[`Expected discoveries: no rule matches (silence) and two rules fire (conflict). Both are brittleness.`,`This connects back to the Week 1 spam-filter demo.`],
+    fig:{label:`Expert system · try unusual cases`, build:expert} },
+
+  { nav:'AI winters', title:'AI winters: when hype met reality', minutes:15,
+    narration:[
+     `Early researchers predicted human-level AI within a generation. Governments and companies invested heavily. Then reality arrived: computers were too slow, data too scarce, and rule systems too brittle for the real world.`,
+     B.ex(`Like a start-up that promises too much: investors lose patience, funding stops, and only a few believers keep working. Those few, such as Geoffrey Hinton, kept neural networks alive.`),
+     B.exam(`<b>AI winter</b> = a period of reduced funding and interest after over-hyped promises. Causes: weak computers, little data, brittle rules.`)],
+    think:`Is today's AI boom another bubble that will end in a winter? What is different this time, and what is the same?`,
+    notes:[`Two winters: 1970s (after the 1973 Lighthill Report and funding cuts) and late 1980s to early 1990s (collapse of the expert-systems market).`],
+    fig:{label:`The two winters`, build:el=>W.accordion(el,[
+      {t:`First winter · 1970s`,s:`UK and US`,d:`In 1973 the Lighthill Report, written for the UK Science Research Council, concluded that AI had failed to deliver on its promises. Funding was cut in the UK, and US agencies also reduced support for open-ended research.`,l:`Promising human-level AI too early destroyed trust.`},
+      {t:`Second winter · late 1980s to early 1990s`,s:`Expert systems`,d:`Companies had bought expensive expert systems and special AI computers. They proved costly to maintain and brittle outside narrow tasks, and the market collapsed.`,l:`Hand-written rules could not scale to messy real life.`},
+      {t:`What ended the winters?`,s:`1990s–2012`,d:`Statistical machine learning, faster chips and the internet's data slowly brought AI back. Then in 2012 deep learning broke through.`,l:`New methods plus data plus computing power.`}])} },
+
+  { nav:'Neural networks', title:'Neural networks and the ascent of machine learning', minutes:15,
+    narration:[
+     B.plain(`A <b>neural network</b> is a program loosely inspired by the brain: layers of simple units that adjust their connection strengths until the network gets the right answers.`),
+     `Neural networks existed since the perceptron in 1958, and backpropagation (1986) showed how to train networks with several layers. So why did they only take off around 2012? Three ingredients finally came together.`,
+     B.exam(`<b>Deep learning boom</b> = big data + GPUs + better algorithms. <b>Backpropagation (1986)</b> is the key training method.`)],
+    notes:[`Backpropagation popularised by Rumelhart, Hinton and Williams (1986). Hinton and Hopfield shared the 2024 Nobel Prize in Physics.`],
+    fig:{label:`Why 2012?`, html:INGR} },
+
+  { nav:'AI spring', title:'AI spring: the milestones that changed the world', minutes:15,
+    narration:[
+     `<table class="tbl"><thead><tr><th>Year</th><th>Milestone</th><th>What it showed</th></tr></thead><tbody><tr><td>1997</td><td>Deep Blue beats Kasparov</td><td>Machines can win at strategy games (by brute-force search)</td></tr><tr><td>2011</td><td>IBM Watson wins Jeopardy!</td><td>Machines can answer natural-language questions</td></tr><tr><td>2012</td><td>AlexNet wins ImageNet</td><td>Deep learning beats older methods; the boom starts</td></tr><tr><td>2016</td><td>AlphaGo beats Lee Sedol</td><td>Learning, not brute force, masters a far harder game</td></tr><tr><td>2017</td><td>“Attention Is All You Need”</td><td>The Transformer: architecture behind modern chatbots</td></tr><tr><td>2022</td><td>ChatGPT released (30 Nov)</td><td>Generative AI reaches the public</td></tr></tbody></table>`,
+     B.exam(`<b>2012 AlexNet</b> = deep learning breakthrough. <b>2017 Transformer</b> = foundation of ChatGPT. <b>2022</b> = ChatGPT public launch.`)],
+    notes:[`Walk the timeline quickly; each row is one “wow” moment. AlphaFold's creators shared the 2024 Chemistry Nobel; Hinton and Hopfield the 2024 Physics Nobel.`],
+    fig:{label:`Back to the timeline · click the recent dots`, build:hype} },
+
+  { nav:'Timeline game', title:'Activity · Put AI history in order', kind:'activity', minutes:15,
+    narration:[
+     `Without looking at your notes, click the events in the order they happened, oldest first. Wrong clicks shake and are counted.`,
+     `Play in pairs: one clicks, the other must agree before each click. Then swap and try for zero mistakes.`],
+    notes:[`Card version for class: print the event names, shuffle, groups race to order them.`],
+    fig:{label:`Timeline game`, build:el=>W.order(el,[
+      {y:1943,t:`First mathematical neuron`},{y:1950,t:`Turing asks “Can machines think?”`},{y:1956,t:`Dartmouth workshop names AI`},{y:1958,t:`Perceptron`},{y:1966,t:`ELIZA chatbot`},{y:1973,t:`Lighthill Report`},{y:1986,t:`Backpropagation popularised`},{y:1997,t:`Deep Blue beats Kasparov`},{y:2011,t:`Watson wins Jeopardy!`},{y:2012,t:`AlexNet wins ImageNet`},{y:2016,t:`AlphaGo beats Lee Sedol`},{y:2017,t:`Transformer paper`},{y:2022,t:`ChatGPT released`}])} },
+
+  { nav:'Deep Blue vs AlphaGo', video:{id:'WXuK6gekU1Y',title:'AlphaGo – The Movie',by:'Google DeepMind',why:'Watch the opening at home: the story of AlphaGo against Lee Sedol, and why Go needed learning rather than brute force.'}, title:'Case: Deep Blue (1997) vs AlphaGo (2016)', minutes:15,
+    narration:[
+     `<table class="tbl"><thead><tr><th></th><th>Deep Blue · chess · 1997</th><th>AlphaGo · Go · 2016</th></tr></thead><tbody><tr><td>Method</td><td>Searched millions of positions per second</td><td>Neural networks plus search</td></tr><tr><td>Knowledge</td><td>Chess rules and scoring written by experts</td><td>Learned from human games, then from playing itself</td></tr><tr><td>Learning</td><td>None during the match</td><td>Made moves experts called creative</td></tr></tbody></table>`,
+     B.plain(`Chess can be attacked by brute-force search. Go has far too many positions, more than the number of atoms in the observable universe, so the machine had to <b>learn</b> good intuition. That shift is the story of modern AI.`),
+     B.exam(`<b>Deep Blue</b> = rules + search. <b>AlphaGo</b> = learning. Know this contrast.`)],
+    notes:[`Figures: chess has roughly 10^44 legal positions; Go about 2 × 10^170 (Tromp's count); atoms in the observable universe about 10^80.`],
+    fig:{label:`How many possible positions?`, html:CPLX, caption:`Approximate counts of legal board positions. Go's number dwarfs even the atoms in the universe, so search alone cannot win.`} },
+
+  { nav:'Assignment 1', title:'Assignment 1 · Where it all began', minutes:15, wide:true,
+    narration:[
+     `Assignment 1 asks you to become the expert on one moment in this history. Pick a milestone from today's timeline, or another you discover in the reading.`,
+     `<ul><li>Explain what happened, who was involved and when.</li><li>Explain <b>why it matters today</b>: connect it to something in modern AI.</li><li>Choose a creative format: short essay, timeline or brief presentation.</li><li>Cite your sources, and check every date.</li></ul>`],
+    notes:[`Students post their chosen milestone on Moodle before leaving, so topics are spread across the timeline.`],
+    fig:{label:`Brief and rubric · from the syllabus`, html:A1} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 2', kind:'exam', minutes:15,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Birth:</b> 1956 Dartmouth workshop; McCarthy named “AI”; Turing 1950.</li><li><b>Early AI:</b> symbolic, hand-written rules; brittle.</li><li><b>Winters:</b> 1970s and late 1980s; hype, weak computers, little data.</li><li><b>Neural nets:</b> perceptron 1958; backpropagation 1986; revival.</li><li><b>Boom (2012):</b> big data + GPUs + better algorithms; AlexNet.</li><li><b>Milestones:</b> Deep Blue 1997, AlphaGo 2016, Transformer 2017, ChatGPT 2022.</li></ul>`),
+     `Try the likely exam questions, then open the hints.`],
+    notes:[`Remind students: Assignment 1 is due next week (check Moodle).`],
+    fig:{mindmap:{center:'History of AI',branches:[{t:'Roots',items:['1943 mathematical neuron','1950 Turing’s question','1956 Dartmouth names AI','1958 perceptron · 1966 ELIZA']},{t:'Symbolic AI',items:['Hand-written IF-THEN rules','Expert systems','Brittle outside narrow tasks']},{t:'AI winters',items:['1970s: Lighthill Report 1973','Late 1980s: expert systems collapse','Hype, slow computers, little data']},{t:'Deep learning',items:['Backpropagation 1986','2012 AlexNet','Data + GPUs + algorithms']},{t:'AI spring',items:['1997 Deep Blue','2016 AlphaGo','2017 Transformer','2022 ChatGPT']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Outline three key moments in AI history.`,hint:`Any three with dates and why they matter, e.g. 1956 Dartmouth (field named), 2012 AlexNet (deep learning boom), 2022 ChatGPT (public generative AI).`},
+      {q:`What caused the AI winters?`,hint:`Over-hyped promises, weak computers, little data, brittle rule systems; 1970s (Lighthill 1973) and late 1980s (expert systems).`},
+      {q:`Why did deep learning succeed after 2012?`,hint:`Big data + GPUs + better algorithms (backpropagation, deeper networks); AlexNet won ImageNet.`},
+      {q:`Compare Deep Blue with AlphaGo.`,hint:`Deep Blue: hand-written rules + brute-force search (1997). AlphaGo: learned from games and self-play (2016); Go too big for brute force.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:10,
+    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 3:</strong> read RB f, Chapter 2 (Santos & Radanliev, <em>Beyond the Algorithm</em>). Finish and submit Assignment 1.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`AI became a named field at…`,o:[`the 1950 Turing paper`,`the 1956 Dartmouth workshop`,`the 1997 Deep Blue match`,`the 2012 ImageNet contest`],a:1,why:`John McCarthy's proposal for Dartmouth named “artificial intelligence”.`},
+      {q:`Symbolic AI works by…`,o:[`learning from data`,`hand-written IF-THEN rules`,`copying the brain exactly`,`trial and error with rewards`],a:1,why:`Experts write the rules; no learning from data.`},
+      {q:`An “AI winter” is…`,o:[`a period of reduced funding and interest after over-hype`,`AI used in cold countries`,`a type of neural network`,`the season when models are trained`],a:0,why:`Funding collapsed in the 1970s and late 1980s.`},
+      {q:`Which three ingredients made deep learning take off around 2012?`,o:[`Robots, satellites, 5G`,`Big data, GPUs, better algorithms`,`Rules, logic, experts`,`Cloud storage, apps, social media`],a:1,why:`Data + compute + algorithms.`},
+      {q:`AlphaGo differed from Deep Blue because it…`,o:[`used only brute-force search`,`learned from games and self-play`,`played chess`,`was programmed with every possible position`],a:1,why:`Go has too many positions for brute force.`},
+      {q:`The 2017 Transformer paper matters because…`,o:[`it named the field of AI`,`it is the architecture behind modern chatbots`,`it ended the first AI winter`,`it beat Kasparov`],a:1,why:`“Attention Is All You Need” introduced the Transformer used by ChatGPT.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

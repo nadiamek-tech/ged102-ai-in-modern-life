@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 7 · AI in Finance and Business</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#A35A00;--wk-soft:rgba(163,90,0,.10);--wk-d:#F0B048;--wk-soft-d:rgba(240,176,72,.14)}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.tiles h4{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.tiles button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 10px;margin-bottom:6px;cursor:pointer;font-family:var(--f-display);font-size:.87rem}
+.tiles button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.detail{margin-top:10px;font-family:var(--f-display);font-size:.92rem;border-top:1px solid var(--line);padding-top:10px}
+.tx{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.84rem;font-variant-numeric:tabular-nums}
+.tx th{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:4px 6px;border-bottom:1px solid var(--line);font-weight:400}
+.tx td{padding:5px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tx tr.flag td{background:var(--wk-soft)}
+.tx .sig{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--line);margin-right:2px}
+.tx .sig.on{background:var(--wk)}
+.scroll{overflow-x:auto}
+.checks{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--f-display);font-size:.88rem}
+.checks label{display:flex;gap:6px;align-items:center;font-weight:400}
+.stat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg)}
+.stat b{display:block;font-family:var(--f-display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.stat span{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.cases{display:grid;gap:8px}
+.cases details{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:10px 12px;font-family:var(--f-display);font-size:.92rem}
+.cases summary{cursor:pointer;font-weight:650}
+.cases p{margin:.45em 0 0}
+.rubric{width:100%;border-collapse:collapse;font-family:var(--f-display);font-size:.82rem}
+.rubric th,.rubric td{border:1px solid var(--line);padding:7px 8px;vertical-align:top;text-align:left}
+.rubric th{background:var(--sunk);font-weight:650}
+.rubric td:first-child{font-weight:650}
+.brief{font-family:var(--f-body);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:12px}
+.brief .mono{color:var(--muted);display:block;margin-bottom:4px}
+@media (max-width:560px){.tiles{grid-template-columns:minmax(0,1fr)}.stat{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script>
+const {W} = Lecture;
+
+function agenda(el, rows){
+  const total=rows.reduce((a,r)=>a+r[1],0); let acc=0;
+  el.innerHTML=`<div class="stack ui">${rows.map(([t,m,k])=>{ const s=acc; acc+=m; return `<div style="display:grid;grid-template-columns:minmax(0,1fr) 46px;gap:8px;align-items:center"><div><div style="font-size:.86rem;margin-bottom:3px">${t}</div><div style="height:10px;background:var(--sunk);border-radius:3px;position:relative"><div style="position:absolute;left:${s/total*100}%;width:${m/total*100}%;top:0;bottom:0;border-radius:3px;background:${k==='a'?'var(--wk)':k==='b'?'var(--line)':k==='c'?'var(--good)':'var(--muted)'}"></div></div></div><span class="mono" style="text-align:right">${m}′</span></div>`; }).join('')}
+   <div class="row mono" style="gap:14px;margin-top:4px"><span><i style="display:inline-block;width:10px;height:10px;background:var(--muted);border-radius:2px"></i> lecture</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--wk);border-radius:2px"></i> activity</span><span><i style="display:inline-block;width:10px;height:10px;background:var(--good);border-radius:2px"></i> check</span><span>Total ${total} min</span></div></div>`;
+}
+
+/* ---------- map ---------- */
+const MAP={
+ 'Finance':[
+  ['Fraud detection','Banks score every card payment in milliseconds against your normal behaviour. Unusual amount, place, time or merchant raises the score; above a threshold the payment is held and you get an SMS.'],
+  ['Credit scoring','Models estimate how likely a borrower is to repay. Some lenders add “alternative data” such as utility or phone-bill payments, which can help people with no credit history but raises privacy questions.'],
+  ['Algorithmic trading','Computer programs place orders automatically, often in fractions of a second. A large share of trading on major stock exchanges is now automated.'],
+  ['Risk management','Models estimate how much a bank or fund could lose in a bad week or month, and test portfolios against stress scenarios.'],
+  ['Portfolio optimisation','Choosing how much to put in each asset to balance expected return against risk. AI methods estimate the inputs and search for good mixes. This is a central topic of the RB c reading.'],
+  ['Anti-money-laundering','Systems scan networks of transfers for patterns linked to money laundering, then human analysts investigate the alerts.']],
+ 'Business':[
+  ['Recommendations','Netflix engineers reported (2016) that about 80% of hours streamed on the service came from its recommendations rather than search.'],
+  ['Demand forecasting','Retailers and airlines predict demand to set stock levels, staffing and prices, including dynamic pricing that changes during the day.'],
+  ['Customer service','Chatbots answer routine questions in Arabic and English and pass complex cases to staff.'],
+  ['Hiring','CV-screening tools rank applicants. Reuters reported in 2018 that Amazon dropped an experimental recruiting tool after it learned to downgrade CVs that mentioned the word “women\'s”.']]
+};
+function map(el){
+  el.innerHTML=`<div class="tiles">${Object.keys(MAP).map(k=>`<div><h4>${k}</h4>${MAP[k].map((x,i)=>`<button type="button" data-k="${k}" data-i="${i}" aria-pressed="false">${x[0]}</button>`).join('')}</div>`).join('')}</div><div class="detail" id="md"></div>`;
+  el.querySelectorAll('.tiles button').forEach(b=>b.addEventListener('click',()=>{ el.querySelectorAll('.tiles button').forEach(x=>x.setAttribute('aria-pressed',x===b)); const [t,d]=MAP[b.dataset.k][+b.dataset.i]; el.querySelector('#md').innerHTML=`<b>${t}</b> · <span class="tag">${b.dataset.k}</span><p style="margin:.4em 0 0">${d}</p>`; }));
+  el.querySelector('.tiles button').click();
+}
+
+/* ---------- fraud signals ---------- */
+// signals: [high amount, new country, night 00-05, new merchant type]; f = actually fraud
+const TX=[
+ ['Sun 09:12','Carrefour, Dubai','AED 312',[0,0,0,0],0],
+ ['Sun 13:40','ENOC, Dubai','AED 140',[0,0,0,0],0],
+ ['Mon 02:47','Electronics store, online (overseas)','AED 4,850',[1,1,1,1],1],
+ ['Mon 08:05','RTA Nol top-up','AED 100',[0,0,0,0],0],
+ ['Tue 20:15','Hotel, Istanbul','AED 2,900',[1,1,0,0],0],
+ ['Tue 21:02','Restaurant, Istanbul','AED 410',[0,1,0,0],0],
+ ['Wed 03:30','Gift cards, online','AED 1,500',[1,0,1,1],1],
+ ['Wed 12:10','Talabat','AED 68',[0,0,0,0],0],
+ ['Thu 01:15','Taxi app, Dubai','AED 54',[0,0,1,0],0],
+ ['Thu 16:44','Gaming credits, overseas site','AED 920',[0,1,0,1],1],
+ ['Fri 11:30','Furniture store, Dubai (new sofa)','AED 6,200',[1,0,0,1],0],
+ ['Sat 04:05','Crypto exchange, overseas','AED 3,700',[1,1,1,1],1]];
+const SIG=['Amount far above usual','New country','Night (00:00–05:00)','New type of merchant'];
+function fraud(el){
+  el.innerHTML=`<div class="ui stack"><p style="margin:0">Sara\'s card · one week · fictional data</p>
+   <div class="checks">${SIG.map((s,i)=>`<label><input type="checkbox" id="sg${i}" checked> ${s}</label>`).join('')}</div>
+   <label for="k">Block a payment when at least <span class="mono" id="kv">2</span> selected signals are present</label>
+   <input type="range" id="k" min="1" max="4" step="1" value="2">
+   <div class="scroll"><table class="tx"><thead><tr><th>When</th><th>Merchant</th><th>Amount</th><th>Signals</th><th>Result</th></tr></thead><tbody id="txb"></tbody></table></div>
+   <div class="stat" id="fs"></div><div class="feedback" id="fm"></div></div>`;
+  const draw=()=>{ const on=SIG.map((_,i)=>el.querySelector('#sg'+i).checked); const k=+el.querySelector('#k').value; el.querySelector('#kv').textContent=k;
+    let caught=0,missed=0,falseb=0;
+    el.querySelector('#txb').innerHTML=TX.map(([w,m,a,s,f])=>{ const sc=s.reduce((acc,v,i)=>acc+(v&&on[i]?1:0),0); const fl=sc>=k; if(f&&fl)caught++; else if(f)missed++; else if(fl)falseb++;
+      return `<tr class="${fl?'flag':''}"><td>${w}</td><td>${m}</td><td>${a}</td><td>${s.map((v,i)=>`<i class="sig ${v&&on[i]?'on':''}" title="${SIG[i]}"></i>`).join('')}</td><td>${fl?'<span class="tag warn">blocked</span>':'<span class="tag">approved</span>'} ${f?'<span class="tag bad">fraud</span>':''}</td></tr>`; }).join('');
+    el.querySelector('#fs').innerHTML=`<div><b>${caught}/4</b><span>fraud blocked</span></div><div><b style="color:var(--bad)">${missed}</b><span>fraud missed</span></div><div><b style="color:var(--warn)">${falseb}</b><span>genuine blocked</span></div>`;
+    el.querySelector('#fm').innerHTML= falseb && !missed ? 'All fraud stopped, but Sara\'s real holiday and sofa purchases are being declined.' : missed && !falseb ? 'No annoyed customer, but fraud is getting through.' : missed && falseb ? 'The worst of both: fraud passes and genuine payments are blocked. Try other signals.' : 'Every fraud blocked and no genuine payment declined. Real systems use hundreds of signals and still cannot do this every time.'; };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',draw)); draw();
+}
+
+/* ---------- diversification ---------- */
+function diversify(el){
+  const A={n:'Stock fund',r:8,s:16}, B={n:'Bond fund',r:4,s:6};
+  el.innerHTML=`<div class="ui stack"><svg viewBox="0 0 560 280" id="pf" role="img" aria-label="Risk on the horizontal axis, expected return on the vertical axis, with the curve of all possible mixes of two funds"></svg>
+   <label for="wA">Share in the stock fund: <span class="mono" id="wv">50%</span></label><input type="range" id="wA" min="0" max="100" value="50">
+   <label for="rho">How closely the two funds move together (correlation): <span class="mono" id="rv">0.2</span></label><input type="range" id="rho" min="-1" max="1" step="0.1" value="0.2">
+   <div class="feedback" id="pm"></div></div>`;
+  const X=s=>50+s/18*480, Y=r=>240-(r-3)/6*210;
+  const draw=()=>{ const w=+el.querySelector('#wA').value/100, rho=+el.querySelector('#rho').value;
+    const port=w=>{ const r=w*A.r+(1-w)*B.r; const s=Math.sqrt(w*w*A.s*A.s+(1-w)**2*B.s*B.s+2*w*(1-w)*rho*A.s*B.s); return [s,r]; };
+    let d='', minS=99,minW=0; for(let i=0;i<=100;i++){ const [s,r]=port(i/100); d+=(i?'L':'M')+X(s).toFixed(1)+','+Y(r).toFixed(1); if(s<minS){minS=s;minW=i;} }
+    const [s,r]=port(w); el.querySelector('#wv').textContent=Math.round(w*100)+'%'; el.querySelector('#rv').textContent=rho.toFixed(1);
+    let grid=''; for(let x=0;x<=18;x+=3) grid+=`<line x1="${X(x)}" x2="${X(x)}" y1="30" y2="240" stroke="var(--line)" stroke-width=".7"/><text x="${X(x)}" y="256" text-anchor="middle" font-size="10" class="t-muted t-mono">${x}%</text>`;
+    for(let y=3;y<=9;y++) grid+=`<line x1="50" x2="530" y1="${Y(y)}" y2="${Y(y)}" stroke="var(--line)" stroke-width=".7"/><text x="42" y="${Y(y)+3}" text-anchor="end" font-size="10" class="t-muted t-mono">${y}%</text>`;
+    el.querySelector('#pf').innerHTML=`${grid}<text x="290" y="275" text-anchor="middle" font-size="11" class="t-muted">Risk (ups and downs per year)</text><text x="12" y="20" font-size="11" class="t-muted">Expected return</text>
+      <line x1="${X(B.s)}" y1="${Y(B.r)}" x2="${X(A.s)}" y2="${Y(A.r)}" stroke="var(--muted)" stroke-dasharray="4 4"/>
+      <path d="${d}" fill="none" stroke="var(--wk)" stroke-width="2.5"/>
+      <circle cx="${X(A.s)}" cy="${Y(A.r)}" r="5" fill="var(--muted)"/><text x="${X(A.s)-8}" y="${Y(A.r)-10}" text-anchor="end" font-size="11">${A.n}</text>
+      <circle cx="${X(B.s)}" cy="${Y(B.r)}" r="5" fill="var(--muted)"/><text x="${X(B.s)+8}" y="${Y(B.r)+16}" font-size="11">${B.n}</text>
+      <circle cx="${X(s)}" cy="${Y(r)}" r="8" fill="var(--wk)" stroke="var(--surface)" stroke-width="2"/>`;
+    const naive=w*A.s+(1-w)*B.s;
+    el.querySelector('#pm').innerHTML=`Your mix: expected return <b>${r.toFixed(1)}%</b>, risk <b>${s.toFixed(1)}%</b>. Averaging the two funds\' risks would suggest ${naive.toFixed(1)}%; diversification removes <b>${(naive-s).toFixed(1)} points</b>. The lowest-risk mix here is about ${minW}% stocks.`; };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',draw)); draw();
+}
+
+/* ---------- flash crash sketch ---------- */
+const CRASH=(()=>{ const pts=[[0,0],[40,-1],[80,-2],[110,-3.5],[125,-5],[132,-9],[138,-8.6],[150,-6],[175,-3.8],[210,-3.2],[260,-3.4],[300,-3.1]];
+  const X=t=>40+t/300*500, Y=v=>40+(-v)/10*170;
+  const d=pts.map(([t,v],i)=>(i?'L':'M')+X(t)+','+Y(v)).join('');
+  return `<svg viewBox="0 0 560 260" role="img" aria-label="Sketch of the 6 May 2010 flash crash: a gradual decline, a sudden drop of about 9 percent, then a fast partial recovery">
+   ${[0,-3,-6,-9].map(v=>`<line x1="40" x2="540" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-width=".7"/><text x="34" y="${Y(v)+3}" text-anchor="end" font-size="10" class="t-muted t-mono">${v}%</text>`).join('')}
+   <path d="${d}" fill="none" stroke="var(--wk)" stroke-width="2.5"/>
+   <rect x="${X(125)}" y="30" width="${X(160)-X(125)}" height="190" fill="var(--wk-soft)"/>
+   <text x="${X(142)}" y="236" text-anchor="middle" font-size="11" class="t-muted">≈ 2:32 – 3:08 pm</text>
+   <text x="${X(170)}" y="${Y(-8.2)}" font-size="12" font-weight="700">Dow down ≈ 9%,</text>
+   <text x="${X(170)}" y="${Y(-8.2)+15}" font-size="12">about 1,000 points</text>
+   <text x="40" y="254" font-size="10" class="t-muted">Shape sketched for teaching, not plotted from market data. 6 May 2010, US markets.</text></svg>`; })();
+
+const FCASES=[
+ ['The Flash Crash, 6 May 2010','In about half an hour, US share prices fell sharply and then mostly recovered. The Dow Jones index dropped close to 1,000 points, roughly 9%. Investigators found that a large automated sell order met high-speed trading algorithms that withdrew and resold to each other, draining liquidity. Regulators later added “circuit breakers” that pause trading after sudden moves.','Automated systems interacting with each other can produce outcomes no single designer intended.'],
+ ['Knight Capital, 1 August 2012','A software deployment error caused one of the largest US trading firms to send millions of unintended orders. It lost about US$440 million in roughly 45 minutes and had to be rescued and sold.','Speed multiplies mistakes. Testing, kill switches and human monitoring are risk controls.'],
+ ['Apple Card credit limits, 2019','Customers publicly complained that women received lower credit limits than their husbands with similar finances. New York\'s financial regulator investigated and in 2021 found no violation of fair-lending law, but the episode showed how hard it is for a bank to explain an algorithm\'s decision to a customer.','Even when a model is lawful, people need understandable reasons for decisions about their money.'],
+ ['Amazon\'s recruiting tool, 2018','Trained on ten years of CVs from a male-dominated industry, the tool learned to penalise signs that an applicant was a woman. Amazon dropped it.','A model trained on past decisions repeats past patterns, including unfair ones.']
+];
+function fcases(el){ el.innerHTML=`<div class="cases">${FCASES.map(([t,d,l],i)=>`<details ${i===0?'open':''}><summary>${t}</summary><p>${d}</p><p><span class="tag good">Lesson</span> ${l}</p></details>`).join('')}</div>`; }
+
+/* ---------- Assignment 2 brief ---------- */
+const A2=`<div class="brief"><span class="mono">ASSIGNMENT 2 · AI IN MY WORLD · 5% · CLO 2</span>Pick a field you're interested in—like art, business, healthcare, or education—and explore how AI is being used there. Describe its benefits, challenges, and give real examples that show how it's changing the way people work or live.</div>
+<div class="scroll"><table class="rubric"><thead><tr><th>Performance indicator</th><th>Unsatisfactory<br>&lt; 40</th><th>Needs improvement<br>40–60</th><th>Meets expectations<br>60–80</th><th>Exceeds expectations<br>80–100</th></tr></thead><tbody>
+<tr><td>Relevance to Topic</td><td>Off-topic or unclear focus</td><td>Somewhat related but vague or limited</td><td>Clearly connects AI to a chosen field</td><td>Strong, relevant focus with personal insight or unique connection</td></tr>
+<tr><td>Explanation and Examples</td><td>Little or no detail; lacks real examples</td><td>Provides few or shallow examples</td><td>Gives good real-world examples with basic explanation</td><td>Provides thoughtful, well-explained examples showing strong understanding</td></tr>
+<tr><td>Critical Reflection</td><td>No reflection or critical thinking</td><td>Some opinion stated but without depth</td><td>Reflects on benefits and challenges of AI in the field</td><td>Strong insight with balanced view and thoughtful reflection</td></tr></tbody></table></div>
+<p class="mono" style="color:var(--muted);margin-top:8px">All three indicators assess CLO 2. Due date: announced on Moodle. Submit through Turnitin (maximum similarity index 20%).</p>`;
+
+const B=Lecture.B;
+const LOOP=`<svg viewBox="0 0 560 190" role="img" aria-label="The bias loop: past unfair decisions train the model, the model repeats them, and new decisions become tomorrow's training data">
+ ${[['Past data','reflects past unfair decisions'],['Model learns','the same pattern'],['New decisions','repeat the unfairness']].map(([t,s],i)=>`<rect x="${14+i*186}" y="30" width="160" height="72" rx="10" fill="${i===1?'var(--wk)':'var(--wk-soft)'}" stroke="var(--wk)"/>
+ <text x="${94+i*186}" y="60" text-anchor="middle" font-size="14" font-weight="700" ${i===1?'style="fill:var(--surface)"':''}>${t}</text>
+ <text x="${94+i*186}" y="80" text-anchor="middle" font-size="11" ${i===1?'style="fill:var(--surface)"':'class="t-muted"'}>${s}</text>
+ ${i<2?`<path d="M${176+i*186} 66 L${198+i*186} 66" stroke="var(--muted)" stroke-width="2" marker-end="url(#a7)"/>`:''}`).join('')}
+ <path d="M466 104 Q466 160 280 160 Q94 160 94 108" fill="none" stroke="var(--bad)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#a7r)"/>
+ <text x="280" y="180" text-anchor="middle" font-size="11" style="fill:var(--bad)">today's decisions become tomorrow's training data</text>
+ <defs><marker id="a7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="var(--muted)"/></marker><marker id="a7r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="var(--bad)"/></marker></defs></svg>`;
+const UMB=`<table class="tbl"><thead><tr><th>Scenario</th><th>Umbrella company</th><th>Sunscreen company</th><th>50/50 portfolio</th></tr></thead><tbody>
+<tr><td>Rainy year</td><td>+20%</td><td>−5%</td><td><b>+7.5%</b></td></tr><tr><td>Sunny year</td><td>−5%</td><td>+20%</td><td><b>+7.5%</b></td></tr></tbody></table>`;
+const RISKS=[
+ {t:`Herding`,d:`Many firms use similar models, so they act alike and move markets together.`,l:`Flash Crash: automated systems reacting to each other.`},
+ {t:`Black box`,d:`Hard to explain why the model decided: a problem for regulators and customers.`,l:`Apple Card (2019): the regulator found no unlawful discrimination (2021), but customers could not get understandable reasons.`},
+ {t:`Systemic risk`,d:`One failure can spread across the whole financial system.`,l:`Knight Capital (2012): about US$440 million lost in roughly 45 minutes from a software error.`},
+ {t:`Data quality`,d:`Bad, old or biased data gives bad decisions.`,l:`Models trained before a crisis may fail during one.`},
+ {t:`Bias`,d:`Unfair credit, pricing or hiring decisions for some groups.`,l:`Amazon's recruiting tool (Reuters, 2018) learned to downgrade women's CVs.`},
+ {t:`Cost and skills`,d:`Needs expensive data, computing and rare expertise.`,l:`Big institutions gain first (Week 4: who benefits?).`}];
+
+Lecture.mount({
+  id:'w7', week:7, clo:2, short:'Week 7 · Finance and Business',
+  title:'Applications of AI: AI in Finances and Business',
+  meta:'RB c Chapter 1 · 3-hour session · Assignment 2 set',
+  scenes:[
+  { nav:'Start here', title:'Can AI manage money and risk better than people?', minutes:10,
+    narration:[
+     `Every time you tap your card, an AI model has already decided whether to let the payment through. Banks use AI to lend, trade and catch criminals; businesses use it to decide what you see, what you pay, and whether you get the interview.`,
+     `Our syllabus topic: <strong>“Artificial Intelligence in Financial Markets Cutting Edge Applications for Risk Management, Portfolio Optimization and Economics”</strong>, building <strong>CLO 2</strong>.`,
+     B.plain(`The key idea this week: <b>speed and scale vs systemic risk</b>. Finance was among the earliest and heaviest users of AI because data is plentiful, goals are numeric and decisions must be fast.`)],
+    src:`Reading: Dunis, C. L., Middleton, P. W., Karathanasopolous, A., & Theofilatos, K. (2017). <em>Artificial intelligence in financial markets</em>. Palgrave Macmillan. Chapter 1.`,
+    notes:[`Last content week before the Week 8 midterm (Weeks 1–7). Assignment 2 is set today.`],
+    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: card blocked`,5,'a'],[`Where AI is used in finance`,10,'l'],[`Fraud = anomaly detection`,20,'a'],[`Credit scoring and bias`,15,'l'],[`Portfolio optimisation`,20,'a'],[`Break`,10,'b'],[`Robo-advisors and trading`,10,'l'],[`When algorithms go wrong`,10,'l'],[`AI and economics`,10,'l'],[`Risks and limits`,10,'l'],[`Activity: AI for a UAE business`,15,'a'],[`Assignment 2 brief`,10,'l'],[`Exam takeaways`,15,'l'],[`Exit check`,10,'c']])} },
+
+  { nav:'Card blocked', title:'2:47 a.m. Your card has been blocked', kind:'activity', minutes:5,
+    narration:[`You wake up to an SMS: <em>“A payment of AED 4,850 at an overseas electronics website was declined. Reply Y if this was you.”</em> You were asleep in Dubai. No human at the bank saw that payment. What made the system suspicious?`],
+    notes:[`Ask who has had a card blocked while travelling. That block was probably an AI decision.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`What most likely triggered the block?`,opts:[`The amount alone`,`The time of night alone`,`A combination of unusual signals`,`A bank employee checked it`],reveal:i=>(i===2?'<b>Yes.</b> ':'<b>Most likely a combination.</b> ')+`Fraud models combine many signals: amount, place, time, merchant type, device. You will build a mini version in two scenes.`})} },
+
+  { nav:'Where AI is used', title:'Where AI is used in finance and business', minutes:10,
+    narration:[
+     `In <strong>finance</strong>, AI protects (fraud, anti-money-laundering), lends (credit scoring), invests (trading, portfolio optimisation, robo-advice) and measures danger (risk management). In everyday <strong>business</strong>, it recommends, forecasts, prices, answers customers and screens applicants. Click the tiles for real examples.`,
+     B.exam(`Why finance? Lots of data, clear numeric goals, decisions needed fast. <b>AI = prediction + pattern spotting + automation.</b>`)],
+    notes:[`Every tile is prediction, pattern spotting or automation; ask students to label each.`],
+    fig:{label:`Finance · Business`, build:el=>W.picker(el,MAP)} },
+
+  { nav:'Fraud detection', title:'Risk management 1: fraud detection = anomaly detection', kind:'activity', minutes:20, wide:true,
+    narration:[
+     B.plain(`The AI learns your normal behaviour. When something does not fit your pattern, it raises a flag. This is called <b>anomaly detection</b>. Inputs: amount, place, time, device, merchant type. Output: a risk score, then approve, block, or ask.`),
+     B.ex(`Normal: Sara spends AED 50–300 per purchase in Dubai. Suddenly: AED 12,000 at 3 a.m. in another country. The system blocks the payment and texts: “Was this you?”`),
+     `Now build a detector on the right using one week of Sara's (fictional) payments. Choose which signals to watch and how many must appear before blocking. Block too easily and her real hotel in Istanbul and her new sofa get declined; block too rarely and criminals spend her money.`,
+     B.exam(`<b>Fraud detection = anomaly detection.</b> Trade-off: false alarms vs missed fraud (the same trade-off as Week 6's threshold).`)],
+    think:`Is it fair that a customer who travels or shops at night gets declined more often?`,
+    notes:[`With all four signals at ≥2, all fraud is blocked but so are the hotel and sofa. Turning off “Amount far above usual” at ≥2 gives a perfect week. Then ask whether that rule would work next month (overfitting in plain words).`,`Anomaly detection is unsupervised or semi-supervised learning (Week 3).`],
+    fig:{flow:[{t:'Inputs',s:'amount, place, time…',d:'Amount, place, time, device and merchant type for each payment.'},{t:'Compare',s:'with your normal',d:'The model compares the payment with your usual pattern and known fraud patterns.'},{t:'Risk score',s:'0 to 1',d:'Unusual combinations push the score up.'},{t:'Decide',s:'approve · block · ask',d:'Above the threshold the payment is blocked or you get a “Was this you?” text.'}],label:`Fictional card · 12 payments`, build:fraud} },
+
+  { nav:'Credit scoring', title:'Risk management 2: credit scoring and its bias risk', minutes:15,
+    narration:[
+     B.plain(`Banks use models to predict whether you will repay a loan. The model learns from past loan decisions and outcomes. It gives a score; the bank approves or rejects.`),
+     `Follow the bias loop on the right. If past decisions were unfair, what does a model trained on them learn? And because its decisions become new data, the unfairness can repeat itself.`,
+     B.ex(`A model is not told the applicant's gender or nationality, but it uses postcode. If a postcode strongly matches a group, postcode acts as a <b>proxy variable</b> and the bias comes back in.`),
+     B.exam(`Removing a sensitive column does <b>not</b> remove bias. <b>Proxy variables</b> can recreate it.`)],
+    think:`Alternative data (phone-bill or utility payments) can give a first loan to someone with no credit history. When does that help, and when does it become surveillance?`,
+    notes:[`Introduce “proxy variable” with the postcode example. It links back to Obermeyer (Week 6) and Amazon (Week 4).`],
+    fig:{label:`The bias loop`, html:LOOP} },
+
+  { nav:'Portfolio optimisation', title:'Portfolio optimisation: don\'t put all your eggs in one basket', kind:'activity', minutes:20, wide:true,
+    narration:[
+     B.plain(`A <b>portfolio</b> is your mix of investments. <b>Portfolio optimisation</b> means choosing the mix that gives the best return for the risk you accept. Core idea: <b>diversification</b> (Harry Markowitz, 1952).`),
+     UMB,
+     `Holding both gives a steady +7.5% whatever the weather. Now try two real-world-style funds on the right: move the mix, then change how closely they move together (correlation). When they move together, the protection disappears.`,
+     B.plain(`<b>Where AI helps:</b> it scans thousands of assets, estimates how they move together, searches for the best mix under your limits, and can rebalance automatically. The reading covers methods such as neural networks and evolutionary algorithms for this.`),
+     B.exam(`Return vs risk trade-off. Diversification lowers risk without giving up all return. AI makes the search <b>faster, not guaranteed</b>.`)],
+    think:`In a crisis, many assets fall together and correlations jump. What happens to diversification exactly when you need it?`,
+    notes:[`Markowitz: Modern Portfolio Theory (1952), Nobel Memorial Prize in Economic Sciences 1990. Walk the numbers: 0.5 × 20 + 0.5 × (−5) = 7.5.`,`Fund numbers in the widget are illustrative.`],
+    fig:{label:`Two funds · illustrative numbers`, build:diversify} },
+
+  { nav:'Robo-advisors and trading', fig:{label:'How a robo-advisor works', flow:[{t:'Questionnaire',s:'goals and risk',d:'Age, savings goal, time horizon, comfort with risk.'},{t:'Portfolio',s:'e.g. 80/20',d:'The app proposes a mix, e.g. 80% shares and 20% bonds for a 20-year-old.'},{t:'Rebalance',s:'automatically',d:'When markets move the mix drifts; the app sells and buys to restore it.'},{t:'Review',s:'human check',d:'Special situations still need a human adviser.'}]}, title:'Robo-advisors and algorithmic trading', minutes:10,
+    narration:[
+     `<table class="tbl"><thead><tr><th></th><th>Robo-advisor</th><th>Algorithmic trading</th></tr></thead><tbody><tr><td>What</td><td>An app that builds and rebalances your portfolio from your goals and risk comfort</td><td>Programs place orders automatically using rules or learned patterns; high-frequency trading sends thousands of orders per second</td></tr><tr><td>Benefit</td><td>Low fees, low minimums, always on</td><td>Speed, lower cost, no emotion</td></tr><tr><td>Limit</td><td>Not a human; weak on special situations</td><td>Errors spread at machine speed</td></tr></tbody></table>`,
+     B.ex(`Robo-advisor: “I am 20, saving for 30 years, medium risk.” The app proposes about 80% shares and 20% bonds and rebalances each year.`)],
+    notes:[`Robo-advisors serve ordinary customers; algorithmic trading is mostly institutional. Keep the definitions crisp.`] },
+
+  { nav:'When algorithms go wrong', video:{id:'TDaFwnOiKVE',title:'How algorithms shape our world',by:'TED · Kevin Slavin',why:'Trading algorithms, the Flash Crash, and what happens when machines act faster than people can follow.'}, title:'When algorithms go wrong: Flash Crash and Knight Capital', minutes:10,
+    narration:[
+     `<b>Flash Crash, 6 May 2010:</b> US stocks fell about 9% within minutes, then largely recovered. Automated trading amplified a large sell order. Markets can move faster than humans can react.`,
+     `<b>Knight Capital, 1 August 2012:</b> a software error sent unintended orders; about US$440 million was lost in around 45 minutes. No one could stop it fast enough. Testing and “kill switches” are essential.`,
+     B.plain(`Automation brings speed. Speed turns small mistakes into big losses before humans notice.`),
+     B.exam(`Exam link: <b>operational risk, systemic risk</b>, and the need for human oversight and kill switches.`)],
+    think:`Should there be a speed limit on trading algorithms, the way there is on Sheikh Zayed Road?`,
+    notes:[`SEC/CFTC report linked the Flash Crash to a large automated sell order interacting with high-frequency trading. Regulators added circuit breakers.`],
+    fig:{label:`Flash Crash · sketch`, html:CRASH} },
+
+  { nav:'AI and economics', title:'AI and economics: markets, jobs and productivity', minutes:10,
+    narration:[
+     `The syllabus title ends with “economics”. Click the six effects on the right.`,
+     B.exam(`Balanced exam answer: gains in <b>efficiency and access</b> vs concerns about <b>jobs, concentration and fairness</b>.`)],
+    notes:[`Link to Week 4 (who benefits, IMF 40%).`],
+    fig:{label:`Six economic effects`, build:el=>W.picker(el,{'Economy':[[`Forecasting`,`AI analyses news, prices and data to predict inflation, demand and trends.`],[`Productivity`,`Automation can lower costs and raise output in banks and firms.`],[`Jobs`,`Routine tasks (data entry, simple analysis) shrink; new roles (AI risk, data) grow.`],[`Inequality`,`Firms and countries with data and capital may gain most; others fall behind.`],[`Competition`,`Fintech start-ups challenge banks with AI-based services.`],[`Regulation`,`Regulators ask for explainability and fairness in credit and trading.`]]})} },
+
+  { nav:'Risks and limits', title:'Risks and limits of AI in finance', minutes:10,
+    narration:[
+     `Six risks summarise the week. Open each one and match it to a case from today or earlier weeks.`,
+     B.exam(`<b>Systemic risk</b> = the failure of one part threatens the whole system. <b>Herding</b> = many act the same way at once.`)],
+    notes:[`On Apple Card, be precise: the regulator found no fair-lending violation. The lesson is explanation, not proven discrimination.`],
+    fig:{label:`Six risks · open each`, build:el=>W.accordion(el,RISKS)} },
+
+  { nav:'AI for a UAE business', title:'Activity · Design AI for a UAE business', kind:'activity', minutes:15,
+    narration:[
+     `In groups of three, choose a business: a karak café chain with eight branches, a Dubai last-mile delivery start-up, or an online abaya store selling across the GCC. Or a family business you know.`,
+     `Complete the canvas: one AI use from today that solves a real problem, the data, the benefit, the risk, and where a human stays in charge. Two groups present in 90 seconds; classmates each ask “Who could be harmed?”`],
+    notes:[`Hints: café → demand forecasting to cut food waste; delivery → route optimisation; abaya store → recommendations or an Arabic chatbot.`,`This canvas can become the outline of Assignment 2.`],
+    fig:{label:`AI opportunity canvas`, build:el=>W.worksheet(el,{id:'w7canvas',title:'GED 102 · Week 7 · AI opportunity canvas',fields:[
+      {l:'Business and its problem',ph:'e.g. Karak café chain throws away 15% of pastries daily'},
+      {l:'Which AI application?',hint:'Forecasting, recommendations, chatbot, fraud, pricing…'},
+      {l:'What data would it learn from?',rows:2},
+      {l:'How would you measure success?'},
+      {l:'Main risk, and who is affected',rows:2},
+      {l:'Where does a human stay in charge?',rows:2}]})} },
+
+  { nav:'Assignment 2', title:'Assignment 2 · AI in my world', minutes:10, wide:true,
+    narration:[
+     `Assignment 2 brings Weeks 4 to 7 together. Choose one field and investigate how AI is used there, with real examples like this week's and the last two weeks'.`,
+     `<ul><li>Use at least two real, checkable examples, and cite them.</li><li>Cover benefits <b>and</b> challenges; one-sided answers cannot meet expectations for critical reflection.</li><li>Use the essay pattern: <b>use → benefit → risk → example → human oversight</b>.</li><li>Follow the Week 5 class AI policy and declare any AI use.</li></ul>`],
+    notes:[`Students post their chosen field on Moodle before leaving.`],
+    fig:{label:`Brief and rubric · from the syllabus`, html:A2} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 7', kind:'exam', minutes:15,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Uses:</b> fraud detection, credit scoring, risk management, portfolio optimisation, trading, robo-advice.</li><li><b>Fraud:</b> anomaly detection; trade-off between false alarms and missed fraud.</li><li><b>Portfolio:</b> diversification lowers risk (Markowitz). Return vs risk.</li><li><b>Algorithmic trading:</b> fast and cheap, but errors spread (Flash Crash, Knight Capital).</li><li><b>Credit bias:</b> past unfair data and proxy variables recreate bias.</li><li><b>Risks:</b> herding, black box, systemic risk, data quality, cost.</li></ul>`),
+     `Which of the three fields (education, healthcare, finance) worries you most, and why? Then open the <a href="review.html">Midterm review</a> page.`],
+    fig:{mindmap:{center:'AI in finance',branches:[{t:'Uses',items:['Fraud · credit · risk','Portfolio · trading · robo-advice']},{t:'Fraud',items:['Anomaly detection','False alarms vs missed fraud']},{t:'Credit',items:['The bias loop','Proxy variables (postcode)']},{t:'Portfolio',items:['Diversification (Markowitz 1952)','Return vs risk']},{t:'Trading risks',items:['Flash Crash 2010','Knight Capital 2012','Kill switches']},{t:'Big risks',items:['Herding · black box','Systemic risk · data quality']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Explain how AI detects fraud, with an example.`,hint:`Learn normal behaviour, flag what does not fit (anomaly detection); Sara's AED 12,000 at 3 a.m. abroad; trade-off of false alarms vs missed fraud.`},
+      {q:`What is diversification and how can AI help?`,hint:`Spread investments to lower risk (umbrella + sunscreen = steady 7.5%); AI estimates co-movement across thousands of assets and searches for the best mix.`},
+      {q:`Discuss two risks of algorithmic trading.`,hint:`Errors at machine speed (Knight Capital, US$440m in 45 min); herding and systemic risk (Flash Crash); need kill switches and oversight.`},
+      {q:`How can a credit-scoring model be biased?`,hint:`Biased past decisions (bias loop) and proxy variables such as postcode; fix by auditing, removing proxies, fairness testing, human review.`}])} },
+
+  { nav:'Exit check', title:'Exit check and midterm preparation', kind:'check', minutes:10,
+    narration:[
+     `The <strong>midterm in Week 8 covers Weeks 1 to 7</strong> (30% of the grade). Use the <a href="review.html">Midterm review</a> page: comparison tables, the four themes, flashcards and practice questions with hints.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Fraud detection is an example of…`,o:[`anomaly detection`,`image generation`,`RLHF`,`symbolic AI`],a:0,why:`Learn what is normal, flag what is not.`},
+      {q:`Making a fraud detector stricter will usually…`,o:[`catch more fraud and decline more genuine payments`,`catch less fraud`,`have no side effects`,`make payments faster`],a:0,why:`False alarms vs missed fraud.`},
+      {q:`A “proxy variable” is…`,o:[`a backup server`,`a neutral-looking feature that stands in for a sensitive one`,`a type of loan`,`a robo-advisor`],a:1,why:`e.g. postcode standing in for nationality or ethnicity.`},
+      {q:`A 50/50 mix of the umbrella and sunscreen companies returns…`,o:[`+20% every year`,`−5% every year`,`+7.5% in both rainy and sunny years`,`nothing`],a:2,why:`0.5 × 20 + 0.5 × (−5) = 7.5.`},
+      {q:`“Systemic risk” means…`,o:[`one customer's loan defaults`,`the failure of one part threatens the whole system`,`a system update`,`risk from bad passwords`],a:1,why:`Flash Crash and Knight Capital show how failures spread.`},
+      {q:`Assignment 2 is assessed on relevance, examples and…`,o:[`word count`,`critical reflection on benefits and challenges`,`use of AI tools`,`presentation software`],a:1,why:`The third indicator is critical reflection (CLO 2).`}])} }
+  ]
+});
+
+</script>
+</body>
+</html>

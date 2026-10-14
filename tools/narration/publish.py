@@ -1,7 +1,7 @@
 import json, os, hashlib, shutil, subprocess, sys
-sys.path.insert(0,'/home/claude/narration'); from normtext import norm
-SRC='/home/claude/ged102'; REPO='/home/claude/ged102-ai-in-modern-life'
-data=json.load(open('/home/claude/narration/narration.json'))
+HERE=os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0,HERE); from normtext import norm
+REPO=os.path.dirname(os.path.dirname(HERE)); SRC=REPO  # clips are generated straight into the repo
+data=json.load(open(os.path.join(HERE,'narration.json')))
 pages={}; ready=[]
 for page,scenes in data.items():
     sc=[]; ok=True
@@ -14,10 +14,11 @@ for page,scenes in data.items():
         sc.append(files)
     if ok: pages[page]=sc; ready.append(page)
 json.dump({'voice':'af_heart','engine':'Kokoro v1.0','pages':pages},open(f'{SRC}/audio/manifest.json','w'))
-os.makedirs(f'{REPO}/audio',exist_ok=True)
-for p in ready: shutil.copytree(f'{SRC}/audio/{p}',f'{REPO}/audio/{p}',dirs_exist_ok=True)
-shutil.copy(f'{SRC}/audio/manifest.json',f'{REPO}/audio/manifest.json')
-shutil.copy(f'{SRC}/assets/course.js',f'{REPO}/assets/course.js'); shutil.copy(f'{SRC}/assets/course.css',f'{REPO}/assets/course.css')
+# remove clips no longer used by any ready page
+keep={f for p in ready for s in pages[p] for f in s}
+for p in ready:
+    for f in os.listdir(f'{REPO}/audio/{p}'):
+        if f'{p}/{f}' not in keep: os.remove(f'{REPO}/audio/{p}/{f}')
 print('ready:',ready)
 if len(sys.argv)>1 and sys.argv[1]=='push':
     g=lambda *a: subprocess.run(['git','-C',REPO,*a],capture_output=True,text=True)

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 3 · How AI Thinks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#00788A;--wk-soft:rgba(0,120,138,.10);--wk-d:#4FC8D9;--wk-soft-d:rgba(79,200,217,.14)}
+.rings circle{cursor:pointer}
+.toks{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.tok{font-family:var(--f-mono);font-size:.8rem;border-radius:5px;padding:3px 6px;border:1px solid var(--line);background:var(--bg);display:inline-flex;flex-direction:column;align-items:center;line-height:1.2}
+.tok small{font-size:.6rem;color:var(--muted)}
+.tok:nth-child(4n+1){background:color-mix(in srgb,var(--wk) 10%,var(--bg))}
+.tok:nth-child(4n+2){background:color-mix(in srgb,var(--exam) 12%,var(--bg))}
+.tok:nth-child(4n+3){background:color-mix(in srgb,var(--plain) 10%,var(--bg))}
+.att{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--f-body);font-size:1.08rem;margin:10px 0}
+.att button{border:1px solid transparent;border-radius:6px;padding:3px 6px;cursor:pointer;font:inherit;background:transparent;position:relative}
+.att button[aria-pressed="true"]{border-color:var(--ink);font-weight:700}
+.att button span{position:absolute;left:0;right:0;bottom:-14px;font-family:var(--f-mono);font-size:.6rem;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script>
+const {W,B}=Lecture;
+
+/* ---------- nested rings ---------- */
+function rings(el){
+  const R=[['AI','Any machine showing intelligent behaviour, with or without learning.','A chess program with hand-written rules.',150],['Machine learning','Systems that learn patterns from data instead of following fixed rules.','A spam filter that learns.',105],['Deep learning','Machine learning with many-layered neural networks.','ChatGPT, face unlock, voice assistants.',60]];
+  el.innerHTML=`<svg viewBox="0 0 400 330" class="rings" role="img" aria-label="Three nested circles: deep learning inside machine learning inside AI">
+   ${R.map(([t,,,r],i)=>`<circle cx="200" cy="${165+ (150-r)*0.35}" r="${r}" fill="${['var(--wk-soft)','color-mix(in srgb,var(--wk) 22%,transparent)','var(--wk)'][i]}" stroke="var(--wk)" data-i="${i}" tabindex="0" role="button" aria-label="${t}"/>`).join('')}
+   <text x="200" y="40" text-anchor="middle" font-size="15" font-weight="700">AI</text>
+   <text x="200" y="104" text-anchor="middle" font-size="14" font-weight="700">Machine learning</text>
+   <text x="200" y="210" text-anchor="middle" font-size="13" font-weight="700" style="fill:var(--surface)">Deep learning</text></svg><div class="pick-detail" id="rd"></div>`;
+  const cs=el.querySelectorAll('circle'); const pick=i=>{ const [t,d,e]=R[i]; el.querySelector('#rd').innerHTML=`<b>${t}</b><p>${d}</p><p><span class="tag">Example</span> ${e}</p>`; };
+  cs.forEach(c=>{ c.addEventListener('click',e=>{ e.stopPropagation(); pick(+c.dataset.i); }); c.addEventListener('keydown',e=>{ if(e.key==='Enter'){pick(+c.dataset.i);} }); });
+  pick(1);
+}
+
+/* ---------- perceptron trainer ---------- */
+const PTS=[[2,5,0],[3,7,0],[1,8,0],[4,4,0],[5,3,0],[3,4,0],[4,6,0],[2,9,0],[6,6,1],[8,4,1],[7,7,1],[9,6,1],[5,8,1],[6.5,4,1],[8,8,1]];
+function neuron(el){
+  let w=[-0.5,1.0], b=0, epoch=0; const lr=0.3;
+  el.innerHTML=`<div class="ui stack"><svg viewBox="0 0 400 300" id="nsvg" role="img" aria-label="Students plotted by hours studied and hours slept; a line separates predicted pass from fail"></svg>
+   <div class="row"><button class="btn" id="t1" type="button">Train 1 round</button><button class="btn ghost" id="t10" type="button">Train 10 rounds</button><button class="btn ghost" id="rs" type="button">Reset</button></div>
+   <div class="feedback" id="nm"></div></div>`;
+  const X=v=>40+v/10*340, Y=v=>270-(v-2)/8*250;
+  const pred=(x,y)=>(w[0]*x/10+w[1]*y/10+b)>=0?1:0;
+  const draw=()=>{ let err=0; let dots='';
+    PTS.forEach(([x,y,l])=>{ const p=pred(x,y); if(p!==l) err++; dots+=`<circle cx="${X(x)}" cy="${Y(y)}" r="8" fill="${l?'var(--good)':'var(--bad)'}"/>${p!==l?`<circle cx="${X(x)}" cy="${Y(y)}" r="13" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="3 2"/>`:''}`; });
+    // boundary: w0*x/10 + w1*y/10 + b = 0
+    let line='';
+    if(Math.abs(w[1])>1e-6){ const yAt=x=>(-(w[0]*x/10)-b)*10/w[1]; line=`<line x1="${X(0)}" y1="${Y(yAt(0))}" x2="${X(10)}" y2="${Y(yAt(10))}" stroke="var(--wk)" stroke-width="3"/>`; }
+    else if(Math.abs(w[0])>1e-6){ const xv=-b*10/w[0]; line=`<line x1="${X(xv)}" y1="${Y(2)}" x2="${X(xv)}" y2="${Y(10)}" stroke="var(--wk)" stroke-width="3"/>`; }
+    el.querySelector('#nsvg').innerHTML=`<defs><clipPath id="pc"><rect x="40" y="20" width="340" height="250"/></clipPath></defs>
+      <rect x="40" y="20" width="340" height="250" fill="var(--bg)" stroke="var(--line)"/>
+      ${[0,2,4,6,8,10].map(v=>`<text x="${X(v)}" y="288" text-anchor="middle" font-size="10" class="t-muted t-mono">${v}</text>`).join('')}
+      ${[2,4,6,8,10].map(v=>`<text x="32" y="${Y(v)+3}" text-anchor="end" font-size="10" class="t-muted t-mono">${v}</text>`).join('')}
+      <text x="210" y="300" text-anchor="middle" font-size="10" class="t-muted">hours studied</text>
+      <text x="12" y="14" font-size="10" class="t-muted">hours slept</text>
+      <g clip-path="url(#pc)">${line}</g>${dots}`;
+    el.querySelector('#nm').innerHTML=`Round <b>${epoch}</b> · <b>${err}</b> of ${PTS.length} students on the wrong side · weights: studied ${w[0].toFixed(2)}, slept ${w[1].toFixed(2)}, bias ${b.toFixed(2)}. ${err===0?'<b>Every student is now classified correctly.</b>':'Dashed rings show mistakes.'}`; };
+  const round=()=>{ PTS.forEach(([x,y,l])=>{ const e=l-pred(x,y); if(e){ w[0]+=lr*e*x/10; w[1]+=lr*e*y/10; b+=lr*e; } }); epoch++; };
+  el.querySelector('#t1').addEventListener('click',()=>{round();draw();});
+  el.querySelector('#t10').addEventListener('click',()=>{for(let i=0;i<10;i++)round();draw();});
+  el.querySelector('#rs').addEventListener('click',()=>{w=[-0.5,1.0];b=0;epoch=0;draw();});
+  draw();
+}
+
+/* ---------- tokens + attention ---------- */
+function tokenize(t){ const out=[]; (t.match(/\s*[A-Za-zÀ-ɏ']+|\s*\d+|\s*[^\sA-Za-z\d]/g)||[]).forEach(w=>{ const core=w.trim(); if(core.length>7&&/^[A-Za-z']+$/.test(core)){ const sp=w.startsWith(' ')?' ':''; out.push(sp+core.slice(0,4)); let rest=core.slice(4); while(rest.length>5){ out.push(rest.slice(0,4)); rest=rest.slice(4);} out.push(rest); } else out.push(w); }); return out; }
+const hash=s=>{ let h=7; for(const c of s) h=(h*31+c.charCodeAt(0))%50000; return h; };
+const ATT={
+ heavy:{words:'The student put the book in her bag because it was heavy'.split(' '),w:{it:{book:.55,bag:.22,heavy:.1,student:.05,put:.04},her:{student:.72,bag:.12,book:.06},heavy:{it:.42,book:.31,bag:.12},put:{student:.4,book:.35,bag:.15}}},
+ small:{words:'The student put the book in her bag because it was too small'.split(' '),w:{it:{bag:.58,book:.2,small:.1,student:.05},her:{student:.72,bag:.12,book:.06},small:{it:.4,bag:.33,book:.12},put:{student:.4,book:.35,bag:.15}}}};
+function chatflow(el){
+  el.innerHTML=`<div class="ui stack">
+   <div><b>Step 1 · Tokenise.</b> Type anything:<input type="text" id="tt" value="Canadian University Dubai students understand transformers!"><div class="toks" id="tk"></div><p class="mono" style="color:var(--muted);margin:6px 0 0">Simplified tokenizer for teaching; real ones learn their pieces from data.</p></div>
+   <div><b>Step 2 · Attention.</b> Click a word to see which earlier words it “looks at”.
+     <div class="row" style="margin-top:6px"><button type="button" class="btn ghost" data-s="heavy" aria-pressed="true">…because it was heavy</button><button type="button" class="btn ghost" data-s="small" aria-pressed="false">…because it was too small</button></div>
+     <div class="att" id="att"></div><div class="feedback" id="am"></div></div></div>`;
+  const tt=el.querySelector('#tt');
+  const tk=()=>{ el.querySelector('#tk').innerHTML=tokenize(tt.value).map(t=>`<span class="tok">${t.replace(/ /g,'·')}<small>${hash(t)}</small></span>`).join(''); };
+  tt.addEventListener('input',tk); tk();
+  let s='heavy', sel='it';
+  const draw=()=>{ const S=ATT[s]; const wmap=S.w[sel]||{};
+    el.querySelector('#att').innerHTML=S.words.map(wd=>{ const key=wd.toLowerCase(); const v=wmap[key]||0; return `<button type="button" data-w="${key}" aria-pressed="${key===sel}" style="background:color-mix(in srgb,var(--wk) ${Math.round(v*100)}%,transparent)">${wd}${v?`<span>${Math.round(v*100)}%</span>`:''}</button>`; }).join('');
+    el.querySelectorAll('.att button').forEach(b=>b.addEventListener('click',()=>{ sel=b.dataset.w; draw(); }));
+    const top=Object.entries(wmap).sort((a,b)=>b[1]-a[1])[0];
+    el.querySelector('#am').innerHTML= top?`When the model reads “<b>${sel}</b>”, it pays most attention to “<b>${top[0]}</b>”. ${sel==='it'?`Change the ending of the sentence and watch “it” switch from <b>book</b> to <b>bag</b>.`:''}`:`Try “it”, “her”, “put” or the last word. (Weights are illustrative.)`; };
+  el.querySelectorAll('[data-s]').forEach(b=>b.addEventListener('click',()=>{ s=b.dataset.s; el.querySelectorAll('[data-s]').forEach(x=>x.setAttribute('aria-pressed',x===b)); sel='it'; draw(); }));
+  draw();
+}
+
+/* ---------- training stages ---------- */
+const STAGES=`<svg viewBox="0 0 580 170" role="img" aria-label="Three training stages: pre-training, fine-tuning, RLHF">
+ ${[['1 · Pre-training','reads huge amounts of text','predicts the next word','the model teaches itself'],['2 · Fine-tuning','example questions','and good answers','learns to be an assistant'],['3 · RLHF','humans rank answers','preferred ones rewarded','learns what people find helpful']].map(([t,a,b2,c],i)=>`<rect x="${10+i*192}" y="20" width="170" height="120" rx="10" fill="${i===0?'var(--wk)':'var(--wk-soft)'}" stroke="var(--wk)"/>
+ <text x="${95+i*192}" y="50" text-anchor="middle" font-size="14" font-weight="700" ${i===0?'style="fill:var(--surface)"':''}>${t}</text>
+ <text x="${95+i*192}" y="76" text-anchor="middle" font-size="11" ${i===0?'style="fill:var(--surface)"':'class="t-muted"'}>${a}</text>
+ <text x="${95+i*192}" y="92" text-anchor="middle" font-size="11" ${i===0?'style="fill:var(--surface)"':'class="t-muted"'}>${b2}</text>
+ <text x="${95+i*192}" y="120" text-anchor="middle" font-size="11" font-weight="700" ${i===0?'style="fill:var(--surface)"':''}>${c}</text>
+ ${i<2?`<path d="M${182+i*192} 80 L${200+i*192} 80" stroke="var(--muted)" stroke-width="2" marker-end="url(#a3)"/>`:''}`).join('')}
+ <text x="290" y="162" text-anchor="middle" font-size="11" class="t-muted">Like a student: read the whole library → practise with a tutor's model answers → get feedback on which answers people like</text>
+ <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="var(--muted)"/></marker></defs></svg>`;
+
+Lecture.mount({
+  id:'w3', week:3, clo:1, short:'Week 3 · How AI Thinks',
+  title:'How AI Thinks – Smart Tools, Not Magic',
+  meta:'RB f Chapter 2 · 3-hour session · Assignment 1',
+  scenes:[
+  { nav:'Start here', title:'How does it work? Learning from data, not magic', minutes:10,
+    narration:[
+     `AI can feel like magic. Today we open the box. Underneath there is no magic, only statistics, data and a lot of computing power, and you can understand all of it without writing a line of code.`,
+     `Our syllabus topics: <strong>The State of the Art · What Are the Leading AI and ML Technologies and Algorithms? · ChatGPT and the Leading AI and ML Technologies: Exploring Capabilities and Applications.</strong> This week builds <strong>CLO 1</strong>. Assignment 1 is due this week.`,
+     B.plain(`The idea to hold on to: a modern AI system is shown many examples, makes guesses, measures how wrong it was, and adjusts itself. Repeat millions of times. That is “learning”.`)],
+    src:`Reading: Santos, O., & Radanliev, P. (2024). <em>Beyond the algorithm: AI, security, privacy, and ethics</em>. Pearson. Chapter 2.`,
+    notes:[`Tone for the day: AI is not magic; it is statistics, data and computation, and students can understand it.`],
+    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: be the model`,15,'a'],[`AI, ML and deep learning`,15,'l'],[`Three types of ML`,15,'a'],[`A neural network learns`,20,'a'],[`Break`,10,'b'],[`Leading algorithms`,15,'l'],[`How ChatGPT works`,20,'a'],[`How ChatGPT was trained`,15,'l'],[`Capabilities and limits`,15,'l'],[`Exam takeaways`,15,'l'],[`Exit check`,15,'c']])} },
+
+  { nav:'Be the model', title:'Activity · Be the language model', kind:'activity', minutes:15,
+    narration:[
+     `Before we explain how ChatGPT works, you are going to <em>be</em> ChatGPT. For each sentence, guess the missing next word out loud. Then reveal the most common answer.`,
+     `Notice two things. First, you are very good at this, and nobody ever gave you a labelled list of answers: you learned from years of reading and listening. Second, you were sometimes confident and wrong.`,
+     B.plain(`This is <b>self-supervised learning</b>: the text itself provides the answers. Hide the next word, guess, check, adjust. A language model does exactly this, trillions of times. That is how it “teaches itself”.`)],
+    think:`Why could a model trained only to predict the next word end up “knowing” that Paris is the capital of France?`,
+    notes:[`Tally the class's guesses for one sentence on the board as a bar chart: that is a probability distribution.`,`Week 5 returns to this with an interactive next-word generator.`],
+    fig:{label:`Guess the next word`, build:el=>W.practice(el,[
+      {q:`The capital of France is ___`,hint:`<b>Paris</b>. A model gives it very high probability because it appears after this phrase so often in its training text.`},
+      {q:`I'd like a cup of ___`,hint:`<b>tea</b> or <b>coffee</b>. Two strong candidates: the model must <em>choose</em>, so answers vary.`},
+      {q:`Happy birthday to ___`,hint:`<b>you</b>. Almost certain. Patterns this strong are easy.`},
+      {q:`The best restaurant in Dubai is ___`,hint:`No single answer. A model will still produce something fluent and confident: the root of hallucination.`},
+      {q:`Assignment 1 is due on ___`,hint:`The model cannot know. It was never shown our Moodle page. It might still invent a date.`}],{label:'Reveal',prefix:'',numbered:true})} },
+
+  { nav:'AI ⊃ ML ⊃ DL', title:'AI, machine learning and deep learning: how they nest', minutes:15,
+    narration:[
+     B.plain(`<b>AI</b> is any machine showing intelligent behaviour. <b>Machine learning</b> is the part of AI that learns patterns from data. <b>Deep learning</b> is machine learning with many-layered neural networks.`),
+     B.ex(`Outer ring only (no learning): a chess program with hand-written rules. Middle ring: a spam filter that learns. Inner ring: ChatGPT.`),
+     B.exam(`<b>Deep learning ⊂ Machine learning ⊂ AI.</b> Be ready to draw this.`)],
+    notes:[`Draw the rings on the board. Every ML system is AI, but not all AI is ML.`],
+    fig:{label:`Click each ring`, build:rings} },
+
+  { nav:'Types of ML', title:'Three types of machine learning', kind:'activity', minutes:15,
+    narration:[
+     B.plain(`<ul><li><b>Supervised:</b> learns from examples <i>with</i> answers (emails labelled spam / not spam).</li><li><b>Unsupervised:</b> finds groups in data <i>without</i> answers (grouping customers by buying behaviour).</li><li><b>Reinforcement:</b> learns by trial, error and rewards (a game-playing agent, a robot learning to walk).</li></ul>`),
+     B.ex(`Teaching a child animals: flash cards with names = supervised. Letting the child sort toys into piles = unsupervised. A treat when they get it right = reinforcement.`),
+     `Now sort the examples on the right.`,
+     B.exam(`Supervised = <b>labelled</b>. Unsupervised = <b>no labels, finds groups</b>. Reinforcement = <b>rewards</b>. A very common exam question.`)],
+    notes:[`Ask students for one new example of each from their own major.`],
+    fig:{label:`Which type of learning?`, build:el=>W.sort(el,{buckets:['Supervised','Unsupervised','Reinforcement'],items:[
+      {t:`Predicting house prices from past sales with known prices`,a:0,why:`Each example has the answer (the price).`},
+      {t:`Grouping shoppers into segments by what they buy`,a:1,why:`No labels; the algorithm finds the groups.`},
+      {t:`AlphaGo improving by playing millions of games against itself`,a:2,why:`Winning is the reward.`},
+      {t:`Recognising handwritten digits from labelled images`,a:0,why:`Every image comes with the correct digit.`},
+      {t:`A robot learning to walk by falling and trying again`,a:2,why:`Staying upright is rewarded.`},
+      {t:`Finding unusual bank transactions with no fraud labels`,a:1,why:`Learn what is normal, flag what is not (Week 7: anomaly detection).`}]})} },
+
+  { nav:'A network learns', video:{id:'aircAruvnKk',title:'But what is a neural network? Deep learning chapter 1',by:'3Blue1Brown',why:'The clearest visual explanation of neurons, layers and weights. Watch after trying the neuron on this page.'}, title:'A neural network in plain words', kind:'activity', minutes:20, wide:true,
+    narration:[
+     B.plain(`Input (pixels, words, numbers) → hidden layers that find patterns step by step → output (“cat” 92%). <b>Training</b> = show an example, compare the network's answer with the right answer, nudge the connection strengths (<b>weights</b>) to reduce the error, repeat millions of times.`),
+     `On the right is the smallest possible network: a single “neuron” deciding whether a student passes, from hours studied and hours slept. Green students passed, red ones failed. The blue line is the neuron's current guess.`,
+     `Press <strong>Train 1 round</strong> a few times. Each round, every mistake nudges the weights. Watch the line move and the mistakes disappear. Nobody tells it where the line should go.`,
+     B.ex(`Recognising a cat in a deep network: the first layer sees edges, the next sees shapes (ears, eyes), the next sees “cat face”. Each layer builds on the last.`),
+     B.exam(`<b>Weights</b> = adjustable connection strengths. <b>Training</b> = adjusting weights to reduce error.`)],
+    think:`The neuron only ever sees these 15 students. Would you trust its line for a student who slept 2 hours and studied 20?`,
+    notes:[`Data are invented for teaching. The method (perceptron rule) is real and dates to 1958 (Week 2).`,`No calculus needed: “wrong → nudge towards right”.`],
+    fig:{label:`Watch one neuron learn`, build:neuron} },
+
+  { nav:'Leading algorithms', title:'Leading AI and ML algorithms at a glance', minutes:15,
+    narration:[
+     `The syllabus asks: what are the leading AI and ML technologies? You do not need the maths, but you should know what each one is <em>for</em>.`,
+     `<table class="tbl"><thead><tr><th>Model</th><th>What it does</th><th>Typical use</th></tr></thead><tbody><tr><td>Linear regression</td><td>Predicts a number</td><td>House price from size and location</td></tr><tr><td>Decision tree</td><td>Asks yes/no questions</td><td>Loan approval, triage</td></tr><tr><td>k-means</td><td>Groups similar items</td><td>Customer segments</td></tr><tr><td>Neural network</td><td>Learns complex patterns</td><td>Speech, images</td></tr><tr><td>CNN</td><td>Neural net for images</td><td>Face unlock, medical imaging</td></tr><tr><td>Transformer</td><td>Sequences with attention</td><td>ChatGPT, translation</td></tr><tr><td>Diffusion model</td><td>Creates images by removing noise</td><td>Image generators</td></tr></tbody></table>`,
+     B.exam(`Match each model to its job: <b>CNN = images</b>, <b>Transformer = language</b>, <b>k-means = grouping</b>, <b>regression = predict a number</b>.`)],
+    notes:[`Quick oral drill: say a use, students shout the model.`],
+    fig:{label:`Which model would you use?`, build:el=>W.quiz(el,[
+      {q:`Group 10,000 customers into types, with no labels`,o:[`Linear regression`,`k-means clustering`,`Transformer`,`CNN`],a:1,why:`Unsupervised grouping.`},
+      {q:`Detect pneumonia on chest X-rays`,o:[`CNN`,`k-means`,`Linear regression`,`Decision tree`],a:0,why:`CNNs are specialised for images (Week 6).`},
+      {q:`Translate Arabic to English`,o:[`Transformer`,`k-means`,`Linear regression`,`Diffusion model`],a:0,why:`Sequences of words: transformer with attention.`},
+      {q:`Predict tomorrow's electricity demand in kWh`,o:[`Linear regression`,`Diffusion model`,`k-means`,`CNN`],a:0,why:`Predicting a number.`}])} },
+
+  { nav:'How ChatGPT works', video:[{id:'wjZofJX0v4M',title:'Transformers, the tech behind LLMs',by:'3Blue1Brown',why:'How a transformer turns tokens into a prediction of the next word.'},{id:'eMlx5fFNoYc',title:'Attention in transformers, step-by-step',by:'3Blue1Brown',why:'Going further: how attention lets words use context. Optional.'}], title:'How ChatGPT works, in four steps', kind:'activity', minutes:20, wide:true,
+    narration:[
+     `<b>1 · Tokenise:</b> your text is cut into small pieces called tokens. <b>2 · Understand context:</b> the transformer weighs which earlier words matter, using <b>attention</b>. <b>3 · Predict:</b> it picks a likely next token from probabilities. <b>4 · Repeat:</b> it adds that token and predicts again until the answer is complete.`,
+     `Try steps 1 and 2 on the right. Type your own sentence to see the tokens. Then click “it” in the sentence and compare the two endings: the same word attends to different words depending on context. That is the job attention does, and the reason transformers were such a breakthrough in 2017.`,
+     B.ex(`You type “The capital of France is”. The model gives high probability to “Paris”, picks it, then continues. It is predicting likely text, not looking up a fact.`),
+     B.exam(`LLMs <b>predict the next token</b>. Key terms: <b>token, transformer, attention, probability</b>.`)],
+    think:`If the model never “looks up” facts, where does its knowledge actually live?`,
+    notes:[`Attention weights shown are illustrative, chosen to show the idea clearly.`],
+    fig:{flow:[{t:'Tokenise',s:'text → pieces',d:'Your text is cut into tokens. Try it below.'},{t:'Attention',s:'weigh context',d:'Each token looks at the other tokens to decide which ones matter. Try it below with “it”.'},{t:'Predict',s:'next token',d:'The model gives every possible next token a probability and picks a likely one.'},{t:'Repeat',s:'until done',d:'The new token is added to the text and the loop runs again, one token at a time.'}],label:`Tokens and attention`, build:chatflow} },
+
+  { nav:'How it was trained', title:'How was ChatGPT trained? Three stages', minutes:15,
+    narration:[
+     B.plain(`<ul><li><b>1. Pre-training:</b> read huge amounts of text and learn language patterns by predicting the next word. No human labels: the model teaches itself (self-supervised learning).</li><li><b>2. Fine-tuning:</b> train on example questions with good answers, so it behaves like an assistant.</li><li><b>3. RLHF:</b> humans rank answers; the model is rewarded for the preferred ones (Reinforcement Learning from Human Feedback).</li></ul>`),
+     B.ex(`Like a student: first reads the whole library (pre-training), then practises with a tutor's sample answers (fine-tuning), then gets feedback on which answers people like best (RLHF).`),
+     B.exam(`Three stages: <b>pre-training → fine-tuning → RLHF</b>. RLHF = learning from human feedback.`)],
+    think:`Which stage do you think made ChatGPT polite? Which made it knowledgeable?`,
+    notes:[`Link back to the hook: pre-training is the “be the model” game at enormous scale.`],
+    fig:{label:`Pre-training → fine-tuning → RLHF`, html:STAGES} },
+
+  { nav:'Capabilities and limits', title:'State of the art: capabilities and limits', minutes:15,
+    narration:[
+     `<table class="tbl"><thead><tr><th>Strong at</th><th>Limits</th></tr></thead><tbody><tr><td>Writing drafts, summaries, emails</td><td><b>Hallucination:</b> confident false answers</td></tr><tr><td>Explaining any topic simply</td><td><b>No true understanding:</b> predicts text patterns</td></tr><tr><td>Coding help</td><td><b>Bias:</b> reflects its training data</td></tr><tr><td>Translating dozens of languages</td><td><b>Wording sensitivity:</b> small changes alter answers</td></tr></tbody></table>`,
+     B.exam(`Always verify important facts. An LLM is a powerful text predictor, <b>not a source of truth</b>. Across text, images, speech and science, the ingredients are the same: <b>data + model + compute</b>.`)],
+    notes:[`These capabilities return in later weeks: healthcare images (6), art (8), design (9).`],
+    fig:{label:`What AI can do today`, build:el=>W.picker(el,{'State of the art':[[`Text`,`Chatbots, summaries, translation, code help.`],[`Images`,`Recognise objects; generate pictures from a text description.`],[`Speech`,`Voice assistants, live captions, voice cloning.`],[`Video`,`Text-to-video, editing, and deepfakes.`],[`Science`,`Protein structures (AlphaFold), weather forecasting, new materials.`],[`Robotics`,`Warehouse robots, self-driving research, drones.`]]})} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 3', kind:'exam', minutes:15,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Nesting:</b> deep learning ⊂ machine learning ⊂ AI.</li><li><b>Three ML types:</b> supervised (labels), unsupervised (groups), reinforcement (rewards).</li><li><b>Neural net:</b> input, hidden layers, output; weights adjusted in training.</li><li><b>Models:</b> CNN = images; Transformer = language; k-means = grouping.</li><li><b>ChatGPT:</b> tokenise, attention, predict next token, repeat.</li><li><b>Training:</b> pre-training, fine-tuning, RLHF.</li></ul>`),
+     `Pair task: explain the ChatGPT four-step flow to your partner without notes, then swap.`],
+    fig:{mindmap:{center:'How AI thinks',branches:[{t:'Nesting',items:['Deep learning ⊂ ML ⊂ AI']},{t:'Types of ML',items:['Supervised: labels','Unsupervised: groups','Reinforcement: rewards']},{t:'Neural networks',items:['Input → hidden layers → output','Weights = connection strengths','Training reduces error']},{t:'Key models',items:['CNN = images','Transformer = language','k-means = grouping','Regression = a number']},{t:'ChatGPT',items:['Tokenise','Attention','Predict next token','Repeat']},{t:'Training',items:['Pre-training (self-supervised)','Fine-tuning','RLHF']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Draw and explain AI, ML and deep learning.`,hint:`Nested circles; rule-based chess (AI only), spam filter (ML), ChatGPT (DL).`},
+      {q:`Compare supervised and unsupervised learning with examples.`,hint:`Supervised uses labelled answers (spam/not spam); unsupervised finds groups without labels (customer segments).`},
+      {q:`Explain how ChatGPT generates an answer.`,hint:`Tokenise → attention weighs context → predict next token from probabilities → repeat.`},
+      {q:`State two strengths and two limits of LLMs.`,hint:`Strengths: writing, explaining, translating, coding. Limits: hallucination, no true understanding, bias, wording sensitivity.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:15,
+    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 4:</strong> read RB a, Chapter 13 and RB b, Chapter 7.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Which statement is correct?`,o:[`AI ⊂ ML ⊂ deep learning`,`Deep learning ⊂ ML ⊂ AI`,`ML and AI are unrelated`,`Deep learning is not AI`],a:1,why:`Deep learning is a kind of ML, which is a kind of AI.`},
+      {q:`Grouping customers without any labels is…`,o:[`supervised learning`,`unsupervised learning`,`reinforcement learning`,`RLHF`],a:1,why:`No labels; the algorithm finds structure.`},
+      {q:`During training, a neural network…`,o:[`writes new rules in English`,`adjusts its weights to reduce error`,`searches the internet`,`memorises every example only`],a:1,why:`Weights are nudged after each mistake.`},
+      {q:`What does “attention” do in a transformer?`,o:[`Stops the model from getting bored`,`Weighs which other words matter for each word`,`Counts tokens`,`Checks facts online`],a:1,why:`It lets each word use context from the rest of the text.`},
+      {q:`In pre-training, a language model mainly learns by…`,o:[`humans labelling every sentence`,`predicting the next word in huge amounts of text`,`playing games`,`copying Wikipedia exactly`],a:1,why:`Self-supervised: the text provides the answers.`},
+      {q:`RLHF stands for…`,o:[`Rapid Learning for High Frequency`,`Reinforcement Learning from Human Feedback`,`Rule Logic for Human Facts`,`Recurrent Layers for Hidden Features`],a:1,why:`Humans rank answers; preferred ones are rewarded.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

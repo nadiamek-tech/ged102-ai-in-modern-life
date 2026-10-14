@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Exams · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body>
+<main class="hub">
+  <h1>Exams</h1>
+  <p class="lede">Two exams make up 70% of your grade. Here is what each one includes and how to prepare.</p>
+  <div class="exams" id="exams"></div>
+  <h2>How to prepare</h2>
+  <p class="sub">Open “Practise &amp; remember” at the end of every lecture: one mind map and six questions per week. Then use the review page for the full midterm practice.</p>
+  <p class="foot">Missed an exam? Email the professor the same day with your reason and official evidence. See the <a href="index.html#q">FAQ</a>.</p>
+</main>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/hub.js"></script>
+<script>
+const {C,esc,dueText}=Hub; Hub.top('exams.html');
+document.getElementById('exams').innerHTML=C.assess.filter(a=>a.exam).map(a=>{
+  const ws=C.weeks.filter(([n])=>a.id==='mid'?n<=7:n<=15);
+  return `<section class="exam-card" id="${a.id}"><span class="eyebrow">${esc(a.type)} · ${a.weight}% · Week ${a.week}</span><h3>${esc(a.name)}</h3>
+    <dl class="facts"><div><dt>When</dt><dd>${esc(dueText(a))}</dd></div><div><dt>Type</dt><dd>${esc(a.type)}</dd></div></dl>
+    <p>${esc(a.brief)}</p><b>What is included</b>
+    <ul>${ws.map(([n,t,,,href])=>`<li>${href?`<a href="${href}">Week ${n} · ${esc(t)}</a>`:`Week ${n} · ${esc(t)}`}</li>`).join('')}</ul>
+    ${a.id==='mid'?'<a class="btn" href="review.html">Midterm review →</a>':'<span class="tag">Review page released before the final</span>'}</section>`; }).join('');
+if(location.hash){ const t=document.querySelector(location.hash); if(t) t.scrollIntoView(); }
+</script>
+</body>
+</html>

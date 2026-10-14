@@ -58,7 +58,7 @@ h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;marg
 .toc li button[aria-current="true"]{background:var(--wk-soft);color:var(--ink);font-weight:600}
 .toc li button[aria-current="true"] .n{color:var(--wk)}
 .toc .kind{display:inline-block;font-family:var(--f-mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;border:1px solid currentColor;border-radius:4px;padding:0 4px;margin-left:6px;vertical-align:1px;opacity:.75}
-.toc li.seen .n::after{content:" ✓";color:var(--good)}
+.toc li.seen .t::after{content:" ✓";color:var(--good);font-size:.8em}
 
 /* ---------- stage ---------- */
 .stage{min-width:0}
@@ -286,3 +286,24 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
 .chip.k-bonus{border-color:var(--good);color:var(--good)}
 .cred-steps{margin:.4em 0 0;padding-left:1.2em;font-size:.92rem}
 .cred-all{font-size:.88rem;margin-top:4px}
+/* lean layout: parts in the sidebar, tool cards */
+.toc li.part{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:var(--wk);padding:14px 10px 4px;border-top:1px solid var(--line);margin-top:6px}
+.toc li.part:first-child{border-top:0;margin-top:0;padding-top:4px}
+.toolcard{border:1.5px solid var(--wk);border-radius:12px;padding:14px 16px;background:var(--wk-soft)}
+.tc-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-family:var(--f-display)}
+.tc-head b{display:block;font-size:1.1rem}
+.tc-by{font-size:.84rem;color:var(--muted)}
+@media (max-width:900px){.toc li.part{display:none}}
+
+.newscard{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;border:1px solid var(--line);border-left:4px solid var(--wk);border-radius:12px;padding:14px 16px;text-decoration:none;color:var(--ink);font-family:var(--f-display);background:var(--bg)}
+.newscard:hover{border-color:var(--wk)}
+.newscard img{width:100%;max-height:260px;object-fit:cover;border-radius:8px}
+.newscard b{display:block;font-size:1.12rem;line-height:1.3;margin:4px 0}
+.newscard p{margin:0 0 6px;color:var(--muted);font-size:.92rem}
+.newscard small{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--wk)}
+.photo img{width:100%;max-height:380px;object-fit:contain;border-radius:10px;background:var(--sunk)}
+.photo small{display:block;margin-top:6px;color:var(--muted);font-family:var(--f-display);font-size:.78rem}
+.photo.noimg img{display:none}
+.photo.noimg{padding:18px;border:1px dashed var(--line);border-radius:10px}
+.toc li.p4{border-top:1px solid var(--line);margin-top:6px;padding-top:6px}
+.toc li.p4 button{font-weight:700;color:var(--wk)}

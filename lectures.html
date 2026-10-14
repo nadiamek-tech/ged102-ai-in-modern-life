@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lectures · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body>
+<main class="hub">
+  <h1>Lectures</h1>
+  <p class="lede">Each 3-hour lecture has three parts: the lecture (60 min), a tools lab (60 min), and case studies with the AI Nerd session (50 min). It ends with “Practise &amp; remember”. Read, or press Listen.</p>
+  <div class="wlist" id="list"></div>
+  <p class="foot">Need to revise for the midterm? Open <a href="review.html">the midterm review</a>.</p>
+</main>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/hub.js"></script>
+<script>
+const {C,esc,weekDates}=Hub; Hub.top('lectures.html');
+document.getElementById('list').innerHTML=C.weeks.filter(w=>w[0]<16).map(([n,t,clo,ref,href])=>{
+  const tag=href?'a':'div', cr=window.COURSE_CREDS&&COURSE_CREDS.weeks[n];
+  return `<${tag} class="wrow${href?'':' off'}"${href?` href="${href}"`:''}><span class="no">${String(n).padStart(2,'0')}</span>
+    <div><h3>${esc(t)}</h3><small>${[weekDates(n),ref?'Reading: '+ref:'',clo?'CLO '+clo:''].filter(Boolean).map(esc).join(' · ')}</small>
+    ${href?`<div class="parts"><span>Lecture</span><span>Tools lab</span><span>Case studies</span>${cr?`<span>AI Nerd: ${esc(cr.mod)}</span>`:''}</div>`:''}</div>
+    <span class="go">${href?'<span class="btn">Open →</span>':'<span class="tag">Coming soon</span>'}</span></${tag}>`; }).join('');
+</script>
+</body>
+</html>

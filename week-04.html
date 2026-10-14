@@ -60,114 +60,91 @@ const COMPAS=(()=>{ const Y=v=>190-v/50*160; const bars=[['Black defendants',44.
   ${bars.map(([t,v,c],i)=>`<rect x="${100+i*150}" y="${Y(v)}" width="90" height="${Y(0)-Y(v)}" rx="4" fill="${c}"/><text x="${145+i*150}" y="${Y(v)-8}" text-anchor="middle" font-size="14" font-weight="700">${v}%</text><text x="${145+i*150}" y="210" text-anchor="middle" font-size="11">${t}</text>`).join('')}
   <text x="230" y="234" text-anchor="middle" font-size="10" class="t-muted">Wrongly labelled high risk, among people who did not reoffend · ProPublica (2016)</text></svg>`; })();
 
-Lecture.mount({
-  id:'w4', week:4, clo:2, short:'Week 4 · AI in Everyday Life',
-  title:'AI in Everyday Life',
-  meta:'RB a Chapter 13 · RB b Chapter 7 · 3-hour session',
-  scenes:[
-  { nav:'Start here', title:'Who benefits, and who is at risk?', minutes:10,
-    narration:[
-     `Weeks 1 to 3 asked what AI is, where it came from and how it works. This week asks the question that matters most for society: <em>who does it affect?</em> AI is already in your pocket. The question is whether it narrows the gaps between people or widens them.`,
-     `Our syllabus topics: <strong>Ask Me Anything · The Impact of AI on Social Equity · Who's going to benefit from this technological revolution? · Are the disruptive effects inevitable?</strong> This week moves to <strong>CLO 2</strong>: identify how AI technologies are applied in different aspects of daily life.`,
-     B.plain(`The big idea of the week: <b>impact depends on human choices</b>. The same technology can help or harm, depending on who builds it, for whom, and with what data.`)],
-    think:`Write down one question about AI you have always wanted to ask. We will collect them in the “Ask me anything” scene.`,
-    src:`Reading: Mitchell (2020), RB a Chapter 13; Kaplan (2016), RB b Chapter 7.`,
-    notes:[`Collect five student questions on the board at the start; answer them at the end of the session.`],
-    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Activity: AI in your pocket`,15,'a'],[`How recommendations work`,20,'a'],[`Ask me anything`,15,'l'],[`Social equity`,15,'l'],[`Break`,10,'b'],[`Who benefits?`,15,'a'],[`Biased algorithms`,20,'l'],[`Debate: inevitable?`,20,'a'],[`What can we do?`,10,'l'],[`Exam takeaways`,15,'l'],[`Exit check`,15,'c']])} },
-
-  { nav:'AI in your pocket', title:'Activity · AI is already in your pocket', kind:'activity', minutes:15,
-    narration:[
-     `Open your phone. Find as many AI features as you can in five minutes and tick them on the right.`,
-     `For each one, ask: what does it predict, and what data did it learn from?`,
-     B.exam(`Most everyday AI is <b>narrow AI</b> built on <b>prediction from data</b>.`)],
-    notes:[`Students usually find more than they expect. Ask the top finder to present their list.`],
-    fig:{label:`Phone AI hunt`, build:hunt} },
-
-  { nav:'Recommendations', video:{id:'B8ofWFx525s',title:'Beware online “filter bubbles”',by:'TED · Eli Pariser',why:'The talk that named the filter bubble. Does it describe your feed?'}, title:'How recommendations work, and the filter bubble', kind:'activity', minutes:20, wide:true,
-    narration:[
-     `<b>1 · Collect</b> what you watch, like and skip. <b>2 · Compare</b> you with similar users. <b>3 · Predict</b> what you will click next. <b>4 · Show</b> a personalised feed.`,
-     B.ex(`You watch three cooking videos. The system finds others who watched those and also liked a baking channel, so it suggests baking to you.`),
-     `Try it on the right. Click only one kind of video, about ten times, and watch your feed. How many topics are left?`,
-     B.exam(`Risk: the <b>filter bubble</b>. The more you click, the narrower your feed becomes.`)],
-    think:`Who decides what you see on your feed: you, the algorithm, or the company that sets its goals?`,
-    notes:[`This is collaborative filtering in plain words: “people like you liked this”. The simulator is a simplified model.`],
-    fig:{flow:[{t:'Collect',s:'watch, like, skip',d:'The app records what you watch, like and skip.'},{t:'Compare',s:'people like you',d:'It finds users whose history looks like yours.'},{t:'Predict',s:'your next click',d:'It estimates what you are most likely to click next.'},{t:'Show',s:'your feed',d:'It fills your feed with those predictions. Your clicks feed step 1 again: a loop.'}],label:`Your feed · click what you like`, build:bubble} },
-
-  { nav:'Ask me anything', title:'Ask me anything: six common questions', minutes:15,
-    narration:[
-     `Here are six questions students ask most often, with short, honest answers. Guess the answer before you reveal it. Then add the questions your class wrote at the start.`,
-     B.plain(`Uncertainty is fine. Good answers about AI often begin with “it depends”, followed by <b>what</b> it depends on.`)],
-    notes:[`Replace or add the students' own questions from the opening round.`],
-    fig:{label:`Reveal each answer`, build:el=>W.practice(el,[
-      {q:`Will AI take my job?`,hint:`It will change many jobs; tasks automate more than whole jobs. Skills that combine AI use with human judgment gain value.`},
-      {q:`Is AI conscious?`,hint:`There is no evidence of that. Current AI predicts patterns and does not have feelings.`},
-      {q:`Is my data safe?`,hint:`It depends on the service. Read privacy settings and do not share sensitive data.`},
-      {q:`Can I trust what AI says?`,hint:`Verify. It can be confidently wrong (hallucination).`},
-      {q:`Is AI biased?`,hint:`It can be, because it learns from human data.`},
-      {q:`Should I learn AI?`,hint:`Yes. The skill is using it well and critically.`}],{label:'Answer',prefix:''})} },
-
-  { nav:'Social equity', title:'Social equity: what it means for AI', minutes:15,
-    narration:[
-     B.plain(`<b>Social equity</b> means fair access to opportunities and outcomes. The question for AI: does it reduce gaps between people, or make them wider?`),
-     `Equity is different from equality. Equality gives everyone the same; equity gives people what they need to reach a fair outcome.`,
-     B.exam(`Four lenses on equity: <b>Access · Representation · Outcomes · Power</b>.`)],
-    think:`Apply the four lenses to a chatbot that works well in English and poorly in Arabic. Which lens shows the problem most clearly?`,
-    notes:[`Ask students to pick one lens and give a UAE example.`],
-    fig:{label:`Four lenses · click each`, build:el=>W.picker(el,{'Lenses':[[`Access`,`Who has the devices, internet, English skills and training to use AI?`],[`Representation`,`Is the training data about everyone, or mostly one group?`],[`Outcomes`,`Does AI treat groups fairly in hiring, loans, justice and health?`],[`Power`,`Who owns the data, the models and the profits?`]]})} },
-
-  { nav:'Who benefits?', title:'Who is going to benefit from the AI revolution?', kind:'activity', minutes:15,
-    narration:[
-     `<table class="tbl"><thead><tr><th>Likely to benefit</th><th>At greater risk</th></tr></thead><tbody><tr><td>People with digital skills and access</td><td>People without devices, internet or training</td></tr><tr><td>Companies with data and capital</td><td>Small businesses that cannot afford AI</td></tr><tr><td>Workers who combine domain knowledge with AI</td><td>Workers in routine, easily automated tasks</td></tr><tr><td>Countries investing in skills and infrastructure</td><td>Countries that only import technology</td></tr><tr><td>Patients and students getting personalised help</td><td>Groups under-represented in training data</td></tr></tbody></table>`,
-     B.exam(`Benefit is <b>not automatic</b>. Gains flow to those with data, capital, skills and access, unless policy spreads them.`)],
-    notes:[`Encourage students to think about their own position honestly.`],
-    fig:{label:`Where do you stand?`, build:el=>W.poll(el,{q:`In your future career, where do you expect to stand?`,opts:[`Likely to benefit`,`At some risk`,`Both, depending on my choices`,`I don't know yet`],reveal:i=>[`What will you do to keep that advantage, and who could you help?`,`Which skill would move you to the other column? Assignment 4 later asks you to imagine this future.`,`The most realistic answer for most people. The choices are the point of this week.`,`An honest answer. This course is designed to help you find out.`][i]})} },
-
-  { nav:'Biased algorithms', video:{id:'UG_X_7g63rY',title:"How I'm fighting bias in algorithms",by:'TED · Joy Buolamwini',why:'A researcher discovers that face-analysis software failed to see her face, and asks why.'}, title:'Case: biased algorithms in the real world', minutes:20,
-    narration:[
-     B.plain(`Both cases below learned from historical human decisions. If history was unfair, the model copies it and makes it look objective.`),
-     `<b>COMPAS (US courts):</b> software predicting who might reoffend. ProPublica (2016) reported that Black defendants who did not reoffend were wrongly labelled high risk almost twice as often as white defendants (44.9% vs 23.5%). The vendor disputed the analysis.`,
-     `<b>Amazon recruiting tool:</b> an experimental CV-screening model trained on past hires, who were mostly men. It learned to downgrade CVs mentioning “women's”. Amazon scrapped it (Reuters, 2018).`,
-     B.exam(`<b>Algorithmic bias</b> = unfair results from biased data or design. Main cause: <b>biased training data</b>.`)],
-    think:`The COMPAS vendor said its scores were equally accurate for both groups. ProPublica said the mistakes fell unequally. Can both be true? (Yes, and that is why “fairness” needs a definition.)`,
-    src:`Angwin, J., Larson, J., Mattu, S., & Kirchner, L. (2016). Machine bias. ProPublica. · Dastin, J. (2018). Amazon scraps secret AI recruiting tool that showed bias against women. Reuters.`,
-    notes:[`Northpointe (the vendor) disputed the methodology. Present it as a contested case; the debate itself is the lesson.`,`These cases return in Weeks 6, 7 and 10.`],
-    fig:{label:`COMPAS · false “high risk” labels`, html:COMPAS} },
-
-  { nav:'Inevitable?', title:'Debate · Are the disruptive effects inevitable?', kind:'activity', minutes:20,
-    narration:[
-     `<b>View 1, inevitable:</b> technology drives change and society must adapt. Jobs disappear whatever we do. <b>View 2, a choice:</b> people, companies and governments decide how AI is used, taxed, regulated and taught.`,
-     B.ex(`When ATMs arrived, many feared bank tellers would vanish. For years teller numbers in the US actually grew, as banks opened more branches and the job shifted towards customer service. Disruption was real, but shaped by choices.`),
-     `Split the room: one side argues “inevitable”, the other “a choice”. Three minutes to prepare, then two speakers each. Vote at the end.`,
-     B.exam(`Balanced answer: AI will change work (IMF, 2024: about <b>40% of jobs worldwide</b> exposed to AI, about 60% in advanced economies), but the effects depend on choices: reskilling, policy, design.`)],
-    notes:[`Technological determinism vs social choice. ATM example: James Bessen's work. Not every worker transitions easily; acknowledge that.`],
-    fig:{label:`Vote after the debate`, build:el=>W.poll(el,{q:`Are the disruptive effects of AI inevitable?`,opts:[`Yes, technology decides`,`No, people decide`,`Partly: the change is coming, the shape is our choice`],reveal:i=>[`That is technological determinism. Your opponents will point to ATMs and to policy.`,`That is the social-choice view. Your opponents will point to how fast AI is spreading.`,`The strongest exam answer: name both views, then use evidence (IMF 40%, ATMs).`][i]})} },
-
-  { nav:'What can we do?', title:'Making AI work for everyone', minutes:10,
-    narration:[
-     `If impact depends on choices, whose choices? At least four levels share responsibility.`,
-     B.exam(`Impact depends on human choices at four levels: <b>individuals, organisations, governments, designers</b>.`)],
-    notes:[`Connect to Week 10 (limits, bias, black box) and the ethics weeks later in the course.`],
-    fig:{label:`Four levels · click each`, build:el=>W.picker(el,{'Who can act':[[`Individuals`,`Build AI skills, verify outputs, protect your data, question results.`],[`Organisations`,`Test for bias, be transparent, keep humans in the loop, retrain staff.`],[`Governments`,`Regulate high-risk uses, fund education and access, protect privacy.`],[`Designers`,`Use diverse data, explain decisions, include affected communities.`]]})} },
-
-  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 4', kind:'exam', minutes:15,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Everyday AI:</b> recommendations, maps, face unlock, spam filters; mostly narrow AI.</li><li><b>Recommendation:</b> collect, compare, predict, show; risk = filter bubble.</li><li><b>Equity lenses:</b> access, representation, outcomes, power.</li><li><b>Who benefits:</b> those with data, capital, skills, access; others at risk.</li><li><b>Cases:</b> COMPAS (justice) and the Amazon recruiting tool: biased past data.</li><li><b>Inevitable?</b> Determinism vs choice; IMF 2024: about 40% of jobs exposed.</li></ul>`),
-     `Return to the questions your class wrote at the start. Which ones can you now answer?`],
-    fig:{mindmap:{center:'Who does AI affect?',branches:[{t:'Everyday AI',items:['Face unlock · maps · spam','Mostly narrow AI','Prediction from data']},{t:'Recommendations',items:['Collect · compare · predict · show','Risk: filter bubble']},{t:'Equity lenses',items:['Access','Representation','Outcomes','Power']},{t:'Who benefits',items:['Data, capital, skills, access','At risk: routine jobs','At risk: under-represented groups']},{t:'Bias cases',items:['COMPAS: 44.9% vs 23.5%','Amazon recruiting tool (2018)']},{t:'Inevitable?',items:['Determinism vs choice','IMF 2024: ≈40% of jobs exposed','ATMs and bank tellers']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+/* ---------- figures and videos kept from the original lecture ---------- */
+const FIG={
+ 'AI in your pocket':{label:`Phone AI hunt`, build:hunt},
+ 'Recommendations':{flow:[{t:'Collect',s:'watch, like, skip',d:'The app records what you watch, like and skip.'},{t:'Compare',s:'people like you',d:'It finds users whose history looks like yours.'},{t:'Predict',s:'your next click',d:'It estimates what you are most likely to click next.'},{t:'Show',s:'your feed',d:'It fills your feed with those predictions. Your clicks feed step 1 again: a loop.'}],label:`Your feed · click what you like`, build:bubble},
+ 'Social equity':{label:`Four lenses · click each`, build:el=>W.picker(el,{'Lenses':[[`Access`,`Who has the devices, internet, English skills and training to use AI?`],[`Representation`,`Is the training data about everyone, or mostly one group?`],[`Outcomes`,`Does AI treat groups fairly in hiring, loans, justice and health?`],[`Power`,`Who owns the data, the models and the profits?`]]})},
+ 'Who benefits?':{label:`Where do you stand?`, build:el=>W.poll(el,{q:`In your future career, where do you expect to stand?`,opts:[`Likely to benefit`,`At some risk`,`Both, depending on my choices`,`I don't know yet`],reveal:i=>[`What will you do to keep that advantage, and who could you help?`,`Which skill would move you to the other column? Assignment 4 later asks you to imagine this future.`,`The most realistic answer for most people. The choices are the point of this week.`,`An honest answer. This course is designed to help you find out.`][i]})},
+ 'Biased algorithms':{label:`COMPAS · false “high risk” labels`, html:COMPAS},
+ 'Inevitable?':{label:`Vote after the debate`, build:el=>W.poll(el,{q:`Are the disruptive effects of AI inevitable?`,opts:[`Yes, technology decides`,`No, people decide`,`Partly: the change is coming, the shape is our choice`],reveal:i=>[`That is technological determinism. Your opponents will point to ATMs and to policy.`,`That is the social-choice view. Your opponents will point to how fast AI is spreading.`,`The strongest exam answer: name both views, then use evidence (IMF 40%, ATMs).`][i]})},
+ 'Exam takeaways':{mindmap:{center:'Who does AI affect?',branches:[{t:'Everyday AI',items:['Face unlock · maps · spam','Mostly narrow AI','Prediction from data']},{t:'Recommendations',items:['Collect · compare · predict · show','Risk: filter bubble']},{t:'Equity lenses',items:['Access','Representation','Outcomes','Power']},{t:'Who benefits',items:['Data, capital, skills, access','At risk: routine jobs','At risk: under-represented groups']},{t:'Bias cases',items:['COMPAS: 44.9% vs 23.5%','Amazon recruiting tool (2018)']},{t:'Inevitable?',items:['Determinism vs choice','IMF 2024: ≈40% of jobs exposed','ATMs and bank tellers']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Give three examples of AI in everyday life.`,hint:`Recommendations, maps traffic, face unlock, spam filters, autocorrect; say what each predicts.`},
       {q:`What is algorithmic bias? Give a real case.`,hint:`Unfair results from biased data or design; COMPAS (44.9% vs 23.5%) or the Amazon recruiting tool.`},
       {q:`Who benefits from AI and who is at risk?`,hint:`Those with data, capital, skills and access vs those without; use the four equity lenses.`},
-      {q:`Are the disruptive effects of AI inevitable? Argue.`,hint:`Both views; evidence: IMF 2024 (≈40% of jobs exposed), ATMs and tellers; conclude that choices shape outcomes.`}])} },
-
-  { nav:'Exit check', title:'Exit check', kind:'check', minutes:15,
-    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 5:</strong> read TB Chapter 5 (Moutinho, Cavique & Bigné, 2023) on LLMs in education.`],
-    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`Are the disruptive effects of AI inevitable? Argue.`,hint:`Both views; evidence: IMF 2024 (≈40% of jobs exposed), ATMs and tellers; conclude that choices shape outcomes.`}])},
+ 'Exit check':{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`A “filter bubble” happens when…`,o:[`your phone overheats`,`recommendations narrow what you see the more you click`,`an app blocks spam`,`you turn off personalisation`],a:1,why:`Feedback loops narrow the feed.`},
       {q:`Which is NOT one of the four equity lenses?`,o:[`Access`,`Representation`,`Speed`,`Power`],a:2,why:`The lenses are access, representation, outcomes and power.`},
       {q:`ProPublica's COMPAS analysis found that…`,o:[`the tool was perfectly fair`,`Black non-reoffenders were wrongly labelled high risk about twice as often`,`the tool was never used in courts`,`white defendants were always labelled high risk`],a:1,why:`44.9% vs 23.5%; the vendor disputed the analysis.`},
       {q:`Why did Amazon's recruiting tool downgrade women's CVs?`,o:[`It was told to`,`It learned from past hires who were mostly men`,`Women applied less`,`A bug in the website`],a:1,why:`Biased training data.`},
       {q:`The IMF (2024) estimated that about what share of jobs worldwide are exposed to AI?`,o:[`4%`,`40%`,`90%`,`100%`],a:1,why:`About 40% worldwide, about 60% in advanced economies.`},
-      {q:`The ATM example shows that…`,o:[`technology always destroys jobs`,`disruption is real but shaped by choices`,`banks stopped hiring`,`ATMs use AI`],a:1,why:`Teller jobs changed rather than vanished for years.`}])} }
+      {q:`The ATM example shows that…`,o:[`technology always destroys jobs`,`disruption is real but shaped by choices`,`banks stopped hiring`,`ATMs use AI`],a:1,why:`Teller jobs changed rather than vanished for years.`}])}
+};
+const V={
+ 'Biased algorithms':{id:'UG_X_7g63rY',title:"How I'm fighting bias in algorithms",by:'TED · Joy Buolamwini',why:'A researcher discovers that face-analysis software failed to see her face, and asks why.'}
+};
+
+Lecture.mount({
+  id:'w4', week:4, clo:2, short:'Week 4 · AI in Everyday Life',
+  title:'AI in Everyday Life',
+  meta:'RB a Chapter 13 · RB b Chapter 7 · 3 hours',
+  scenes:[
+  { part:1, nav:'AI in your pocket', title:'AI is already in your pocket',
+    narration:[`Take out your phone and tick every AI feature you used today. Face unlock, autocorrect, photo search, maps and your feeds are all narrow AI making predictions from data, most of the time without you noticing.`],
+    fig:FIG['AI in your pocket'] },
+
+  { part:1, nav:'Recommendations', title:'How your feed decides what you see', full:true,
+    narration:[`A recommender collects what you watch, like and skip, compares you with similar users, predicts your next click and fills your feed with it. Your clicks then feed the next round, so the loop can narrow what you see into a filter bubble. Click a few videos below and watch your feed change.`],
+    fig:FIG['Recommendations'] },
+
+  { part:1, nav:'Social equity', title:'Social equity: four lenses',
+    narration:[`Social equity asks whether AI's benefits and harms are shared fairly. Four lenses help: who has access, who is represented in the data, who is affected by decisions, and who has a voice in how systems are built.`],
+    fig:FIG['Social equity'] },
+
+  { part:1, nav:'Who benefits?', title:'Who benefits from the AI revolution?',
+    narration:[`AI creates winners and losers at the same time. People with skills, data and capital tend to gain first, while routine jobs and groups missing from the data carry more of the risk. Where do you expect to stand?`],
+    fig:FIG['Who benefits?'] },
+
+  { part:2, nav:'My Ad Center', title:'See what Google thinks you like',
+    narration:[`Google's My Ad Center shows the topics, brands and personal details it uses to choose your ads. Sign in with your own account, compare its guesses with reality, and switch off one topic you do not want to be targeted by.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'My Ad Center',by:'Google',account:'Google account',url:'https://myadcenter.google.com/',steps:[
+      {t:'Sign in',s:'your account',d:'Open My Ad Center with your own Google account.'},
+      {t:'Read',s:'topics and brands',d:'List three guesses that are right and one that is wrong.'},
+      {t:'Explain',s:'why that guess?',d:'Which of your searches or videos could have produced each guess?'},
+      {t:'Control',s:'switch one off',d:'Turn off one topic, or turn personalised ads off completely.'}]})} },
+
+  { part:2, nav:'Survival of the Best Fit', title:'Build a hiring algorithm, then watch it go wrong',
+    narration:[`Survival of the Best Fit is a short game made by students at NYU Abu Dhabi. You hire people by hand, then hand the job to a machine that learns from your past choices. Play it to the end and explain where the bias came from.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Survival of the Best Fit',by:'NYU Abu Dhabi students · 10 minutes',url:'https://www.survivalofthebestfit.com/',steps:[
+      {t:'Hire',s:'by hand',d:'Choose candidates for your company as fast as you can.'},
+      {t:'Automate',s:'train the model',d:'The game trains a model on your past decisions.'},
+      {t:'Watch',s:'who gets rejected',d:'Notice which group the model starts to reject, and why.'},
+      {t:'Explain',s:'one sentence',d:'Write down where the bias came from: the model, or the data you gave it?'}]})} },
+
+  { part:3, nav:'Case: COMPAS', title:'Case: a risk score in court',
+    narration:[`COMPAS scores defendants in some US courts on how likely they are to reoffend. In 2016 ProPublica found that Black defendants who did not reoffend were almost twice as likely as white defendants to be wrongly labelled high risk. The data reflected past policing, and the model learned it.`],
+    src:`Source: Angwin, J. et al. (2016). <a href="https://www.propublica.org/article/machine-bias-risk-assessments-in-criminal-sentencing" target="_blank" rel="noopener">Machine Bias</a>. ProPublica.`,
+    fig:FIG['Biased algorithms'] },
+
+  { part:3, nav:'Case: Amazon hiring', title:'Case: the hiring tool that learned to prefer men',
+    narration:[`Amazon built a tool to rate job applicants, trained on ten years of CVs that came mostly from men. It learned to mark down CVs that included the word “women's”, and Amazon dropped the project. It is the real version of the game you just played.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Reuters via CNBC',date:'10 October 2018',head:'Amazon scraps a secret AI recruiting tool that showed bias against women',dek:'The model was trained on a decade of CVs, most of them from men, and penalised CVs that included the word “women’s”.',url:'https://www.cnbc.com/2018/10/10/amazon-scraps-a-secret-ai-recruiting-tool-that-showed-bias-against-women.html'})} },
+
+  { part:3, nav:'Watch: Buolamwini', title:'Watch: “the coded gaze”',
+    narration:[`Joy Buolamwini found that face-analysis software failed to see her face until she wore a white mask. Watch her talk and note the three steps she proposes for fairer code.`],
+    fig:{label:`Watch`, build:el=>W.video(el,V['Biased algorithms'])} },
+
+  { part:3, nav:'Inevitable?', title:'Debate: are the disruptive effects inevitable?',
+    narration:[`One side says technology decides and the disruption is coming whatever we do. The other says people decide, through laws, companies and choices. Debate in two groups, then vote.`],
+    fig:FIG['Inevitable?'] },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`IBM's free Machine Learning and Deep Learning course shows how the models behind your feed are trained. It is course 3 of the AI Fundamentals badge. Finish it and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open each branch of the mind map, then answer the six questions. Before Week 5, read TB Chapter 5 on large language models in education.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:FIG['Exam takeaways'].mindmap, build:FIG['Exit check'].build} }
   ]
 });
 </script>

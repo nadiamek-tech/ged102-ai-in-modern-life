@@ -1,0 +1,306 @@
+{
+ "week-01": [
+  [
+   "Artificial intelligence is the field of building computer systems that do tasks which normally need human intelligence: understanding language, recognising images, making decisions and learning from experience. It is a goal, a field of study and a family of very different tools, from your spam filter to ChatGPT."
+  ],
+  [
+   "Sort each item, then reveal the answers. Notice the pattern: the items that count as AI learn from data or adapt, while the others follow one fixed rule."
+  ],
+  [
+   "Russell and Norvig sort definitions of AI by two questions: should a machine think or act, and should it copy humans or be ideally rational? That gives four views. Most modern AI follows the fourth, acting rationally: choosing the best action to reach a goal."
+  ],
+  [
+   "Ordinary software follows rules a programmer wrote: rules plus data give answers. Machine learning turns this around: data plus answers give the rules. Change the rule filter on the right and try to catch every spam email without blocking the free pizza announcement."
+  ],
+  [
+   "AI did not come from computer science alone. Philosophy, mathematics, statistics, neuroscience, linguistics, psychology and economics each gave it a key idea, which is why AI is called interdisciplinary."
+  ],
+  [
+   "AI is both a science and an engineering discipline. It tests hypotheses and measures results on shared benchmarks, but much of it is building tools that work before we fully understand why, and black-box models make some results hard to explain or reproduce."
+  ],
+  [
+   "All AI today is narrow: superhuman at one task and helpless at everything else. General AI does not exist yet, and super AI is theoretical. Moravec's paradox explains the gap: what is hard for us, like chess, is easy for machines, and what is easy for a child, like recognising a friend, is hard for them."
+  ],
+  [
+   "Teachable Machine lets you train an image model in the browser with your webcam. Teach it two objects, test it with a third it has never seen, and watch it still pick one of the two with confidence: it only knows what its data showed it."
+  ],
+  [
+   "Quick, Draw! asks you to sketch six objects in 20 seconds each while a neural network guesses what you are drawing. It learned from millions of doodles drawn by players around the world. At the end, open a drawing it missed and compare yours with the examples it learned from."
+  ],
+  [
+   "In 1950 the British mathematician Alan Turing published “Computing Machinery and Intelligence”. Instead of defining thinking, he proposed a test: if a judge chatting by text cannot tell the machine from a human, the machine passes. The question still drives debates about ChatGPT today."
+  ],
+  [
+   "In 1980 the philosopher John Searle replied with the Chinese Room: a person who knows no Chinese follows a rule book and gives perfect Chinese answers, yet understands nothing. Turing judges behaviour; Searle says behaviour is not understanding. Vote, then defend your answer with one of the two."
+  ],
+  [
+   "This week's ideas continue in IBM's free Introduction to Artificial Intelligence course, the first step towards the AI Fundamentals badge. Finish it, keep your proof, and send it for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Before Week 2, read RB a, Chapters 1–3 (Mitchell), and pick one moment in AI history that interests you: it could become Assignment 1."
+  ]
+ ],
+ "week-02": [
+  [
+   "ChatGPT looks new, but it is the latest chapter of an 80-year story. Vote for the year you think AI began as a named field, then see the answer."
+  ],
+  [
+   "A mathematical neuron in 1943, Turing's question in 1950, and the 1956 Dartmouth workshop, where John McCarthy's proposal named the field “artificial intelligence”. Click the dots: the line shows how excitement and funding rose and fell for eighty years."
+  ],
+  [
+   "Early AI was symbolic: experts wrote IF-THEN rules and the computer followed them, with no learning from data. Try the expert system on the right with an unusual patient, and watch it fall silent or fire two rules that disagree."
+  ],
+  [
+   "Researchers promised human-level AI within a generation. When slow computers, scarce data and brittle rules could not deliver, funding collapsed twice: in the 1970s and again in the late 1980s. These periods are called AI winters."
+  ],
+  [
+   "Neural networks existed since the perceptron in 1958, and backpropagation showed how to train them in 1986. They only took off around 2012, when three ingredients finally met: big data, fast graphics chips and better algorithms."
+  ],
+  [
+   "Click the milestones from oldest to newest. Wrong clicks shake and are counted, so try for zero mistakes."
+  ],
+  [
+   "ELIZA, written by Joseph Weizenbaum at MIT, matched keywords and turned your sentences back into questions. Some users still believed it understood them. Chat with it for five minutes and find the rules behind its replies."
+  ],
+  [
+   "Deep Blue won by searching millions of positions per second. Lichess lets you run Stockfish, a modern engine, in your browser. Make a few moves, switch on computer analysis, and watch it score the position and list the lines it is searching."
+  ],
+  [
+   "Deep Blue beat Kasparov at chess with expert-written scoring and brute-force search. Go has more possible positions than there are atoms in the observable universe, so search alone cannot win it. AlphaGo learned from human games and then from playing itself, and beat Lee Sedol in 2016."
+  ],
+  [
+   "Watch the opening of the AlphaGo film in class. Note the moment experts called a move “creative”, and ask yourself: can a learned move be creative if no human taught it?"
+  ],
+  [
+   "Microsoft Learn's Introduction to AI concepts module turns this history into today's vocabulary. Finish it, keep the trophy, and send your proof for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Assignment 1, “Where it all began”, uses today's timeline: the brief, rubric and submission button are on the course page. Before Week 3, read RB f, Chapter 2."
+  ]
+ ],
+ "week-03": [
+  [
+   "Before any theory, play the machine. Guess the missing word in each sentence, then open the answer. You just did what a language model does: predict the most likely next word from patterns you have seen before."
+  ],
+  [
+   "The three terms nest inside each other. AI is the whole field. Machine learning is the part of AI that learns from data. Deep learning is the part of machine learning that uses neural networks with many layers."
+  ],
+  [
+   "Supervised learning learns from labelled examples, like emails marked spam. Unsupervised learning finds groups with no labels, like customer types. Reinforcement learning learns by trial and error with rewards, like AlphaGo. Sort the examples on the right."
+  ],
+  [
+   "A neural network is built from simple units. Each one multiplies its inputs by weights, adds them up, and fires if the total passes a threshold. Training means nudging the weights after every mistake. Press “Train 1 round” a few times and watch the dividing line move until it separates the two groups."
+  ],
+  [
+   "ChatGPT cuts your text into tokens, uses attention to decide which earlier tokens matter, predicts a likely next token, adds it, and repeats until the reply is done. Play the flow, then try the tokeniser and attention demo below it."
+  ],
+  [
+   "First, pre-training on a huge amount of text teaches the model to predict the next word. Then fine-tuning on example conversations teaches it to follow instructions. Finally, human feedback rewards the answers people prefer."
+  ],
+  [
+   "TensorFlow Playground shows a real neural network learning live. Pick a dataset, press play, and watch the coloured background change as the weights update. Then remove neurons and layers until it can no longer learn the spiral."
+  ],
+  [
+   "Transformer Explainer runs a small GPT-2 model in your browser. Type a sentence and follow it through tokens, attention and the final probabilities for the next word. Move the temperature slider and watch the choices become safer or more surprising."
+  ],
+  [
+   "In 2023 a New York judge fined two lawyers who had filed a legal brief citing court cases that did not exist: ChatGPT had invented them. A language model predicts likely text, not true text. This is called hallucination, and the fix is human checking."
+  ],
+  [
+   "Different problems need different algorithms: regression predicts numbers, clustering finds groups, convolutional networks read images and transformers handle language. Choose the right tool for each real case."
+  ],
+  [
+   "IBM's free Natural Language Processing and Computer Vision course goes deeper into how machines read text and see images. It is course 2 of the AI Fundamentals badge. Finish it and send your proof for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Assignment 1 is due this week: the brief and submission button are on the course page. Before Week 4, read RB a, Chapter 13 and RB b, Chapter 7."
+  ]
+ ],
+ "week-04": [
+  [
+   "Take out your phone and tick every AI feature you used today. Face unlock, autocorrect, photo search, maps and your feeds are all narrow AI making predictions from data, most of the time without you noticing."
+  ],
+  [
+   "A recommender collects what you watch, like and skip, compares you with similar users, predicts your next click and fills your feed with it. Your clicks then feed the next round, so the loop can narrow what you see into a filter bubble. Click a few videos below and watch your feed change."
+  ],
+  [
+   "Social equity asks whether AI's benefits and harms are shared fairly. Four lenses help: who has access, who is represented in the data, who is affected by decisions, and who has a voice in how systems are built."
+  ],
+  [
+   "AI creates winners and losers at the same time. People with skills, data and capital tend to gain first, while routine jobs and groups missing from the data carry more of the risk. Where do you expect to stand?"
+  ],
+  [
+   "Google's My Ad Center shows the topics, brands and personal details it uses to choose your ads. Sign in with your own account, compare its guesses with reality, and switch off one topic you do not want to be targeted by."
+  ],
+  [
+   "Survival of the Best Fit is a short game made by students at NYU Abu Dhabi. You hire people by hand, then hand the job to a machine that learns from your past choices. Play it to the end and explain where the bias came from."
+  ],
+  [
+   "COMPAS scores defendants in some US courts on how likely they are to reoffend. In 2016 ProPublica found that Black defendants who did not reoffend were almost twice as likely as white defendants to be wrongly labelled high risk. The data reflected past policing, and the model learned it."
+  ],
+  [
+   "Amazon built a tool to rate job applicants, trained on ten years of CVs that came mostly from men. It learned to mark down CVs that included the word “women's”, and Amazon dropped the project. It is the real version of the game you just played."
+  ],
+  [
+   "Joy Buolamwini found that face-analysis software failed to see her face until she wore a white mask. Watch her talk and note the three steps she proposes for fairer code."
+  ],
+  [
+   "One side says technology decides and the disruption is coming whatever we do. The other says people decide, through laws, companies and choices. Debate in two groups, then vote."
+  ],
+  [
+   "IBM's free Machine Learning and Deep Learning course shows how the models behind your feed are trained. It is course 3 of the AI Fundamentals badge. Finish it and send your proof for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Before Week 5, read TB Chapter 5 on large language models in education."
+  ]
+ ],
+ "week-05": [
+  [
+   "Read the two answers on the right and vote: which one did a chatbot write? If it is hard to tell, that is exactly why large language models are changing how students learn and how teachers assess."
+  ],
+  [
+   "A large language model predicts the next word, again and again, from patterns in huge amounts of text. It sounds fluent because it has seen so much language, but it does not check facts, so it can be confidently wrong."
+  ],
+  [
+   "Students use LLMs as tutors, writing helpers and study planners. Teachers use them to draft materials and feedback. Institutions use them for support chatbots and admissions. Each use brings its own benefit and its own risk."
+  ],
+  [
+   "In 1984 Benjamin Bloom found that students with a one-to-one tutor performed about two standard deviations better than students in a normal class. AI tutors promise that advantage at scale, if they guide students to think instead of giving them answers."
+  ],
+  [
+   "The same tools can harm learning: answers you did not think through, invented facts and sources, unfair detectors, privacy leaks, unequal access, and over-reliance that weakens your own skills. Open each threat on the right."
+  ],
+  [
+   "Copilot is free with a Microsoft account. Ask it to explain this week's idea, then ask it to quiz you instead of giving answers. Compare the two chats: one outsources your thinking, the other trains it."
+  ],
+  [
+   "NotebookLM answers only from the documents you upload and shows a citation for every claim. Upload this week's slides or chapter, ask three questions, and click the citations to check where each answer came from."
+  ],
+  [
+   "Sal Khan, founder of Khan Academy, argues that AI tutors could give every student the benefit of personal tutoring. Watch critically: which of today's threats does he address, and which does he skip?"
+  ],
+  [
+   "In 2023 OpenAI withdrew its own tool for spotting AI-written text because of its low accuracy. A Stanford study found that seven popular detectors wrongly flagged over half of essays written by non-native English speakers. A detector score alone is not proof."
+  ],
+  [
+   "This answer was written in the style of an AI tutor, and some sentences are false. Click the ones you think are wrong, then check your score."
+  ],
+  [
+   "Google's free Introduction to Generative AI and Introduction to Large Language Models courses explain the tools from today's lab. They lead to the Generative AI Fundamentals skill badge. Finish them and send your proof for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Before Week 6, read TB Chapter 3, Artificial Intelligence in Healthcare, and start choosing your field for Assignment 2."
+  ]
+ ],
+ "week-06": [
+  [
+   "Imagine your chest X-ray is waiting to be read. Vote: a doctor alone, the AI alone, or both together? Keep your answer; we test it against real evidence later today."
+  ],
+  [
+   "AI appears at every stage of care: triage, diagnosis, treatment planning, drug discovery, monitoring at home and hospital operations. Click each stage to see a real example."
+  ],
+  [
+   "A diagnostic model is the image classifier from Week 3, trained on thousands of labelled scans. It gives each new image a score, a threshold turns the score into a flag, and a clinician reviews the flagged cases and decides."
+  ],
+  [
+   "Every screening model needs a threshold. Set it low and you catch more disease but raise many false alarms. Set it high and alarms fall but you miss sick patients. Move the slider and decide which mistake is worse."
+  ],
+  [
+   "Developing a new medicine usually takes many years. AI speeds up the early steps by predicting protein structures and which molecules might fit a target, so only the best candidates go to the lab and to clinical trials."
+  ],
+  [
+   "The AlphaFold Protein Structure Database holds over 200 million structures predicted by DeepMind's AlphaFold. Search for haemoglobin or insulin, rotate the 3D model, and read the colour code that shows how confident the prediction is."
+  ],
+  [
+   "Open Teachable Machine again and train two classes: an open hand and a fist. Then show a half-open hand. The confidence falls, which is exactly the case a medical threshold must handle."
+  ],
+  [
+   "Predicting how a protein folds was a grand challenge in biology for fifty years. Watch how the AlphaFold team approached it; its creators shared the 2024 Nobel Prize in Chemistry."
+  ],
+  [
+   "Epic's sepsis model was used in hundreds of US hospitals. When Michigan Medicine tested it independently in 2021, it caught only about a third of sepsis patients and alerted on almost one in five of all patients. Vendor claims need independent testing."
+  ],
+  [
+   "If an AI misses a cancer, who is to blame: the developer, the hospital, the doctor who trusted it, or the regulator who approved it? Divide the responsibility on the right and defend your split."
+  ],
+  [
+   "Microsoft Learn's Introduction to computer vision module explains how models read images like the scans we studied today. Finish it, keep the trophy, and send your proof for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Before Week 7, read RB c, Chapter 1, and choose your field for Assignment 2."
+  ]
+ ],
+ "week-07": [
+  [
+   "Your bank has just blocked your card and sent you a message. No person looked at it: a model did. Vote on what triggered the block."
+  ],
+  [
+   "Banks use AI to detect fraud, score credit and manage risk. Investors use it to build portfolios and trade. Businesses use it to forecast demand, set prices and answer customers. Click each use for an example."
+  ],
+  [
+   "A fraud model learns your normal pattern: usual amounts, places, times and shops. A payment that breaks several patterns at once gets a high score and is blocked. Change the signals on the right and watch the score."
+  ],
+  [
+   "Credit models predict who will repay a loan from past data. If past lending was unfair, the model learns that unfairness, approves fewer people from the same groups, and creates new data that confirms it. That is the bias loop."
+  ],
+  [
+   "Portfolio optimisation chooses a mix of investments that balances return and risk. Mixing assets that do not move together lowers risk without giving up much return. Move the slider between the two funds and find the safest mix."
+  ],
+  [
+   "A robo-advisor asks about your goals and comfort with risk, proposes a portfolio, and rebalances it automatically when markets move. It is cheap and consistent, but special situations still need a human adviser."
+  ],
+  [
+   "Businesses forecast demand from search data. In Google Trends, compare searches for “umbrella” and “sunscreen” in the United Arab Emirates over five years, and describe the seasonal pattern a shop could plan for."
+  ],
+  [
+   "Open a new Google Sheet, enter twelve months of sales, and let the FORECAST.LINEAR function predict month thirteen. Then add one unusual month and see how much a single outlier moves the prediction."
+  ],
+  [
+   "On 6 May 2010 US stock prices plunged and recovered within about half an hour. The official SEC and CFTC report found that one large automated sell order, executed fast and without regard to price, triggered a chain reaction among trading algorithms."
+  ],
+  [
+   "Kevin Slavin shows how trading and pricing algorithms already run much of the economy, sometimes in ways nobody fully understands. Watch and note one example that surprised you."
+  ],
+  [
+   "Finance AI can be biased, opaque, fooled by situations missing from its data, and dangerous when many firms use similar models at once. Open each risk and name one way to reduce it."
+  ],
+  [
+   "Microsoft Learn's Fundamentals of machine learning module explains regression, classification and clustering, the models behind today's fraud, credit and forecasting examples. Finish it and send your proof for a class-activity bonus."
+  ],
+  [
+   "Open each branch of the mind map, then answer the six questions. Assignment 2, “AI in my world”, is set this week: the brief, rubric and submission button are on the course page. The midterm is next week and covers Weeks 1 to 7."
+  ]
+ ],
+ "review": [
+  [
+   "The midterm covers Weeks 1 to 7 and is worth 30% of your grade. This page collects everything you need: two summary tables, the four themes that repeat, flashcards for every key term, and practice questions with hints.",
+   "REMEMBER FOR THE EXAM\nThe answer formula for almost any question: define the term, give a real example, name a benefit, name a risk, and finish with human oversight. Marking rewards this structure.",
+   "Revise each week's Exam takeaways scene and the two tables here.\nSelf-test with the flashcards until you know them all.\nPractise the 14 questions aloud with a partner, then check the hints.\nRetake each week's exit check."
+  ],
+  [
+   "If you can fill in this table from memory, you are ready for Weeks 1–4. Cover a column and test yourself."
+  ],
+  [
+   "Your master memory aid for comparison questions. Practise saying one row across all three fields."
+  ],
+  [
+   "REMEMBER FOR THE EXAM\nExam trick: for any application question, finish with these four themes. They fit education, health and finance."
+  ],
+  [
+   "Read the cards first. Then switch on Self-test: tap a card to reveal the meaning, and tap again to mark it as known. Aim for all of them."
+  ],
+  [
+   "Try each question without notes, aloud or on paper. Then open the hint and compare."
+  ],
+  [
+   "Same method. For the discuss and essay questions, use the answer formula."
+  ],
+  [
+   "Ten questions across all seven weeks. Note the ones you miss and revisit that week's takeaways."
+  ],
+  [
+   "Revise: each week's Exam takeaways and the two tables.\nPractise: the 14 questions aloud with a partner.\nRemember the formula: define → example → benefit → risk → human oversight.\nReminder: the midterm covers Weeks 1–7 and is worth 30% of the course grade.",
+   "Questions? Bring them to office hours before the exam."
+  ]
+ ]
+}

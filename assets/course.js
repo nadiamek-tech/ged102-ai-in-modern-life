@@ -112,6 +112,22 @@
         else { miss++; b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); }
       }));
     },
+    tool(el, t){
+      const box=h('div',{class:'toolcard'});
+      box.innerHTML=`<div class="tc-head"><div><span class="eyebrow">Free tool${t.account?' · '+esc(t.account):' · no account'}</span><b>${esc(t.name)}</b><span class="tc-by">${esc(t.by||'')}</span></div><a class="btn" href="${t.url}" target="_blank" rel="noopener">Open ↗</a></div>`;
+      el.appendChild(box);
+      if(t.steps){ const fl=h('div',{style:'margin-top:12px'}); el.appendChild(fl); W.flow(fl,t.steps); }
+    },
+    news(el, n){
+      const a=h('a',{class:'newscard',href:n.url,target:'_blank',rel:'noopener'});
+      a.innerHTML=`${n.img?`<img src="${n.img}" alt="${esc(n.alt||'')}" loading="lazy" onerror="this.remove()">`:''}<div><span class="eyebrow">In the news · ${esc(n.outlet)}${n.date?' · '+esc(n.date):''}</span><b>${esc(n.head)}</b>${n.dek?`<p>${n.dek}</p>`:''}<small>Read the source ↗</small></div>`;
+      el.appendChild(a);
+    },
+    photo(el, p){
+      const f=h('div',{class:'photo'});
+      f.innerHTML=`<img src="${p.src}" alt="${esc(p.alt)}" loading="lazy" onerror="this.parentNode.classList.add('noimg')"><small>${p.credit||''}${p.href?` · <a href="${p.href}" target="_blank" rel="noopener">View the original ↗</a>`:''}</small>`;
+      el.appendChild(f);
+    },
     video(el, v){
       const embed=!/claude|anthropic/.test(location.hostname);  // embed everywhere except the Claude preview (it blocks iframes)
       const url=`https://www.youtube.com/watch?v=${v.id}${v.start?`&t=${v.start}s`:''}`;
@@ -173,12 +189,12 @@
   window.Lecture = { W, B, mount(cfg){
     document.title = cfg.pageTitle || document.title;
     const S = cfg.scenes; let cur = 0;
-    if(window.COURSE_CREDS && window.COURSE_CREDS.weeks[cfg.week] && !S.some(x=>x.kind==='bonus'))
-      S.push({ nav:'Keep learning', title:'Optional, but important', kind:'bonus',
-        narration:['This week\'s topic continues in a free industry course. Finish the unit, earn a recognised badge, and get a bonus for class activity.'] });
+    if(window.COURSE_CREDS && window.COURSE_CREDS.weeks[cfg.week] && !S.some(x=>x.kind==='bonus')){
+      const nerd={ part:3, nav:'AI Nerd', title:'AI Nerd · take it further', kind:'bonus',
+        narration:['Today\'s topic continues in a free industry course. Finish this unit, earn a recognised badge for your CV, and send your proof for a class-activity bonus.'] };
+      const at=S.findIndex(x=>x.part===4); if(at<0) S.push(nerd); else S.splice(at,0,nerd); }
     const seen = new Set(JSON.parse(store.get('ged102-seen-'+cfg.id)||'[]'));
     document.body.dataset.layout = store.get('ged102-layout') || 'even';
-    if(store.get('ged102-teacher')==='1') document.body.classList.add('teacher');
 
     const bar=h('header',{class:'bar'});
     bar.innerHTML=`<div class="bar-in">
@@ -189,7 +205,6 @@
           <button type="button" data-l="text">Text</button><button type="button" data-l="even">Even</button><button type="button" data-l="diagram">Diagram</button>
         </div>
         <button type="button" class="pill listen" id="listen" aria-pressed="false">▶ Listen</button>
-        <button type="button" class="pill" id="teach" aria-pressed="false" title="Show timings and facilitation notes">Teacher notes</button>
         <button type="button" class="pill" id="theme" title="Switch light or dark">◐ Theme</button>
       </div></div><div class="progress"><i></i></div>`;
     document.body.appendChild(bar);
@@ -199,7 +214,10 @@
     toc.innerHTML=`<div class="eyebrow">Week ${cfg.week} · CLO ${cfg.clo}</div><h1>${esc(cfg.title)}</h1>
       <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Eng. Nadia Mek')}</b></div>`;
     const ol=h('ol'); toc.appendChild(ol);
-    S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review',bonus:'bonus'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
+    const PARTS=cfg.parts||{1:'Lecture · 60 min',2:'Tools lab · 60 min',3:'Case studies & AI Nerd · 50 min',4:'Practise & remember'};
+    let lastPart=null;
+    S.forEach((s,i)=>{ if(s.part&&s.part!==lastPart){ lastPart=s.part; if(s.part<4) ol.appendChild(h('li',{class:'part'},`${s.part<4?'Part '+s.part+' · ':''}${esc(PARTS[s.part]||'')}`)); }
+      const li=h('li',{class:'sc'+(s.part===4?' p4':'')}); const b=h('button',{type:'button'},`<span class="n">${String(i+1).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
     const stage=h('main',{class:'stage',id:'stage'});
     shell.append(toc,stage); document.body.appendChild(shell);
 
@@ -207,9 +225,6 @@
     const segBtns=bar.querySelectorAll('.seg button');
     const setLayout=l=>{ document.body.dataset.layout=l; store.set('ged102-layout',l); segBtns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.l===l)); };
     segBtns.forEach(b=>b.addEventListener('click',()=>setLayout(b.dataset.l))); setLayout(document.body.dataset.layout);
-    const teach=bar.querySelector('#teach');
-    const syncTeach=()=>teach.setAttribute('aria-pressed',document.body.classList.contains('teacher'));
-    teach.addEventListener('click',()=>{document.body.classList.toggle('teacher'); store.set('ged102-teacher',document.body.classList.contains('teacher')?'1':'0'); syncTeach();}); syncTeach();
     bar.querySelector('#theme').addEventListener('click',toggleTheme);
     const listen=bar.querySelector('#listen');
     listen.addEventListener('click',()=>{ speaking?stop():speak(); });
@@ -262,8 +277,7 @@
       const s=S[cur]; stop(); stage.innerHTML='';
       const kindLabel={lecture:'Lecture',activity:'In-class activity',check:'Check your understanding',exam:'Exam takeaways',review:'Review',bonus:'Optional · bonus'}[s.kind||'lecture'];
       const head=h('div',{class:'scene-head'});
-      head.innerHTML=`<div><div class="eyebrow">Scene ${cur} of ${S.length-1}</div><h2>${s.title}</h2></div>
-        <div class="chips"><span class="chip k-${s.kind||'lecture'}">${kindLabel}</span>${s.minutes?`<span class="chip">${s.minutes} min</span>`:''}</div>`;
+      head.innerHTML=`<div><div class="eyebrow">${s.part?(s.part<4?'Part '+s.part+' · ':'')+esc(PARTS[s.part]||''):'Scene '+(cur+1)}</div><h2>${s.title}</h2></div>`;
       stage.appendChild(head);
       const split=h('div',{class:'split'+(s.fig?'':' nofig')+(s.wide?' wide':'')+(s.full?' full':'')});
       const narr=h('div',{class:'narr'});
@@ -286,7 +300,7 @@
         card.querySelector('input').addEventListener('change',e=>store.set(key,e.target.checked?'1':'0'));
         narr.appendChild(card);
       }
-      if(s.notes) narr.appendChild(h('div',{class:'notes'},`<span class="eyebrow">Teacher notes${s.minutes?` · ${s.minutes} min`:''}</span><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`));
+      /* teacher notes are never shown on student pages */
       split.appendChild(narr);
       if(s.fig){ const f=h('figure',{class:'fig',style:'margin:0'}); if(s.fig.label) f.appendChild(h('span',{class:'eyebrow'},esc(s.fig.label)));
         if(s.fig.mindmap){ const mm=h('div',{style:'margin-bottom:18px'}); f.appendChild(mm); W.mindmap(mm,s.fig.mindmap); }
@@ -297,8 +311,8 @@
       const prev=h('button',{type:'button',class:'prev'},`<small>← Previous</small>${cur>0?esc(S[cur-1].nav||S[cur-1].title):'Start'}`); prev.disabled=cur===0; prev.addEventListener('click',()=>go(cur-1));
       const nxt=h('button',{type:'button',class:'next'},`<small>Next →</small>${cur<S.length-1?esc(S[cur+1].nav||S[cur+1].title):'End of lecture'}`); nxt.disabled=cur===S.length-1; nxt.addEventListener('click',()=>go(cur+1));
       pager.append(prev,h('span',{class:'kbd'},'← → keys'),nxt); stage.appendChild(pager);
-      ol.querySelectorAll('li').forEach((li,i)=>{ li.querySelector('button').setAttribute('aria-current',i===cur); li.classList.toggle('seen',seen.has(i)); });
-      const cb=ol.children[cur].querySelector('button'); if(cb.scrollIntoView && innerWidth<900) cb.scrollIntoView({block:'nearest',inline:'center'});
+      ol.querySelectorAll('li.sc').forEach((li,i)=>{ li.querySelector('button').setAttribute('aria-current',i===cur); li.classList.toggle('seen',seen.has(i)); });
+      const cb=ol.querySelectorAll('li.sc')[cur].querySelector('button'); if(cb.scrollIntoView && innerWidth<900) cb.scrollIntoView({block:'nearest',inline:'center'});
       bar.querySelector('.progress i').style.width=(cur/(S.length-1)*100)+'%';
       seen.add(cur); store.set('ged102-seen-'+cfg.id,JSON.stringify([...seen]));
     }

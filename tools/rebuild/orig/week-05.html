@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 5 · AI in Education</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#2F55C8;--wk-soft:rgba(47,85,200,.10);--wk-d:#8AA6FF;--wk-soft-d:rgba(138,166,255,.14)}
+.bars{display:grid;gap:6px;font-family:var(--f-display);font-size:.88rem}
+.bars .b{display:grid;grid-template-columns:96px minmax(0,1fr) 48px;gap:8px;align-items:center}
+.bars .track{height:16px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.bars .fill{height:100%;background:var(--wk);transition:width .3s}
+.bars .b.hit .fill{background:var(--warn)}
+.bars .b.hit span:first-child{font-weight:700;color:var(--warn)}
+.out{font-family:var(--f-body);font-size:1.05rem;padding:12px 14px;border-radius:8px;background:var(--bg);border:1px solid var(--line);min-height:3.2em}
+.out em{font-style:normal;background:var(--mark);padding:0 3px;border-radius:3px}
+.lanes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.lane h4{font-size:.85rem;font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.lane button{display:block;width:100%;text-align:left;border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:7px 9px;margin-bottom:6px;cursor:pointer;font-family:var(--f-display);font-size:.86rem}
+.lane button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+.detail{margin-top:10px;font-family:var(--f-display);font-size:.92rem;border-top:1px solid var(--line);padding-top:10px}
+.threats{display:grid;gap:6px}
+.threats details{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:8px 12px;font-family:var(--f-display);font-size:.92rem}
+.threats summary{cursor:pointer;font-weight:600}
+.threats p{margin:.4em 0 0}
+.claim{display:inline;cursor:pointer;border-radius:3px;padding:1px 2px;border-bottom:1px dashed var(--line)}
+.claim:hover{background:var(--sunk)}
+.claim.flag{background:color-mix(in srgb,var(--bad) 18%,transparent);border-bottom-color:var(--bad)}
+.claim.ok-shown{background:color-mix(in srgb,var(--good) 14%,transparent)}
+.claim.bad-shown{background:color-mix(in srgb,var(--bad) 18%,transparent)}
+.tutor{font-family:var(--f-body);line-height:1.75;padding:14px 16px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.tutor .who{font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.policy .item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line);font-family:var(--f-display);font-size:.9rem}
+.light{display:flex;gap:4px}
+.light button{width:30px;height:26px;border-radius:6px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-family:var(--f-mono);font-size:.7rem;font-weight:600}
+.light button[data-c="R"][aria-pressed="true"]{background:var(--bad);color:var(--surface);border-color:var(--bad)}
+.light button[data-c="A"][aria-pressed="true"]{background:var(--warn);color:var(--surface);border-color:var(--warn)}
+.light button[data-c="G"][aria-pressed="true"]{background:var(--good);color:var(--surface);border-color:var(--good)}
+@media (max-width:560px){.lanes{grid-template-columns:minmax(0,1fr)}.bars .b{grid-template-columns:80px minmax(0,1fr) 42px}}
+</style>
+</head>
+<body>
+<script src="assets/credentials.js"></script>
+<script src="assets/course.js"></script>
+<script>
+const {W} = Lecture;
+
+/* ---------- Scene 2: next-word widget ---------- */
+function nextWord(el){
+  const words=[['practice',.41],['review',.22],['understand',.14],['sleep',.08],['memorise',.07],['ask',.05],['panic',.03]];
+  el.innerHTML=`<div class="stack ui">
+    <div class="out" id="nw-out">Before the exam, the best way to study statistics is to <em>…</em></div>
+    <div class="bars" id="nw-bars"></div>
+    <label for="nw-t">Temperature (how adventurous the model is): <span id="nw-tv" class="mono">1.0</span></label>
+    <input id="nw-t" type="range" min="0.2" max="2" step="0.1" value="1">
+    <div class="row"><button class="btn" id="nw-go" type="button">Generate next word</button><span class="mono" id="nw-log"></span></div>
+  </div>`;
+  const bars=el.querySelector('#nw-bars'), t=el.querySelector('#nw-t'), log=el.querySelector('#nw-log'); let runs={};
+  const dist=()=>{ const T=+t.value; const w=words.map(([k,p])=>[k,Math.pow(p,1/T)]); const s=w.reduce((a,[,p])=>a+p,0); return w.map(([k,p])=>[k,p/s]); };
+  const draw=(hit)=>{ bars.innerHTML=dist().map(([k,p])=>`<div class="b ${k===hit?'hit':''}"><span>${k}</span><div class="track"><div class="fill" style="width:${(p*100).toFixed(1)}%"></div></div><span class="mono">${(p*100).toFixed(0)}%</span></div>`).join(''); };
+  t.addEventListener('input',()=>{ el.querySelector('#nw-tv').textContent=(+t.value).toFixed(1); draw(); });
+  el.querySelector('#nw-go').addEventListener('click',()=>{ const d=dist(); let r=Math.random(),pick=d[d.length-1][0]; for(const [k,p] of d){ if((r-=p)<=0){pick=k;break;} }
+    el.querySelector('#nw-out').innerHTML=`Before the exam, the best way to study statistics is to <em>${pick}</em>`; runs[pick]=(runs[pick]||0)+1; draw(pick);
+    log.textContent='Runs so far: '+Object.entries(runs).map(([k,v])=>k+' ×'+v).join(', '); });
+  draw();
+}
+
+/* ---------- Scene 3: landscape ---------- */
+const LAND={
+ Students:[
+  ['Personal tutor','Khan Academy launched <b>Khanmigo</b> in 2023, a GPT-4-based tutor designed to ask guiding questions instead of handing over answers. The design choice matters: a tutor that gives the answer saves time; a tutor that asks the next question builds understanding.'],
+  ['Language practice','<b>Duolingo Max</b> (2023) added "Explain my answer" and role-play conversations powered by GPT-4. Learners practise speaking situations, such as ordering in a café, that a worksheet cannot simulate.'],
+  ['Writing feedback','LLMs can comment on structure, clarity and grammar in seconds. The learning happens only if the student revises the text themselves.'],
+  ['Accessibility','Text-to-speech, simplification and translation help students with reading difficulties or who study in a second language, which is the daily reality for many students in the UAE.'],
+  ['Course chatbot (Georgia State)','Georgia State University built a course chatbot, Pounce, that sent reminders, answered routine questions and nudged students to start assignments. The university reported (2022) better course performance for students who used it. Why it worked: a narrow task, answers from approved course material, and staff involved for harder questions.']],
+ Teachers:[
+  ['Lesson preparation','Drafting examples, case studies, quiz questions and differentiated versions of the same task for different levels.'],
+  ['Feedback at scale','First-pass comments on drafts, which the teacher checks and personalises. The teacher stays accountable for the grade.'],
+  ['Admin load','Emails, rubrics, summaries of student questions. Time saved here can go back into contact with students.']],
+ Institutions:[
+  ['National curriculum','The UAE announced that AI would be taught as a subject across public schools, from kindergarten to Grade 12, starting in the 2025–26 academic year.'],
+  ['Policy and integrity','Universities write rules on when AI use is allowed and how it must be declared. CUD checks assignments through Turnitin, with a maximum similarity index of 20%.'],
+  ['Student support','24/7 chat assistants for admissions, registration and IT questions free staff for complex cases.']]
+};
+function landscape(el){
+  el.innerHTML=`<div class="lanes">${Object.keys(LAND).map(k=>`<div class="lane"><h4>${k}</h4>${LAND[k].map((x,i)=>`<button type="button" data-k="${k}" data-i="${i}" aria-pressed="false">${x[0]}</button>`).join('')}</div>`).join('')}</div><div class="detail" id="ld">Select any use to see a real example.</div>`;
+  el.querySelectorAll('.lane button').forEach(b=>b.addEventListener('click',()=>{ el.querySelectorAll('.lane button').forEach(x=>x.setAttribute('aria-pressed',x===b)); const [t,d]=LAND[b.dataset.k][+b.dataset.i]; el.querySelector('#ld').innerHTML=`<b>${t}</b> · <span class="tag">${b.dataset.k}</span><p style="margin:.4em 0 0">${d}</p>`; }));
+  el.querySelector('.lane button').click();
+}
+
+/* ---------- Scene 4: Bloom 2-sigma curves ---------- */
+function twoSigma(el){
+  const Wd=560,H=250,pad=30, x0=-3.2,x1=5.2;
+  const X=v=>pad+(v-x0)/(x1-x0)*(Wd-2*pad), Y=v=>H-40-v*420;
+  const pdf=(x,m)=>Math.exp(-((x-m)**2)/2)/Math.sqrt(2*Math.PI);
+  const path=(m)=>{ let d=''; for(let x=x0;x<=x1+1e-9;x+=0.05){ d+=(d?'L':'M')+X(x).toFixed(1)+','+Y(pdf(x,m)).toFixed(1);} return d; };
+  const area=(m,from)=>{ let d=`M${X(from).toFixed(1)},${Y(0)}`; for(let x=from;x<=x1;x+=0.05) d+=`L${X(x).toFixed(1)},${Y(pdf(x,m)).toFixed(1)}`; return d+`L${X(x1)},${Y(0)}Z`; };
+  let ticks=''; for(let s=-3;s<=5;s++){ ticks+=`<line x1="${X(s)}" x2="${X(s)}" y1="${Y(0)}" y2="${Y(0)+5}" stroke="var(--muted)"/><text x="${X(s)}" y="${Y(0)+19}" text-anchor="middle" font-size="11" class="t-muted t-mono">${s>0?'+':''}${s}σ</text>`; }
+  el.innerHTML=`<svg viewBox="0 0 ${Wd} ${H}" role="img" aria-label="Two bell curves: the tutored group's distribution sits two standard deviations to the right of the conventional class">
+    <path d="${area(0,2)}" fill="var(--wk-soft)" stroke="none"/>
+    <path d="${path(0)}" fill="none" stroke="var(--muted)" stroke-width="2"/>
+    <path d="${path(2)}" fill="none" stroke="var(--wk)" stroke-width="2.5"/>
+    <line x1="${X(0)}" x2="${X(0)}" y1="${Y(pdf(0,0))}" y2="${Y(0)}" stroke="var(--muted)" stroke-dasharray="3 3"/>
+    <line x1="${X(2)}" x2="${X(2)}" y1="${Y(pdf(0,0))}" y2="${Y(0)}" stroke="var(--wk)" stroke-dasharray="3 3"/>
+    <line x1="${pad}" x2="${Wd-pad}" y1="${Y(0)}" y2="${Y(0)}" stroke="var(--line)"/>${ticks}
+    <text x="${X(0)}" y="${Y(pdf(0,0))-10}" text-anchor="middle" font-size="12" class="t-muted">Conventional class</text>
+    <text x="${X(2)}" y="${Y(pdf(0,0))-10}" text-anchor="middle" font-size="12" font-weight="700" fill="var(--wk)" style="fill:var(--wk)">One-to-one tutoring</text>
+    <text x="${X(3.4)}" y="${Y(0.06)}" font-size="11" class="t-muted">shaded: conventional students</text>
+    <text x="${X(3.4)}" y="${Y(0.06)+14}" font-size="11" class="t-muted">above the tutored average ≈ 2%</text>
+  </svg>`;
+}
+
+/* ---------- Scene 5: threats ---------- */
+const THREATS=[
+ ['1 · Academic integrity','Submitting AI work as your own. Plagiarism and ghost-writing become easy.','An essay that the student cannot explain when asked in class.','Declare AI use; keep drafts; be ready to explain your own work.'],
+ ['2 · Hallucination','False facts and fake references presented with full confidence.','A student cites a journal article that does not exist.','Verify every fact and reference against a real source.'],
+ ['3 · Over-reliance','Skills you never practise (writing, reasoning, problem solving) fade.','Asking for the answer to every practice question before trying it.','Attempt first, then ask the AI to check or question your attempt.'],
+ ['4 · Bias','Training data reflects stereotypes; answers can favour some groups, and coverage of Arabic and regional content is weaker.','Career advice that differs by the gender of the name in the prompt.','Compare outputs, question defaults, use local sources.'],
+ ['5 · Privacy','Student data and personal details typed into a tool may be stored or reused.','Pasting a classmate\'s personal details or graded work into a chatbot.','Never paste personal or confidential data; check the tool\'s data settings.'],
+ ['6 · Digital divide','Not all students have equal access, devices, internet or English skills; paid tiers are stronger than free ones.','Some students use a paid model, others a free one.','Course activities use free tools; institutions consider licences for all.']
+];
+function threats(el){
+  el.innerHTML=`<div class="threats">${THREATS.map(([t,d,e,s],i)=>`<details ${i===0?'open':''}><summary>${t}</summary><p>${d}</p><p><span class="tag warn">Looks like</span> ${e}</p><p><span class="tag good">Safeguard</span> ${s}</p></details>`).join('')}</div>`;
+}
+
+/* ---------- Scene 7: fact-check the tutor ---------- */
+const CLAIMS=[
+ [0,'The term “artificial intelligence” was coined by Alan Turing at the Dartmouth workshop in 1950.','False. John McCarthy used the term in the 1955 proposal for the 1956 Dartmouth workshop. Turing\'s famous paper, “Computing Machinery and Intelligence”, appeared in 1950.'],
+ [1,'In that paper Turing proposed the “imitation game”, which we now call the Turing Test.','Correct.'],
+ [1,'Funding cuts in the 1970s, including those that followed the UK\'s Lighthill Report in 1973, contributed to the first “AI winter”.','Correct.'],
+ [0,'Neural networks were invented in 2012, when AlexNet won the ImageNet competition.','False. Neural network ideas date to the 1940s–50s (McCulloch & Pitts 1943; Rosenblatt\'s perceptron 1958). AlexNet in 2012 was a breakthrough for deep learning, not the invention.'],
+ [1,'In 1997 IBM\'s Deep Blue defeated world chess champion Garry Kasparov.','Correct.'],
+ [0,'ChatGPT was released by Google in 2020 and reached 100 million users in its first week.','False twice. OpenAI released ChatGPT in November 2022. It reached an estimated 100 million users in about two months, not one week.']
+];
+function factCheck(el){
+  el.innerHTML=`<div class="tutor"><span class="who">AI tutor · constructed example for this exercise</span>${CLAIMS.map((c,i)=>`<span class="claim" data-i="${i}" tabindex="0" role="button" aria-pressed="false">${c[1]}</span> `).join('')}</div>
+   <div class="row ui" style="margin-top:12px"><span id="fc-n" class="mono">0 sentences flagged</span><button class="btn" id="fc-go" type="button">Check my flags</button></div><div id="fc-out" class="stack" style="margin-top:10px"></div>`;
+  const cl=[...el.querySelectorAll('.claim')]; const n=el.querySelector('#fc-n');
+  const tog=c=>{ c.classList.toggle('flag'); c.setAttribute('aria-pressed',c.classList.contains('flag')); n.textContent=el.querySelectorAll('.claim.flag').length+' sentences flagged'; };
+  cl.forEach(c=>{ c.addEventListener('click',()=>tog(c)); c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();tog(c);} }); });
+  el.querySelector('#fc-go').addEventListener('click',()=>{ let right=0; const out=el.querySelector('#fc-out'); out.innerHTML='';
+    cl.forEach((c,i)=>{ const ok=CLAIMS[i][0]===1, flagged=c.classList.contains('flag'); if(ok!==flagged) right++; c.classList.remove('flag'); c.classList.add(ok?'ok-shown':'bad-shown');
+      if(!ok) out.insertAdjacentHTML('beforeend',`<div class="feedback"><span class="tag bad">Error</span> ${CLAIMS[i][2]}</div>`); });
+    out.insertAdjacentHTML('afterbegin',`<div class="feedback"><b>${right} of ${cl.length}</b> sentences judged correctly. Three sentences contained errors. Notice how the false sentences sound exactly as confident as the true ones.</div>`);
+  });
+}
+
+/* ---------- Scene 8: class AI policy ---------- */
+const TASKS=['Brainstorming topic ideas for Assignment 2','Explaining a lecture concept I did not understand','Checking grammar and spelling of my final text','Writing paragraphs that I submit as my own','Summarising a reading I have not opened','Translating a source from Arabic or French to English','Generating a list of references','Making a quiz to test myself before the midterm'];
+function policy(el){
+  const st={};
+  el.innerHTML=`<div class="policy ui">${TASKS.map((t,i)=>`<div class="item"><span>${t}</span><div class="light" data-i="${i}">${['G','A','R'].map(c=>`<button type="button" data-c="${c}" aria-pressed="false" aria-label="${{G:'Allowed',A:'Allowed with conditions',R:'Not allowed'}[c]}">${c}</button>`).join('')}</div></div>`).join('')}
+   <p class="mono" style="margin:10px 0 4px">G = allowed · A = allowed if declared and checked · R = not allowed</p>
+   <button class="btn" id="pol-go" type="button">Build our policy</button><div id="pol-out" style="margin-top:10px"></div></div>`;
+  el.querySelectorAll('.light').forEach(g=>g.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{ st[g.dataset.i]=b.dataset.c; g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b)); })));
+  el.querySelector('#pol-go').addEventListener('click',()=>{
+    const grp=c=>TASKS.filter((t,i)=>st[i]===c); const out=el.querySelector('#pol-out');
+    const txt=`GED 102 class AI policy (draft)\n\nAllowed:\n${grp('G').map(t=>'- '+t).join('\n')||'- (none)'}\n\nAllowed if declared and checked:\n${grp('A').map(t=>'- '+t).join('\n')||'- (none)'}\n\nNot allowed:\n${grp('R').map(t=>'- '+t).join('\n')||'- (none)'}\n\nEvery use of AI is declared in a short note at the end of the submission.`;
+    out.innerHTML=''; const ta=W.h('textarea',{rows:12,id:'pol-txt'}); ta.value=txt; out.appendChild(ta);
+    const c=W.h('button',{class:'btn ghost',type:'button',style:'margin-top:6px'},'Copy policy'); c.addEventListener('click',()=>{ try{navigator.clipboard.writeText(txt).then(()=>c.textContent='Copied',()=>{ta.select();c.textContent='Select and copy the text above';});}catch(e){ta.select();} }); out.appendChild(c);
+  });
+}
+
+const B=Lecture.B;
+const tiles=(rows)=>`<div style="display:grid;grid-template-columns:repeat(${rows.length},minmax(0,1fr));gap:8px">${rows.map(([n,t])=>`<div style="border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg)"><div style="font-family:var(--f-display);font-weight:800;font-size:1.9rem;color:var(--wk);line-height:1">${n}</div><div style="font-family:var(--f-display);font-size:.84rem;margin-top:6px">${t}</div></div>`).join('')}</div>`;
+const USES=`<table class="tbl"><thead><tr><th></th><th>Learning with AI</th><th>Outsourcing to AI</th></tr></thead><tbody>
+<tr><td>Step 1</td><td>“Explain photosynthesis like I am 12.”</td><td>“Write my 1000-word essay on photosynthesis.”</td></tr>
+<tr><td>Step 2</td><td>“Now quiz me with 5 questions.”</td><td>Copies, pastes, submits.</td></tr>
+<tr><td>Step 3</td><td>“Here is my answer. What did I miss?”</td><td>Cannot explain a single sentence in class.</td></tr>
+<tr><td>Result</td><td><span class="tag good">learning</span> The student thinks, tries and improves.</td><td><span class="tag bad">no learning</span> Plus an academic integrity case.</td></tr></tbody></table>`;
+const FAIR=`<table class="tbl"><thead><tr><th>Use</th><th>Usually OK</th><th>Not OK</th></tr></thead><tbody>
+<tr><td>Understanding</td><td>Ask for a simpler explanation or an analogy</td><td>Letting AI answer the take-home quiz</td></tr>
+<tr><td>Writing</td><td>Get feedback on YOUR draft; fix grammar</td><td>Submitting AI text as your own</td></tr>
+<tr><td>Research</td><td>Brainstorm keywords, then check real sources</td><td>Using AI references without checking they exist</td></tr>
+<tr><td>Studying</td><td>Create practice questions for yourself</td><td>Pasting exam questions during a test</td></tr>
+<tr><td>Transparency</td><td>Declare: “I used AI for…”</td><td>Hiding that AI was used</td></tr></tbody></table>`;
+
+Lecture.mount({
+  id:'w5', week:5, clo:2, short:'Week 5 · Education and Learning',
+  title:'Applications of AI: Education and Learning',
+  meta:'TB Chapter 5 · 3-hour session',
+  scenes:[
+  { nav:'Start here', title:'Does AI help students learn, or replace learning?', minutes:10,
+    narration:[
+     `Every student in this room has used, or been tempted to use, a chatbot for coursework. This week we look at that experience honestly: what LLMs do, where they help learning, where they quietly replace it, and what fair rules look like.`,
+     `Our syllabus topic: <strong>“The Incorporation of Large Language Models (LLMs) in the Field of Education: Ethical Possibilities, Threats, and Opportunities.”</strong> This builds <strong>CLO 2</strong>: identify how AI technologies are applied in different aspects of daily life.`,
+     B.plain(`Weeks 5, 6 and 7 follow one pattern. For each field we ask: <b>What can AI do here? A simple example. What can go wrong? What must you remember for the exam?</b> The key idea this week: <b>opportunity vs integrity</b>.`)],
+    think:`Who used ChatGPT, Gemini, Claude or Copilot for a course this semester? Write one honest sentence about how. You will come back to it at the end.`,
+    src:`Reading: Moutinho, L., Cavique, L., & Bigné, E. (2023). <em>Philosophy of artificial intelligence and its place in society</em>. IGI Global. Chapter 5.`,
+    notes:[`Hands up for the hook question. Normalise it: we are going to be honest today.`],
+    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: human or machine?`,10,'a'],[`An LLM in one minute`,15,'l'],[`Where LLMs show up`,15,'l'],[`Opportunities`,15,'l'],[`Good use vs poor use`,10,'l'],[`Break`,10,'b'],[`Threats`,15,'l'],[`Case: AI detectors`,10,'l'],[`Activity: help or replace?`,10,'a'],[`Activity: fact-check the tutor`,15,'a'],[`Fair use and our class policy`,20,'a'],[`Exam takeaways`,15,'l'],[`Exit check`,10,'c']])} },
+
+  { nav:'Human or machine?', title:'Can you tell who wrote it?', kind:'activity', minutes:10,
+    narration:[
+     `Two short answers to the same question: <em>“Why should university students study history?”</em> Read both, then vote for the one you think an AI wrote.`,
+     `Before you reveal the answer, say out loud what you based your vote on: vocabulary, rhythm, a mistake, a “feeling”?`],
+    think:`If you cannot reliably tell human from machine writing, what does that mean for how teachers should assess learning?`,
+    notes:[`Key point: the cues people trust (polish, structure) are the cues detectors use, and both are unreliable. Sets up the detector case.`],
+    fig:{label:`Vote`, build:el=>{
+      el.innerHTML=`<div class="stack"><div class="tutor"><span class="who">Answer A</span>History trains us to ask who is telling the story and why. When we read a source from 1950, we learn to notice what it leaves out. That habit is useful every time we read the news, a contract, or a chatbot's answer.</div><div class="tutor"><span class="who">Answer B</span>Studying history is important for university students because it helps them understand the past, develop critical thinking skills, and become informed citizens. By learning about historical events, students can make better decisions in the future.</div></div><div style="margin-top:12px" id="pv"></div>`;
+      W.poll(el.querySelector('#pv'),{q:'Which answer did an AI write?',opts:['Answer A','Answer B','Both','Neither'],reveal:i=>(i===2?'<b>Right.</b> ':'<b>The answer is: both.</b> ')+'Both were generated by an AI model for this lecture. Most people pick B because it sounds generic. Style alone is not evidence of who wrote a text.'});
+    }} },
+
+  { nav:'An LLM in one minute', title:'An LLM in one minute (recap of Week 3)', minutes:15,
+    narration:[
+     B.plain(`A <b>Large Language Model (LLM)</b> is a program trained on huge amounts of text. It learns patterns so well that it can predict the next word, again and again, until it has written an answer. Examples: ChatGPT, Gemini, Claude, Copilot.<ul><li><b>Good at:</b> explaining, summarising, rewriting, brainstorming, translating, giving feedback.</li><li><b>Weak at:</b> knowing what is true. It writes what <i>sounds</i> right.</li><li><b>Cannot:</b> understand your class, your teacher or your exam.</li></ul>`),
+     `Try the generator on the right. Press <strong>Generate</strong> several times: the same prompt does not always give the same answer, because the model samples from probabilities. The <strong>temperature</strong> slider makes it more or less adventurous.`,
+     B.ex(`Ask: “Who wrote the book <i>The Smart Student Handbook</i> by Ahmed Salem?” (a made-up book and author). An LLM may answer confidently with a summary of a book that does not exist. This is a <b>hallucination</b>: fluent text that is false.`),
+     B.exam(`<b>LLM</b> = predicts the next word. <b>Hallucination</b> = confident but false output. Both are likely exam definitions.`)],
+    think:`If the model only predicts likely words, why does it so often get facts right, and why does it sometimes get them confidently wrong?`,
+    notes:[`Keep to the recap. Everything risky in education follows from “it predicts text, it does not know truth”.`,`Probabilities in the widget are illustrative.`],
+    fig:{label:`Next-word prediction · illustrative probabilities`, build:nextWord, caption:`Probabilities are made up for teaching. Real models choose among tens of thousands of possible tokens.`} },
+
+  { nav:'Where LLMs show up', title:'Three places LLMs enter education', minutes:15,
+    narration:[
+     `LLMs reach learning through three doors. <strong>Students</strong> use them as tutors, writing assistants and language partners. <strong>Teachers</strong> use them to prepare materials and give feedback faster. <strong>Institutions</strong> set curricula and integrity rules, and run support services.`,
+     `Click through the real examples on the right. Notice the design choices: Khanmigo was built to ask questions rather than give answers; Georgia State's chatbot did a narrow job with approved content and human follow-up.`,
+     B.exam(`Good AI in education = <b>narrow purpose + trusted content + human follow-up</b>. Contrast it with an open chatbot that writes essays.`)],
+    think:`Which of these uses have you seen at CUD? Which one would you add?`,
+    src:`Georgia State University (2022). Classroom chatbot improves student performance, study says. news.gsu.edu`,
+    notes:[`Ask students to open the Georgia State link at home and check the numbers themselves.`],
+    fig:{label:`Students · Teachers · Institutions`, build:el=>W.picker(el,LAND)} },
+
+  { nav:'Opportunities', video:{id:'hJP5GqnTrNo',title:'How AI Could Save (Not Destroy) Education',by:'TED · Sal Khan',why:'A strong case for AI tutors (Khanmigo). Watch critically: which risks from this week does he mention, and which does he leave out?'}, title:'Opportunities: what LLMs can do for learning', minutes:15,
+    narration:[
+     `<ul><li><b>1 · Personal tutor, 24/7:</b> explains a topic again and again, at your speed, in simple words. No fear of asking a “silly” question.</li><li><b>2 · Instant feedback:</b> checks grammar, structure and clarity of your draft in seconds, not days.</li><li><b>3 · Accessibility:</b> translation, text-to-speech and simplified text help non-native speakers and students with learning difficulties.</li><li><b>4 · Teacher time saved:</b> drafts quizzes, rubrics and routine emails, so teachers can spend time with students.</li></ul>`,
+     `Why such excitement? In 1984 Benjamin Bloom reported that students tutored one-to-one scored about <strong>two standard deviations</strong> higher than students in a conventional class (the average tutored student beat about 98% of the class). LLMs offer something like a tutor for everyone. Later studies usually find smaller gains, but real ones.`,
+     B.exam(`Always pair an opportunity with its condition: “it helps <b>if</b> students still think for themselves and the teacher checks quality.”`)],
+    think:`What is the difference between a tutor who explains and a tutor who answers? Which one did Bloom study?`,
+    src:`Bloom, B. S. (1984). The 2 sigma problem. <em>Educational Researcher</em>, 13(6), 4–16.`,
+    notes:[`For each opportunity, ask a student for a real example.`,`Statistics bridge: σ = standard deviation.`],
+    fig:{label:`Bloom's 2-sigma result · normal curves`, build:twoSigma, caption:`The tutored curve sits two standard deviations to the right of the conventional class.`} },
+
+  { nav:'Good vs poor use', title:'Simple example: good use vs poor use of the same tool', minutes:10,
+    narration:[
+     `Same tool, same student, opposite outcome. Walk through the two columns on the right line by line.`,
+     B.plain(`The tool is not good or bad. The question is: <b>who did the thinking?</b>`)],
+    notes:[`This is the heart of the ethics discussion. Ask students which column their last AI use belonged to.`],
+    fig:{label:`Learning with AI vs outsourcing to AI`, html:USES} },
+
+  { nav:'Threats', title:'Threats: what can go wrong', minutes:15,
+    narration:[
+     `Six threats. Open each one on the right to see what it looks like in practice and one safeguard that reduces it.`,
+     `Most students rank cheating first. Push yourself to also see <strong>over-reliance</strong> and <strong>bias</strong>: they are quieter, and they hurt honest students too.`,
+     B.exam(`Memorise the six: <b>Integrity · Hallucination · Over-reliance · Bias · Privacy · Digital divide</b>.`)],
+    think:`Which threat worries you most as a student? Which would worry you most as a teacher? Are they the same?`,
+    notes:[`Ask students to rank the six. Connect privacy to Week 12 and bias to Week 10.`],
+    fig:{label:`Six threats · open each one`, build:threats} },
+
+  { nav:'Case: AI detectors', title:'Case study: AI detectors are not a safe fix', minutes:10,
+    narration:[
+     `Many universities tried “AI detector” software to catch cheating. Stanford researchers tested seven detectors on real essays.`,
+     B.plain(`Detectors judge “how predictable the writing is”. Simpler English is more predictable, so honest non-native writers look like AI. The result: unfair accusations. Some universities, such as Vanderbilt in August 2023, switched their AI detector off.`),
+     B.exam(`A detector score is <b>a clue, not proof</b>. A fair process needs conversation, drafts and evidence. This is a <b>bias</b> example.`)],
+    think:`Most CUD students write in their second or third language. What does this study mean for us?`,
+    src:`Liang, W., Yuksekgonul, M., Mao, Y., Wu, E., & Zou, J. (2023). GPT detectors are biased against non-native English writers. <em>Patterns</em>, 4(7).`,
+    notes:[`Numbers: 61.3% average false positive on TOEFL essays; 19.8% flagged by all seven detectors; 97.8% (89 of 91) flagged by at least one. US eighth-grade essays were classified almost perfectly.`],
+    fig:{label:`Stanford study · 7 detectors`, html:tiles([['61%','of real essays by non-native English students wrongly flagged as AI (average)'],['≈20%','wrongly flagged by ALL seven detectors at once'],['≈0','errors on essays by native US students']])} },
+
+  { nav:'Help or replace?', title:'Activity 1 · Does it help learning or replace it?', kind:'activity', minutes:10,
+    narration:[
+     `In pairs, sort each use into a group. <strong>Supports</strong>: you do more of the thinking. <strong>Replaces</strong>: the tool does the thinking the task was meant to build. <strong>Depends how</strong>: the same tool can go either way.`,
+     `Then reveal the suggested answers and argue about any where your pair disagrees.`],
+    notes:[`Expect debate on translation and rewriting; both are “depends how”.`],
+    fig:{label:`Sort the uses`, build:el=>W.sort(el,{buckets:['Supports','Replaces','Depends how'],items:[
+      {t:`Asking a chatbot to quiz me on this week's reading`,a:0,why:`Retrieval practice is one of the best-evidenced study methods.`},
+      {t:`Pasting the assignment question and submitting the output`,a:1,why:`The tool did all the thinking, and it is an integrity violation.`},
+      {t:`Asking it to explain a concept a second way after the lecture`,a:0,why:`Like asking a classmate. You still have to make sense of it.`},
+      {t:`Summarising a reading I have not opened`,a:1,why:`You lose the reading itself, and summaries can be wrong.`},
+      {t:`Translating a French source into English for my essay`,a:2,why:`Helpful for access; check key passages and cite the original.`},
+      {t:`Getting feedback on the structure of my own draft`,a:0,why:`You keep authorship and improve through revision.`},
+      {t:`Having it rewrite my paragraphs “to sound better”`,a:2,why:`Light edits help; full rewrites replace your voice and argument.`},
+      {t:`Asking it to solve a statistics problem before I try`,a:1,why:`Attempt first. Ask for a hint, not the solution.`}]})} },
+
+  { nav:'Fact-check the tutor', title:'Activity 2 · Fact-check the AI tutor', kind:'activity', minutes:15,
+    narration:[
+     `Here is an AI tutor's answer to “Summarise the history of AI in six sentences.” Some sentences are true and some are false. It is also revision for Week 2 and the midterm.`,
+     `Click every sentence you think is wrong, then press <strong>Check my flags</strong>. Notice that the false sentences sound exactly as confident as the true ones: that is hallucination in practice.`],
+    notes:[`Constructed example written for this exercise, not output from a specific product.`,`Groups of three: one reads, one searches, one records.`],
+    fig:{label:`Click the sentences you think are false`, build:factCheck} },
+
+  { nav:'Fair use and policy', title:'Activity 3 · Fair use, principles and our class policy', kind:'activity', minutes:20, wide:true,
+    narration:[
+     FAIR,
+     B.plain(`Four principles appear in almost every institutional AI policy, from UNESCO's 2023 guidance to the EU AI Act: <b>Transparency</b> (say when and how AI was used) · <b>Fairness</b> (tools must not disadvantage groups) · <b>Privacy</b> (protect student data) · <b>Human accountability</b> (“the AI did it” is not a defence).`),
+     B.ex(`A teacher uses AI to draft quiz questions (opportunity), reads and fixes every question (accountability), and tells students that AI helped (transparency).`),
+     `Now build our class policy on the right: for each task choose <b>G</b> allowed, <b>A</b> allowed if declared and checked, or <b>R</b> not allowed. Remember the CUD rules that already apply: the academic integrity policy and the 20% Turnitin similarity limit.`,
+     B.exam(`Golden rules: <b>(1)</b> follow the course policy, <b>(2)</b> declare your AI use, <b>(3)</b> verify every fact, <b>(4)</b> you are responsible for what you submit.`)],
+    src:`UNESCO (2023). <em>Guidance for generative AI in education and research</em>.`,
+    notes:[`Pairs argue the middle rows of the table for 2 minutes, then build the policy in groups.`,`Use the merged policy as the AI-use statement for Assignment 2.`],
+    fig:{label:`Traffic-light policy builder`, build:policy} },
+
+  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 5', kind:'exam', minutes:15,
+    narration:[
+     B.exam(`<b>If you remember only this…</b><ul><li><b>Define:</b> LLM = predicts the next word; hallucination = confident but false.</li><li><b>Opportunities (4):</b> tutor, feedback, accessibility, teacher time.</li><li><b>Threats (6):</b> integrity, hallucination, over-reliance, bias, privacy, digital divide.</li><li><b>Detector case:</b> 61% of non-native essays wrongly flagged; a detector score is not proof.</li><li><b>Principles:</b> transparency, fairness, privacy, human accountability.</li><li><b>Golden rule:</b> follow policy, declare use, verify facts, you are responsible.</li></ul>`),
+     `Close your notes and name the six threats. Then try the likely questions.`],
+    fig:{mindmap:{center:'LLMs in education',branches:[{t:'LLM basics',items:['Predicts the next word','Hallucination: confident but false']},{t:'Opportunities',items:['24/7 tutor','Instant feedback','Accessibility','Teacher time']},{t:'Threats',items:['Integrity · hallucination','Over-reliance · bias','Privacy · digital divide']},{t:'Detector case',items:['61% of non-native essays flagged','A clue, not proof']},{t:'Principles',items:['Transparency · fairness','Privacy · accountability']},{t:'Golden rules',items:['Follow policy · declare use','Verify facts','You are responsible']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+      {q:`Explain two opportunities and two threats of LLMs in education.`,hint:`e.g. 24/7 tutor and instant feedback; hallucination and over-reliance; give one example each and the condition (“if students still think”).`},
+      {q:`Why are AI detectors unreliable? Give an example.`,hint:`They judge predictability; non-native writers flagged (Stanford: 61% average); a score is a clue, not proof.`},
+      {q:`Compare learning with AI vs outsourcing to AI.`,hint:`Explain → quiz → check my answer vs write → copy → submit; the question is who did the thinking.`},
+      {q:`Suggest a fair AI policy for a class.`,hint:`Allowed / declared / not allowed uses; transparency, fairness, privacy, accountability; verify facts.`}])} },
+
+  { nav:'Exit check', title:'Exit check', kind:'check', minutes:10,
+    narration:[
+     `Six questions. Then return to your honest sentence from the start: would you change how you use AI next week?`,
+     `<strong>Before Week 6:</strong> read TB Chapter 3, <em>Artificial Intelligence in Healthcare</em>. Start choosing your field for Assignment 2, “AI in my world”.`],
+    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`At its core, what does a large language model do when it writes?`,o:[`Looks up the answer in a database of facts`,`Predicts a likely next word, again and again`,`Copies the closest matching web page`,`Follows rules written by teachers`],a:1,why:`It generates text one token at a time from learned probabilities.`},
+      {q:`A “hallucination” is…`,o:[`a slow answer`,`confident output that is false`,`a refusal to answer`,`a translation error only`],a:1,why:`Fluent and confident, but wrong, including invented references.`},
+      {q:`Which is NOT one of the six threats?`,o:[`Over-reliance`,`Digital divide`,`Battery drain`,`Privacy`],a:2,why:`The six: integrity, hallucination, over-reliance, bias, privacy, digital divide.`},
+      {q:`In the Stanford study, AI detectors…`,o:[`were perfect`,`wrongly flagged about 61% of non-native English essays on average`,`only failed on native speakers`,`were never tested`],a:1,why:`Liang et al. (2023). A detector score is a clue, not proof.`},
+      {q:`Georgia State's course chatbot worked well mainly because…`,o:[`it wrote students' essays`,`it had a narrow purpose, trusted content and human follow-up`,`it replaced teachers`,`it was the most powerful model`],a:1,why:`Narrow purpose + trusted content + human follow-up.`},
+      {q:`An AI tutor gives a confident answer with a reference. What should you do first?`,o:[`Use it, since it gave a reference`,`Check that the reference exists and says what is claimed`,`Ask the AI if it is sure`,`Remove the reference`],a:1,why:`Hallucinated references look real. Verify the source.`}])} }
+  ]
+});
+
+</script>
+</body>
+</html>

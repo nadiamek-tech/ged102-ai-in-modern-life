@@ -159,130 +159,94 @@ const OTHER=[
  {t:`Who is in the training images?`,s:`Dermatology AI`,d:`A skin-cancer app trained mostly on images of light skin may miss cancers on dark skin. A model can score well overall and still fail the patients least represented in its data.`,l:`Ask “accurate for whom?” as well as “how accurate?”. Fix: diverse data and testing across groups.`},
  {t:`Automation bias`,s:`A human factor`,d:`Busy, tired people tend to over-trust an automated aid. A tool meant as a second reader can quietly become the only reader.`,l:`Workflow, workload and training are part of AI safety.`}];
 
-Lecture.mount({
-  id:'w6', week:6, clo:2, short:'Week 6 · AI in Healthcare',
-  title:'Applications of AI: AI in Healthcare',
-  meta:'TB Chapter 3 · 3-hour session',
-  scenes:[
-  { nav:'Start here', title:'Can AI be trusted with life-and-death decisions?', minutes:10,
-    narration:[
-     `Last week a wrong answer from AI cost a student a grade. This week a wrong answer can cost a patient their health. Healthcare is where AI's promise is largest and where its mistakes matter most.`,
-     `Our syllabus topic: <strong>“Artificial Intelligence in Healthcare”</strong>, building <strong>CLO 2</strong>.`,
-     B.plain(`The key idea this week: <b>accuracy plus human oversight</b>. AI can be faster and more consistent than people at narrow tasks, but a qualified human must stay responsible.`)],
-    think:`Would you accept a diagnosis from an AI if it were more accurate than the average doctor? Decide now; we return to this at the end.`,
-    src:`Reading: Moutinho, L., Cavique, L., & Bigné, E. (2023). <em>Philosophy of artificial intelligence and its place in society</em>. IGI Global. Chapter 3.`,
-    notes:[`Show of hands on the opening question. Return to it in the human-in-the-loop scene.`],
-    fig:{label:`Today's session · 180 minutes`, build:el=>W.agenda(el,[[`Start here`,10,'l'],[`Hook: who reads your scan?`,10,'a'],[`Where AI is used`,15,'l'],[`Diagnostics and the screening flow`,15,'l'],[`Activity: set the threshold`,20,'a'],[`Break`,10,'b'],[`Drugs and personalised medicine`,10,'l'],[`Patient care`,10,'l'],[`Benefits vs risks`,10,'l'],[`Case: the sepsis model`,15,'l'],[`Ethics: who is responsible?`,20,'a'],[`Human-in-the-loop`,10,'a'],[`Exam takeaways`,15,'l'],[`Exit check`,10,'c']])} },
-
-  { nav:'Who reads your scan?', title:'Who should read your scan?', kind:'activity', minutes:10,
-    narration:[`Imagine you have a mammogram or a chest X-ray next month. Who would you want to read it? Vote, then compare with what a large trial in Sweden found.`],
-    think:`Would your answer change if the AI were better on average, but you could not ask it why?`,
-    notes:[`Most classes split between “doctor alone” and “both”.`],
-    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Your scan should be read by…`,opts:[`A doctor alone`,`The AI alone`,`The AI plus a doctor`,`It depends on the evidence`],reveal:i=>`${[`Many patients feel this way. Doctors also miss things, especially when tired.`,`Few health systems allow fully autonomous reading, and most patients are uncomfortable with it.`,`This is how most systems use AI today: as a second reader.`,`A scientist's answer.`][i]}<br><br><b>Evidence:</b> in the Swedish MASAI trial (Lancet Oncology, 2023), AI-supported screening found 20% more cancers than two radiologists reading independently, and cut radiologists' reading workload by 44%.`})} },
-
-  { nav:'Where AI is used', title:'Where AI is used in healthcare', minutes:15,
-    narration:[
-     `Healthcare AI appears at almost every stage of care: <strong>diagnosis</strong>, <strong>treatment</strong> (including surgery support), <strong>drug discovery</strong>, <strong>patient care</strong> and <strong>hospital operations</strong>. Click each stage on the right; every example is real.`,
-     `Each one maps to something from Week 3: pattern recognition in images, prediction from records, language models for text, and optimisation for logistics. The UAE examples, Malaffi and the Emirati Genome Programme, show that health AI depends first on connected, well-governed <em>data</em>.`,
-     B.exam(`The surgeon's robot is a <b>human-controlled tool</b>, not an autonomous doctor.`)],
-    notes:[`Assign one stage per row of students; each row reports one example back.`],
-    fig:{label:`Six stages · click each`, build:journey} },
-
-  { nav:'Diagnostics', title:'Diagnostics = image classification (Week 3 again)', minutes:15,
-    narration:[
-     B.plain(`Show a neural network 100,000 eye scans labelled “disease” or “healthy”. It learns the visual patterns that separate them, like a student who has seen 100,000 solved examples. Then it labels new scans.<ul><li><b>Learning type:</b> supervised (labelled examples).</li><li><b>Model type:</b> CNN, good at images.</li><li><b>Strength:</b> never tired, consistent, very fast.</li><li><b>Weakness:</b> fails on patients unlike its training data.</li></ul>`),
-     B.ex(`Diabetic eye screening: a camera photographs the retina, and the AI answers “refer to a specialist” or “no signs of disease”. In 2018 the US FDA authorised IDx-DR, the first system allowed to give such a result without a doctor reading the image.`),
-     `The screening flow on the right ends with a person. Think of airport security: a machine scans every bag and flags suspicious ones; a person opens only the flagged bags and makes the final call.`,
-     B.exam(`Labelled data → trained model → prediction. Risk: <b>generalisation failure</b> on new populations. The pattern “AI suggests, a qualified human decides” is called <b>human-in-the-loop</b>.`)],
-    notes:[`Connect to Week 3: supervised learning and CNNs. The model only knows what it was shown.`],
-    fig:{flow:[{t:'Capture',s:'camera or scanner',d:'A camera or scanner takes the image.'},{t:'Model',s:'AI scores it',d:'The trained model gives the image a score.'},{t:'Confidence',s:'“92% likely disease”',d:'A threshold turns the score into a flag.'},{t:'Human check',s:'clinician reviews',d:'A qualified clinician reviews the flagged cases.'},{t:'Action',s:'refer · treat · monitor',d:'The human decides what happens next: human-in-the-loop.'}],label:`Train once · use many times · human decides`, html:PIPE} },
-
-  { nav:'Set the threshold', title:'Activity · Missed cases or false alarms?', kind:'activity', minutes:20, wide:true,
-    narration:[
-     `On the right are 40 patients. Red dots really have the disease; grey dots are well. Each dot sits at the score the AI gave that patient. Drag the threshold: everyone to the right of the line is flagged.`,
-     `A red dot left of the line is a <strong>false negative</strong>: a sick person sent home. An orange dot right of the line is a <strong>false positive</strong>: a well person sent for more tests, worry and cost.`,
-     `In groups, choose a threshold for (1) screening for an aggressive cancer and (2) deciding who gets an expensive, risky treatment. Write down your threshold and reason.`,
-     B.exam(`<b>False negative</b> = AI misses a real disease (dangerous). <b>False positive</b> = AI raises a false alarm (stress, cost). Know both terms.`)],
-    think:`Who should choose the threshold: the developer, the doctors, hospital managers, or patients?`,
-    notes:[`Data are illustrative.`,`Expected: lower threshold for screening, higher for risky treatment. MTH 105 link: Type I and Type II errors.`],
-    fig:{label:`40 illustrative patients`, build:threshold} },
-
-  { nav:'Drugs and personalised care', fig:{label:'From target to medicine', flow:[{t:'Disease target',s:'what to block',d:'Scientists choose the protein or process a drug should act on.'},{t:'AI predicts',s:'likely molecules',d:'Models such as AlphaFold-style structure prediction help guess which molecules could fit.'},{t:'Shortlist',s:'the best 20 keys',d:'Only the most promising candidates go forward.'},{t:'Lab tests',s:'check reality',d:'Experiments test whether the predictions hold.'},{t:'Clinical trials',s:'test in people',d:'Humans and regulators decide whether the drug is safe and works.'}]}, video:{id:'gg7WjuFs8F4',title:'AlphaFold: The making of a scientific breakthrough',by:'Google DeepMind',why:'How the team behind AlphaFold cracked protein structure prediction.'}, title:'Drug discovery and personalised medicine', minutes:10,
-    narration:[
-     `<b>Drug discovery.</b> Old way: test thousands of molecules in a lab, over 10 years and billions of dollars. AI way: predict which molecules are likely to work and test only the best. Famous case: DeepMind's AlphaFold predicts the 3D shape of proteins from their sequence; its creators Demis Hassabis and John Jumper shared the 2024 Nobel Prize in Chemistry.`,
-     `<b>Personalised medicine.</b> Same disease, different patients, different best treatment. AI finds patterns in genes, history and lab results to suggest the likely best option. It needs very large, high-quality, private data.`,
-     B.ex(`Finding a key for a lock: instead of trying every key on the ring, AI predicts the 20 keys most likely to fit. You still must test them.`)],
-    notes:[`AlphaFold: breakthrough at CASP14 in 2020; Nobel 2024 shared with David Baker.`] },
-
-  { nav:'Patient care', title:'Patient care: wearables, chatbots and hospital tasks', minutes:10,
-    narration:[
-     `<ul><li><b>Wearables:</b> watches track heart rate and sleep and can warn about an irregular rhythm.</li><li><b>Symptom chatbots:</b> give first guidance: “see a doctor now” or “rest at home”.</li><li><b>AI note-taking:</b> listens to a visit and drafts the doctor's notes, saving admin time.</li><li><b>Hospital planning:</b> predicts busy days to staff wards and manage beds.</li></ul>`,
-     B.ex(`A smartwatch notices an irregular heartbeat while you sleep and suggests seeing a doctor. It does not diagnose; it nudges you to get checked.`),
-     B.exam(`Health data is among the <b>most sensitive</b> data. Privacy and consent are central exam points.`)],
-    notes:[`Lower risk than diagnosis, but high privacy risk.`] },
-
-  { nav:'Benefits vs risks', title:'Benefits vs risks in healthcare', minutes:10,
-    narration:[
-     `The table on the right is the balanced summary of the week so far. Each benefit has a matching risk.`,
-     `Which risk worries you most, and why? Pick one and give a real example from today.`],
-    notes:[`Use as a balanced summary; link to Week 4 equity lenses.`],
-    fig:{label:`Benefits · Risks`, html:BR} },
-
-  { nav:'Case: sepsis model', title:'Case study: the Epic Sepsis Model', minutes:15,
-    narration:[
-     `Sepsis is a life-threatening reaction to infection. Hundreds of US hospitals used a built-in AI tool to predict it. Researchers at Michigan Medicine tested it on real patients.`,
-     B.plain(`Too many false alarms cause <b>alert fatigue</b>: staff start ignoring the alerts. Lesson: an AI tool must be tested on local patients before it is trusted.`),
-     B.exam(`Lessons: <b>validate externally · transparency · alert fatigue · human oversight</b>. (The vendor disputes the study and released an updated model.)`),
-     `Open the other cases below the figure. Each failure entered at a different place: the data, the target, the location, or the people.`],
-    think:`Should a hospital use an AI model it cannot inspect?`,
-    src:`Wong, A., et al. (2021). External validation of a widely implemented proprietary sepsis prediction model in hospitalized patients. <em>JAMA Internal Medicine</em>, 181(8). · Obermeyer, Z., et al. (2019). <em>Science</em>, 366(6464).`,
-    notes:[`AUC 0.63 (developer reported 0.76–0.83), sensitivity 33%, alerts on 18% of all hospitalised patients. Present neutrally as an external evaluation.`],
-    fig:{label:`External test · Michigan Medicine`, build:el=>{ el.innerHTML=tiles([['33%','of sepsis patients caught: it missed about two out of three'],['18%','of ALL hospitalised patients triggered an alert'],['Black box','hospitals could not inspect how it worked']])+'<div id="oc" style="margin-top:12px"></div>'; W.accordion(el.querySelector('#oc'),OTHER); }} },
-
-  { nav:'Who is responsible?', title:'Activity · Ethics: who is responsible?', kind:'activity', minutes:20,
-    narration:[
-     B.plain(`Four pillars of healthcare AI ethics: <b>Privacy and consent</b> (patients know and agree how data is used) · <b>Bias and fairness</b> (a model trained on one group may fail others) · <b>Accountability</b> (doctor, hospital or developer: it must be clear) · <b>Explainability</b> (doctors need to understand why the AI recommends something).`),
-     `Read the fictional case on the right. In groups of four, divide responsibility for the missed cancer among the developer, the hospital, the doctor and the regulator. Each group presents its split in one minute, with one reason for its largest share.`],
-    think:`Should the patient have been told that AI was involved in reading his scan?`,
-    notes:[`Steer towards “shared responsibility” only after groups commit to a split. Links forward to Weeks 11 and 12.`],
-    fig:{label:`Divide the responsibility`, build:responsibility} },
-
-  { nav:'Human-in-the-loop', title:'Human-in-the-loop: AI assists, humans decide', kind:'activity', minutes:10,
-    narration:[
-     B.plain(`In medicine, AI should support the clinician, not replace them. The human checks unusual cases, explains results to the patient, and carries legal and moral responsibility.`),
-     `<table class="tbl"><thead><tr><th>AI is strong at</th><th>Humans are strong at</th></tr></thead><tbody><tr><td>Spotting patterns in huge data, speed, consistency, never tired</td><td>Context, empathy, ethics, judging unusual cases, talking to patients</td></tr></tbody></table>`,
-     `If time allows, start the worksheet on the right: analyse one healthcare AI from today. It is a rehearsal for Assignment 2.`,
-     B.exam(`Best result = <b>AI + clinician together</b>. A common exam answer: “AI assists, humans remain accountable.”`)],
-    notes:[`Return to the opening show of hands: has anyone changed their mind?`,`Worksheet can be finished at home and pasted into Moodle.`],
-    fig:{label:`Worksheet`, build:el=>W.worksheet(el,{id:'w6case',title:'GED 102 · Week 6 · Healthcare AI case analysis',fields:[
-      {l:'Which AI application did you choose?',ph:'e.g. IDx-DR diabetic eye screening'},
-      {l:'What does the AI actually do?',hint:'Input → output',rows:2},
-      {l:'Who benefits?',rows:2},
-      {l:'Who could be harmed, and how?',rows:2},
-      {l:'Where is the human in the loop?',rows:2}]})} },
-
-  { nav:'Exam takeaways', full:true, title:'Exam takeaways · Week 6', kind:'exam', minutes:15,
-    narration:[
-     B.exam(`<b>If you remember only this…</b><ul><li><b>Areas:</b> diagnosis, treatment, drug discovery, patient care and hospital operations.</li><li><b>Diagnostics:</b> supervised learning + CNN on labelled images.</li><li><b>Examples:</b> IDx-DR eye screening (2018), AlphaFold proteins, MASAI screening trial.</li><li><b>Case:</b> Epic Sepsis Model missed 67% of cases and over-alerted.</li><li><b>Key terms:</b> false positive, false negative, alert fatigue, human-in-the-loop.</li><li><b>Ethics pillars:</b> privacy, bias, accountability, explainability.</li></ul>`),
-     `Recall game: split the room in two. One side names a benefit, the other a risk; alternate until one side runs out.`],
-    fig:{mindmap:{center:'AI in healthcare',branches:[{t:'Uses',items:['Diagnosis · treatment','Drug discovery · patient care','Hospital operations']},{t:'Diagnostics',items:['Supervised learning + CNN','IDx-DR (2018)','MASAI: 20% more cancers found']},{t:'Errors',items:['False positive: false alarm','False negative: missed disease','Threshold = trade-off']},{t:'Sepsis case',items:['Missed 67% of cases','Alerts on 18% of patients','Alert fatigue']},{t:'Ethics pillars',items:['Privacy · bias','Accountability · explainability']},{t:'Human-in-the-loop',items:['AI suggests','Clinician decides']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
+/* ---------- figures and videos kept from the original lecture ---------- */
+const FIG={
+ 'Who reads your scan?':{label:`Vote`, build:el=>W.poll(el,{q:`Your scan should be read by…`,opts:[`A doctor alone`,`The AI alone`,`The AI plus a doctor`,`It depends on the evidence`],reveal:i=>`${[`Many patients feel this way. Doctors also miss things, especially when tired.`,`Few health systems allow fully autonomous reading, and most patients are uncomfortable with it.`,`This is how most systems use AI today: as a second reader.`,`A scientist's answer.`][i]}<br><br><b>Evidence:</b> in the Swedish MASAI trial (Lancet Oncology, 2023), AI-supported screening found 20% more cancers than two radiologists reading independently, and cut radiologists' reading workload by 44%.`})},
+ 'Where AI is used':{label:`Six stages · click each`, build:journey},
+ 'Diagnostics':{flow:[{t:'Capture',s:'camera or scanner',d:'A camera or scanner takes the image.'},{t:'Model',s:'AI scores it',d:'The trained model gives the image a score.'},{t:'Confidence',s:'“92% likely disease”',d:'A threshold turns the score into a flag.'},{t:'Human check',s:'clinician reviews',d:'A qualified clinician reviews the flagged cases.'},{t:'Action',s:'refer · treat · monitor',d:'The human decides what happens next: human-in-the-loop.'}],label:`Train once · use many times · human decides`, html:PIPE},
+ 'Set the threshold':{label:`40 illustrative patients`, build:threshold},
+ 'Drugs and personalised care':{label:'From target to medicine', flow:[{t:'Disease target',s:'what to block',d:'Scientists choose the protein or process a drug should act on.'},{t:'AI predicts',s:'likely molecules',d:'Models such as AlphaFold-style structure prediction help guess which molecules could fit.'},{t:'Shortlist',s:'the best 20 keys',d:'Only the most promising candidates go forward.'},{t:'Lab tests',s:'check reality',d:'Experiments test whether the predictions hold.'},{t:'Clinical trials',s:'test in people',d:'Humans and regulators decide whether the drug is safe and works.'}]},
+ 'Case: sepsis model':{label:`External test · Michigan Medicine`, build:el=>{ el.innerHTML=tiles([['33%','of sepsis patients caught: it missed about two out of three'],['18%','of ALL hospitalised patients triggered an alert'],['Black box','hospitals could not inspect how it worked']])+'<div id="oc" style="margin-top:12px"></div>'; W.accordion(el.querySelector('#oc'),OTHER); }},
+ 'Who is responsible?':{label:`Divide the responsibility`, build:responsibility},
+ 'Exam takeaways':{mindmap:{center:'AI in healthcare',branches:[{t:'Uses',items:['Diagnosis · treatment','Drug discovery · patient care','Hospital operations']},{t:'Diagnostics',items:['Supervised learning + CNN','IDx-DR (2018)','MASAI: 20% more cancers found']},{t:'Errors',items:['False positive: false alarm','False negative: missed disease','Threshold = trade-off']},{t:'Sepsis case',items:['Missed 67% of cases','Alerts on 18% of patients','Alert fatigue']},{t:'Ethics pillars',items:['Privacy · bias','Accountability · explainability']},{t:'Human-in-the-loop',items:['AI suggests','Clinician decides']}]},label:`The week as a mind map · then likely exam questions`, build:el=>W.practice(el,[
       {q:`Explain how AI helps diagnose disease. Give an example.`,hint:`Supervised learning on labelled images (CNN) → score → human check; IDx-DR or MASAI.`},
       {q:`What is human-in-the-loop and why does it matter?`,hint:`AI suggests, a qualified human decides; handles unusual cases, explains, stays accountable.`},
       {q:`Discuss two risks of AI in healthcare.`,hint:`e.g. false negatives, bias in training data, privacy, automation bias; give an example each.`},
-      {q:`What lesson does the sepsis model teach?`,hint:`Validate externally on local patients; transparency; alert fatigue from false alarms; human oversight.`}])} },
-
-  { nav:'Exit check', title:'Exit check', kind:'check', minutes:10,
-    narration:[`Six questions. Feedback appears after each answer.`,`<strong>Before Week 7:</strong> read RB c, Chapter 1 (Dunis et al., 2017). Choose your field for Assignment 2.`],
-    fig:{label:`Six questions`, build:el=>W.quiz(el,[
+      {q:`What lesson does the sepsis model teach?`,hint:`Validate externally on local patients; transparency; alert fatigue from false alarms; human oversight.`}])},
+ 'Exit check':{label:`Six questions`, build:el=>W.quiz(el,[
       {q:`A false negative in medical AI means…`,o:[`a false alarm on a healthy patient`,`a real disease that the AI missed`,`a slow result`,`a refused scan`],a:1,why:`Missed disease: the more dangerous error.`},
       {q:`Diagnostic image AI is usually trained by…`,o:[`unsupervised learning on unlabelled scans`,`supervised learning on labelled scans`,`reinforcement learning with rewards`,`hand-written rules only`],a:1,why:`Experts label each scan; a CNN learns the patterns.`},
       {q:`“Human-in-the-loop” means…`,o:[`a human builds the computer`,`AI suggests and a qualified human decides`,`humans are replaced`,`patients train the AI`],a:1,why:`The clinician stays responsible.`},
       {q:`In the external test of the Epic Sepsis Model, it…`,o:[`caught every case`,`missed about two-thirds of sepsis cases and alerted on 18% of all patients`,`was never used`,`was fully transparent`],a:1,why:`Wong et al. (2021). The vendor disputes the study.`},
       {q:`“Alert fatigue” happens when…`,o:[`doctors work long shifts`,`too many false alarms make staff ignore alerts`,`the AI runs out of power`,`patients ignore reminders`],a:1,why:`Over-alerting erodes trust.`},
-      {q:`AlphaFold is famous for…`,o:[`reading X-rays`,`predicting 3D protein structures`,`writing doctors' notes`,`robotic surgery`],a:1,why:`Its creators shared the 2024 Nobel Prize in Chemistry.`}])} }
+      {q:`AlphaFold is famous for…`,o:[`reading X-rays`,`predicting 3D protein structures`,`writing doctors' notes`,`robotic surgery`],a:1,why:`Its creators shared the 2024 Nobel Prize in Chemistry.`}])}
+};
+const V={
+ 'Drugs and personalised care':{id:'gg7WjuFs8F4',title:'AlphaFold: The making of a scientific breakthrough',by:'Google DeepMind',why:'How the team behind AlphaFold cracked protein structure prediction.'}
+};
+
+Lecture.mount({
+  id:'w6', week:6, clo:2, short:'Week 6 · AI in Healthcare',
+  title:'Applications of AI: AI in Healthcare',
+  meta:'TB Chapter 3 · 3 hours',
+  scenes:[
+  { part:1, nav:'Who reads your scan?', title:'Who should read your scan?',
+    narration:[`Imagine your chest X-ray is waiting to be read. Vote: a doctor alone, the AI alone, or both together? Keep your answer; we test it against real evidence later today.`],
+    fig:FIG['Who reads your scan?'] },
+
+  { part:1, nav:'Where AI is used', title:'AI along the patient journey',
+    narration:[`AI appears at every stage of care: triage, diagnosis, treatment planning, drug discovery, monitoring at home and hospital operations. Click each stage to see a real example.`],
+    fig:FIG['Where AI is used'] },
+
+  { part:1, nav:'Diagnostics', title:'Diagnosis is image classification', full:true,
+    narration:[`A diagnostic model is the image classifier from Week 3, trained on thousands of labelled scans. It gives each new image a score, a threshold turns the score into a flag, and a clinician reviews the flagged cases and decides.`],
+    fig:FIG['Diagnostics'] },
+
+  { part:1, nav:'Set the threshold', title:'Missed cases or false alarms?', wide:true,
+    narration:[`Every screening model needs a threshold. Set it low and you catch more disease but raise many false alarms. Set it high and alarms fall but you miss sick patients. Move the slider and decide which mistake is worse.`],
+    fig:FIG['Set the threshold'] },
+
+  { part:1, nav:'Drugs and personalised care', title:'From target to medicine',
+    narration:[`Developing a new medicine usually takes many years. AI speeds up the early steps by predicting protein structures and which molecules might fit a target, so only the best candidates go to the lab and to clinical trials.`],
+    fig:FIG['Drugs and personalised care'] },
+
+  { part:2, nav:'AlphaFold DB', title:'Explore a protein structure predicted by AI',
+    narration:[`The AlphaFold Protein Structure Database holds over 200 million structures predicted by DeepMind's AlphaFold. Search for haemoglobin or insulin, rotate the 3D model, and read the colour code that shows how confident the prediction is.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'AlphaFold Protein Structure Database',by:'Google DeepMind · EMBL-EBI',url:'https://alphafold.ebi.ac.uk/',steps:[
+      {t:'Search',s:'a protein',d:'Type “human haemoglobin” or “insulin” in the search box.'},
+      {t:'Open',s:'the 3D model',d:'Open an entry and rotate the structure with your mouse.'},
+      {t:'Confidence',s:'blue vs orange',d:'Dark blue parts are predicted with high confidence; orange parts with low confidence.'},
+      {t:'Discuss',s:'why it matters',d:'Why would a drug designer want to know the shape before testing molecules?'}]})} },
+
+  { part:2, nav:'Model confidence', title:'Watch a model\'s confidence drop',
+    narration:[`Open Teachable Machine again and train two classes: an open hand and a fist. Then show a half-open hand. The confidence falls, which is exactly the case a medical threshold must handle.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Teachable Machine',by:'Google',url:'https://teachablemachine.withgoogle.com/train/image',steps:[
+      {t:'Two classes',s:'open hand · fist',d:'Record about 50 webcam images of each.'},
+      {t:'Train',s:'one click',d:'Press Train Model.'},
+      {t:'Edge case',s:'half-open hand',d:'Watch the two confidence bars. Where would you set the threshold?'},
+      {t:'Link',s:'to medicine',d:'In a hospital, who should look at the unclear cases?'}]})} },
+
+  { part:3, nav:'Watch: AlphaFold', title:'Watch: solving a 50-year-old puzzle',
+    narration:[`Predicting how a protein folds was a grand challenge in biology for fifty years. Watch how the AlphaFold team approached it; its creators shared the 2024 Nobel Prize in Chemistry.`],
+    fig:{label:`Watch`, build:el=>W.video(el,V['Drugs and personalised care'])} },
+
+  { part:3, nav:'Case: sepsis model', title:'Case: the sepsis alert that missed most patients',
+    narration:[`Epic's sepsis model was used in hundreds of US hospitals. When Michigan Medicine tested it independently in 2021, it caught only about a third of sepsis patients and alerted on almost one in five of all patients. Vendor claims need independent testing.`],
+    src:`Wong, A. et al. (2021). External validation of a widely implemented proprietary sepsis prediction model. <em>JAMA Internal Medicine</em>. <a href="https://ihpi.umich.edu/news/popular-sepsis-prediction-tool-less-accurate-claimed" target="_blank" rel="noopener">Summary, University of Michigan</a>.`,
+    fig:FIG['Case: sepsis model'] },
+
+  { part:3, nav:'Who is responsible?', title:'When AI is wrong, who is responsible?',
+    narration:[`If an AI misses a cancer, who is to blame: the developer, the hospital, the doctor who trusted it, or the regulator who approved it? Divide the responsibility on the right and defend your split.`],
+    fig:FIG['Who is responsible?'] },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Microsoft Learn's Introduction to computer vision module explains how models read images like the scans we studied today. Finish it, keep the trophy, and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open each branch of the mind map, then answer the six questions. Before Week 7, read RB c, Chapter 1, and choose your field for Assignment 2.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:FIG['Exam takeaways'].mindmap, build:FIG['Exit check'].build} }
   ]
 });
-
 </script>
 </body>
 </html>

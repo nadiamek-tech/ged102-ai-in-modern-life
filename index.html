@@ -19,8 +19,8 @@
 
   <div class="doors">
     <a class="door l" href="lectures.html"><span class="ic" aria-hidden="true">▶</span><b>Lectures</b><span>Narrated weekly lectures: lecture, tools lab, case studies.</span></a>
-    <a class="door b" href="labs.html"><span class="ic" aria-hidden="true">⚙</span><b>Labs</b><span>Every free AI tool we try in class, week by week.</span></a>
-    <a class="door e" href="exams.html"><span class="ic" aria-hidden="true">✎</span><b>Exams</b><span>Midterm and final: what is included, and how to prepare.</span></a>
+    <a class="door b" href="labs.html"><b>Labs</b><span>Every free AI tool we try in class, week by week.</span></a>
+    <a class="door e" href="exams.html"><b>Exams</b><span>Midterm and final: what is included, and how to prepare.</span></a>
   </div>
   <div class="helpers" id="helpers"></div>
 
@@ -47,6 +47,7 @@
 
 <script src="assets/course-data.js"></script>
 <script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
 <script src="assets/course.js"></script>
 <script src="assets/hub.js"></script>
 <script>
@@ -56,7 +57,7 @@ document.getElementById('byline').innerHTML=`<b>${esc(C.instructor)}</b> · ${es
 /* helper buttons: one form for requests, the portal for grades, the FAQ for questions */
 const req=C.helpForm||(C.email?`mailto:${C.email}?subject=GED%20102`:'');
 document.getElementById('helpers').innerHTML=
-  `<button type="button" class="btn" id="ask">🙂 Ask me</button>`+
+  `<button type="button" class="btn" id="ask">Ask me</button>`+
   btn(req,'I need help','btn ghost')+btn(req,'I will be absent','btn ghost')+
   btn(C.booking||req,'Meet the professor','btn ghost')+btn(C.portal,'Check my grades','btn ghost');
 document.getElementById('ask').addEventListener('click',()=>{ const q=document.getElementById('q'); q.scrollIntoView({behavior:'smooth',block:'center'}); q.focus(); });

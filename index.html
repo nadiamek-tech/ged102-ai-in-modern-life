@@ -73,7 +73,7 @@ h2.sec{font-size:1.5rem;font-weight:800;margin-bottom:6px}
     <div>
       <p>Narrated, visual lectures for students from every discipline. Every topic follows four steps: <b>in plain words</b>, a <b>simple example</b>, the <b>risks</b>, and <b>what to remember for the exam</b>. Read or listen, explore the diagram, then try it in a class activity. No technical background is required.</p>
       <div class="byline">Course lecturer <b>Eng. Nadia Mek</b></div>
-      <div class="row" style="gap:10px"><a class="start" href="week-01.html">Start with Week 1 →</a><a class="start" href="review.html" style="background:transparent;color:var(--ink);border:1px solid var(--line)">Midterm review</a></div>
+      <div class="row" style="gap:10px"><a class="start" href="week-01.html">Start with Week 1 →</a><a class="start" href="review.html" style="background:transparent;color:var(--ink);border:1px solid var(--line)">Midterm review</a><a class="start" href="credentials.html" style="background:var(--good);color:var(--surface)">My Credentials</a></div>
     </div>
   </section>
 
@@ -96,6 +96,7 @@ h2.sec{font-size:1.5rem;font-weight:800;margin-bottom:6px}
   <p class="foot">Assessment: Assignment 1 (5%), Assignment 2 (5%), Assignment 3 (10%), Assignment 4 (10%), Midterm Examination (30%), Final Examination (40%). Reading codes refer to the syllabus: TB = Moutinho, Cavique &amp; Bigné (2023); RB a–f = reference books. Narration voice: Kokoro text-to-speech (open source, Apache 2.0), voice “Heart”.</p>
 </div>
 
+<script src="assets/credentials.js"></script>
 <script src="assets/course.js"></script>
 <script>
 document.getElementById('theme').addEventListener('click',()=>GED102Theme.toggle());
@@ -123,7 +124,7 @@ document.getElementById('ledger').innerHTML=WEEKS.map(([n,t,subs,clo,ref,ass,hre
   return `<${tag} class="wk${href?' ready':''}" ${href?`href="${href}"`:''} style="--cc:${cc}">
     <span class="no">${String(n).padStart(2,'0')}</span>
     <div><h3>${esc(t)}</h3>${subs.length?`<ul>${subs.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}</div>
-    <div class="meta">${ref?`<b>Reading</b>${esc(ref)}`:''}</div>
+    <div class="meta">${ref?`<b>Reading</b>${esc(ref)}`:''}${(window.COURSE_CREDS&&COURSE_CREDS.weeks[n])?`<b style="margin-top:6px;color:var(--good)">Micro-credential</b>${esc(COURSE_CREDS.weeks[n].mod)}`:''}</div>
     <div class="meta">${clo?`<b>CLO</b>${clo}`:''}${ass?`<b style="margin-top:6px">Assessment</b>${ass}`:''}</div>
     <div class="st">${href?'<span class="open">Open lecture →</span>':'<span class="tag">In preparation</span>'}</div></${tag}>`; }).join('');
 </script>

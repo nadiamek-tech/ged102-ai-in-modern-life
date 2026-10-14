@@ -117,6 +117,7 @@ body:not(.teacher) .notes{display:none}
 
 /* ---------- shared widgets ---------- */
 .btn{border:1px solid var(--wk);background:var(--wk);color:var(--on-wk);border-radius:8px;padding:7px 14px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.88rem}
+a.btn{text-decoration:none;display:inline-block}
 .btn.ghost{background:none;color:var(--wk)}
 .btn:disabled{opacity:.4;cursor:default}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -228,6 +229,15 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
 /* full-width figure under the narration */
 .split.full{grid-template-columns:minmax(0,1fr)}
 .split.full .narr{max-width:76ch}
+
+/* micro-credential card */
+.cred{border:1.5px solid var(--good);border-radius:12px;padding:14px 16px;margin:1.2em 0;background:color-mix(in srgb,var(--good) 7%,transparent);font-family:var(--f-display);display:grid;gap:4px}
+.cred .eyebrow{color:var(--good)}
+.cred b{font-size:1.05rem}
+.cred-meta{font-size:.86rem;color:var(--muted)}
+.cred .row{margin-top:6px;gap:12px}
+.cred .btn{background:var(--good);border-color:var(--good);color:var(--surface)}
+.cred-done{display:flex;gap:6px;align-items:center;font-size:.9rem;font-weight:400}
 
 /* video */
 .videos{display:grid;gap:12px;margin:1.2em 0}

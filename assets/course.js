@@ -268,6 +268,18 @@
       if(s.think) narr.appendChild(h('div',{class:'think'},`<span class="eyebrow">Pause and think</span>${s.think}`));
       if(s.video){ const vd=h('div',{class:'videos'}); [].concat(s.video).forEach(v=>W.video(vd,v)); narr.appendChild(vd); }
       if(s.src) narr.appendChild(h('div',{class:'src'},s.src));
+      const C=window.COURSE_CREDS, cw=C&&C.weeks[cfg.week];
+      if(cw && s.kind==='check'){
+        const bd=C.badges.find(x=>x.id===cw.b), key='cred-'+cfg.id+'-'+cfg.week;
+        const card=h('div',{class:'cred'});
+        card.innerHTML=`<span class="eyebrow">Micro-credential · this week</span><b>${esc(cw.mod)}</b>
+          <span class="cred-meta">${bd?esc(bd.prov)+' · '+esc(bd.name)+' · ':''}${esc(cw.part)}${cw.min?' · '+cw.min+' min':''} · free</span>
+          <div class="row"><a class="btn" href="${cw.url}" target="_blank" rel="noopener">Earn it ↗</a>
+          <label class="cred-done"><input type="checkbox" ${store.get(key)==='1'?'checked':''}> Done</label>
+          <a href="credentials.html">My credentials →</a></div>`;
+        card.querySelector('input').addEventListener('change',e=>store.set(key,e.target.checked?'1':'0'));
+        narr.appendChild(card);
+      }
       if(s.notes) narr.appendChild(h('div',{class:'notes'},`<span class="eyebrow">Teacher notes${s.minutes?` · ${s.minutes} min`:''}</span><ul>${s.notes.map(n=>`<li>${n}</li>`).join('')}</ul>`));
       split.appendChild(narr);
       if(s.fig){ const f=h('figure',{class:'fig',style:'margin:0'}); if(s.fig.label) f.appendChild(h('span',{class:'eyebrow'},esc(s.fig.label)));

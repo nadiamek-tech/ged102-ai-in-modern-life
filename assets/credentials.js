@@ -2,6 +2,7 @@
    Verified Oct 2026: IBM SkillsBuild (free, Credly badge), Google Skills / Cloud Skills Boost (free skill badge),
    Microsoft Learn (free modules, trophies on Learn profile). */
 window.COURSE_CREDS = {
+  form: '',  // Microsoft Forms link for proof submission (bonus). Paste it here.
   badges: [
     { id:'ibm', prov:'IBM SkillsBuild', name:'Artificial Intelligence Fundamentals', proof:'Credly digital badge', done:13, url:'https://skillsbuild.org/college-students/course-catalog/artificial-intelligence-fundamentals', account:'Free IBM SkillsBuild + Credly accounts' },
     { id:'google', prov:'Google', name:'Generative AI Fundamentals', proof:'Google skill badge', done:10, url:'https://www.cloudskillsboost.google/course_templates/556', account:'Free Google account' },

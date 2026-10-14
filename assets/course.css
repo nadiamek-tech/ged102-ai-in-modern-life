@@ -283,3 +283,6 @@ textarea,input[type=text]{width:100%;border:1px solid var(--line);background:var
   .brand span{display:none}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.chip.k-bonus{border-color:var(--good);color:var(--good)}
+.cred-steps{margin:.4em 0 0;padding-left:1.2em;font-size:.92rem}
+.cred-all{font-size:.88rem;margin-top:4px}

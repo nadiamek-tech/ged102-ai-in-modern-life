@@ -173,6 +173,9 @@
   window.Lecture = { W, B, mount(cfg){
     document.title = cfg.pageTitle || document.title;
     const S = cfg.scenes; let cur = 0;
+    if(window.COURSE_CREDS && window.COURSE_CREDS.weeks[cfg.week] && !S.some(x=>x.kind==='bonus'))
+      S.push({ nav:'Keep learning', title:'Optional, but important', kind:'bonus',
+        narration:['This week\'s topic continues in a free industry course. Finish the unit, earn a recognised badge, and get a bonus for class activity.'] });
     const seen = new Set(JSON.parse(store.get('ged102-seen-'+cfg.id)||'[]'));
     document.body.dataset.layout = store.get('ged102-layout') || 'even';
     if(store.get('ged102-teacher')==='1') document.body.classList.add('teacher');
@@ -196,7 +199,7 @@
     toc.innerHTML=`<div class="eyebrow">Week ${cfg.week} · CLO ${cfg.clo}</div><h1>${esc(cfg.title)}</h1>
       <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Eng. Nadia Mek')}</b></div>`;
     const ol=h('ol'); toc.appendChild(ol);
-    S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
+    S.forEach((s,i)=>{ const li=h('li'); const b=h('button',{type:'button'},`<span class="n">${String(i).padStart(2,'0')}</span><span class="t">${esc(s.nav||s.title)}${s.kind&&s.kind!=='lecture'?`<span class="kind">${{check:'quiz',activity:'activity',exam:'exam',review:'review',bonus:'bonus'}[s.kind]}</span>`:''}</span>`); b.addEventListener('click',()=>go(i)); li.appendChild(b); ol.appendChild(li); });
     const stage=h('main',{class:'stage',id:'stage'});
     shell.append(toc,stage); document.body.appendChild(shell);
 
@@ -257,7 +260,7 @@
 
     function render(){
       const s=S[cur]; stop(); stage.innerHTML='';
-      const kindLabel={lecture:'Lecture',activity:'In-class activity',check:'Check your understanding',exam:'Exam takeaways',review:'Review'}[s.kind||'lecture'];
+      const kindLabel={lecture:'Lecture',activity:'In-class activity',check:'Check your understanding',exam:'Exam takeaways',review:'Review',bonus:'Optional · bonus'}[s.kind||'lecture'];
       const head=h('div',{class:'scene-head'});
       head.innerHTML=`<div><div class="eyebrow">Scene ${cur} of ${S.length-1}</div><h2>${s.title}</h2></div>
         <div class="chips"><span class="chip k-${s.kind||'lecture'}">${kindLabel}</span>${s.minutes?`<span class="chip">${s.minutes} min</span>`:''}</div>`;
@@ -269,14 +272,17 @@
       if(s.video){ const vd=h('div',{class:'videos'}); [].concat(s.video).forEach(v=>W.video(vd,v)); narr.appendChild(vd); }
       if(s.src) narr.appendChild(h('div',{class:'src'},s.src));
       const C=window.COURSE_CREDS, cw=C&&C.weeks[cfg.week];
-      if(cw && s.kind==='check'){
+      if(cw && s.kind==='bonus'){
         const bd=C.badges.find(x=>x.id===cw.b), key='cred-'+cfg.id+'-'+cfg.week;
+        const form=C.form||'';
         const card=h('div',{class:'cred'});
-        card.innerHTML=`<span class="eyebrow">Micro-credential · this week</span><b>${esc(cw.mod)}</b>
-          <span class="cred-meta">${bd?esc(bd.prov)+' · '+esc(bd.name)+' · ':''}${esc(cw.part)}${cw.min?' · '+cw.min+' min':''} · free</span>
-          <div class="row"><a class="btn" href="${cw.url}" target="_blank" rel="noopener">Earn it ↗</a>
-          <label class="cred-done"><input type="checkbox" ${store.get(key)==='1'?'checked':''}> Done</label>
-          <a href="credentials.html">My credentials →</a></div>`;
+        card.innerHTML=`<span class="eyebrow">${bd?esc(bd.prov):'Credential'} · ${esc(cw.part)}${cw.min?' · '+cw.min+' min':''} · free</span><b>${esc(cw.mod)}</b>
+          <span class="cred-meta">Counts toward: ${bd?esc(bd.name)+' ('+esc(bd.proof)+')':'your badges'}</span>
+          <ol class="cred-steps"><li>Complete the unit.</li><li>Take a screenshot of your progress or copy your badge link.</li><li>Submit it for a class-activity bonus.</li></ol>
+          <div class="row"><a class="btn" href="${cw.url}" target="_blank" rel="noopener">Continue learning ↗</a>
+          ${form?`<a class="btn ghost" href="${form}" target="_blank" rel="noopener">Submit proof ↗</a>`:`<span class="btn ghost" aria-disabled="true" style="opacity:.55;cursor:default">Proof form: link coming soon</span>`}
+          <label class="cred-done"><input type="checkbox" ${store.get(key)==='1'?'checked':''}> Done</label></div>
+          <a class="cred-all" href="credentials.html">See the full pathway →</a>`;
         card.querySelector('input').addEventListener('change',e=>store.set(key,e.target.checked?'1':'0'));
         narr.appendChild(card);
       }

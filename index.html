@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
 <link rel="stylesheet" href="assets/course.css">
 <link rel="stylesheet" href="assets/hub.css">
+<link rel="stylesheet" href="assets/portal.css">
 </head>
 <body>
 <main class="hub">
@@ -45,29 +46,30 @@
   <p class="foot">Course lecturer <b>Eng. Nadia Mek</b> · Narration: Kokoro text-to-speech (open source), voice “Heart” · Reading codes follow the syllabus: TB = Moutinho, Cavique &amp; Bigné (2023); RB a–f = reference books.</p>
 </main>
 
+<script src="assets/professor.js"></script>
 <script src="assets/course-data.js"></script>
 <script src="assets/credentials.js"></script>
 <script src="assets/supports.js"></script>
 <script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
 <script src="assets/hub.js"></script>
+<script src="assets/portal.js"></script>
 <script>
 const {C,esc,fill,btn,weekDates,dueText}=Hub; Hub.top('index.html');
 document.getElementById('byline').innerHTML=`<b>${esc(C.instructor)}</b> · ${esc(C.term)}${C.email?` · <a href="mailto:${C.email}">${esc(C.email)}</a>`:''}`;
 
-/* helper buttons: one form for requests, the portal for grades, the FAQ for questions */
-const req=C.helpForm||(C.email?`mailto:${C.email}?subject=GED%20102`:'');
-document.getElementById('helpers').innerHTML=
-  `<button type="button" class="btn" id="ask">Ask me</button>`+
-  btn(req,'I need help','btn ghost')+btn(req,'I will be absent','btn ghost')+
-  btn(C.booking||req,'Meet the professor','btn ghost')+btn(C.portal,'Check my grades','btn ghost');
-document.getElementById('ask').addEventListener('click',()=>{ const q=document.getElementById('q'); q.scrollIntoView({behavior:'smooth',block:'center'}); q.focus(); });
+/* help agents: same menu as every course (assets/portal.js + assets/professor.js) */
+document.body.dataset.home='1';
+const hp=document.getElementById('helpers'); hp.className='pt pt-agents'; Portal.agents(hp);
 
 /* FAQ with search */
 function faq(term=''){
   const t=term.trim().toLowerCase();
   const rows=C.faq.filter(([q,a])=>!t||(q+' '+a).toLowerCase().includes(t));
   document.getElementById('faq').innerHTML=rows.length?rows.map(([q,a],i)=>`<details${t&&i===0?' open':''}><summary>${esc(q)}</summary><p>${fill(esc(a))}</p></details>`).join('')
-    :`<p class="none">No answer yet for “${esc(term)}”. Press “I need help” and the professor will reply.</p>`;
+    :`<p class="none">No answer yet for “${esc(term)}”. Press “General help” and the professor will reply.</p>`;
 }
 document.getElementById('q').addEventListener('input',e=>faq(e.target.value)); faq();
 

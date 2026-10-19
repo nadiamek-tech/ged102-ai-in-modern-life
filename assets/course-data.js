@@ -4,12 +4,14 @@ window.COURSE = {
   /* ---------- SETTINGS (fill these in) ---------- */
   code: 'GED 102', title: 'AI in Modern Life', term: 'Fall 2026',
   instructor: 'Eng. Nadia Mek',
-  email: '',          // e.g. 'nadia.mek@cud.ac.ae'
-  office: '',         // e.g. 'Room 2.14, Building A'
-  hours: '',          // e.g. 'Mon and Wed, 12:00–13:30'
-  booking: '',        // link to book office hours (Microsoft Bookings / Calendly / Teams)
-  helpForm: '',       // one Microsoft Form for "I need help", "I will be absent", "Meet the professor"
-  portal: '',         // student faculty portal (grades)
+  /* email, office, office hours, form and portal links come from assets/professor.js (same file in every course) */
+  email: (window.PROF||{}).email||'',
+  office: (window.PROF||{}).office||'',
+  hours: (window.PROF||{}).officeHours||'',
+  booking: '',        // link to book office hours (Microsoft Bookings / Calendly / Teams); empty = students email to book
+  helpForm: ((window.PROF||{}).links||{}).form||'',
+  portal: ((window.PROF||{}).links||{}).portal||'',
+  ask: ()=>window.CourseAssistant&&CourseAssistant.open(),
   moodle: '',         // Moodle course page
   start: '',          // Monday of Week 1 as YYYY-MM-DD; week dates are then calculated automatically
 
@@ -95,10 +97,10 @@ window.COURSE = {
 
   /* ---------- FAQ (edit freely) ---------- */
   faq: [
-    ['How do I contact the professor?', 'Email {email}. Write your name, student ID and “GED 102” in the subject line. You can also use the “I need help” button above.'],
+    ['How do I contact the professor?', 'Email {email}. Write your name, student ID and “GED 102” in the subject line. You can also use “General help” above.'],
     ['When are office hours?', '{hours} in {office}. You are welcome to drop in during these times.'],
     ['How do I book an office-hour meeting?', 'Press “Meet the professor” at the top of this page and choose a time. If no slot fits, email the professor with two times that suit you.'],
-    ['I missed a class. What should I do?', 'Open that week’s lecture on this site: every scene can be read or listened to. Then press “I will be absent” for future absences, and keep any official excuse (for example a medical certificate).'],
+    ['I missed a class. What should I do?', 'Open that week’s lecture on this site: every scene can be read or listened to. Then press “I was / will be absent” for future absences, and keep any official excuse (for example a medical certificate).'],
     ['I missed an exam or a deadline. What happens now?', 'Contact the professor by email the same day, with your reason and any official evidence. A make-up or extension is possible only with an excuse accepted under CUD policy.'],
     ['How many classes can I miss?', 'CUD sends a reminder at 10% and 20% absence. At 25% absence you receive “FA” (Failure for Non-Attendance) and cannot sit the final exam.'],
     ['What are the exams?', 'Two exams: the Midterm (30%) in Week 8 covers Weeks 1–7, and the Final (40%) in Week 16 covers the whole course. Open “Exams” at the top for details and the review page.'],

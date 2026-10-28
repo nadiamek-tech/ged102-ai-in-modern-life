@@ -22,19 +22,6 @@
   </div>
   <div class="helpers" id="helpers"></div>
 
-  <h2>FAQ</h2>
-  <p class="sub">The questions students ask most. Type a word to search.</p>
-  <input type="search" class="faq-search" id="q" placeholder="Search: absent, exam, grades, AI tools…" aria-label="Search the FAQ">
-  <div class="faq" id="faq"></div>
-
-  <h2>Semester calendar</h2>
-  <p class="sub">Click an assessment to see what it includes, its type and how to submit.</p>
-  <div class="scroll"><table class="cal"><thead><tr><th>Wk</th><th>Dates</th><th>Topic</th><th>CLO</th><th>Assessment</th></tr></thead><tbody id="cal"></tbody></table></div>
-
-  <h2>Course learning outcomes</h2>
-  <p class="sub">What you will be able to do by the end of the course.</p>
-  <div class="clos" id="clos"></div>
-
   <h2>Grades and submissions</h2>
   <p class="sub">Grades are on the student faculty portal. Every submission opens the right Moodle page.</p>
   <div class="grades" id="grades"></div>
@@ -60,28 +47,8 @@ const {C,esc,fill,btn,weekDates,dueText}=Hub; Hub.top('index.html');
 document.body.dataset.home='1';
 const hp=document.getElementById('helpers'); hp.className='pt pt-agents'; Portal.agents(hp);
 
-/* FAQ with search */
-function faq(term=''){
-  const t=term.trim().toLowerCase();
-  const rows=C.faq.filter(([q,a])=>!t||(q+' '+a).toLowerCase().includes(t));
-  document.getElementById('faq').innerHTML=rows.length?rows.map(([q,a],i)=>`<details${t&&i===0?' open':''}><summary>${esc(q)}</summary><p>${fill(esc(a))}</p></details>`).join('')
-    :`<p class="none">No answer yet for “${esc(term)}”. Press “General help” and the professor will reply.</p>`;
-}
-document.getElementById('q').addEventListener('input',e=>faq(e.target.value)); faq();
-
-/* calendar */
-const today=new Date(); const cur=C.start?Math.floor((today-new Date(C.start+'T00:00:00'))/6048e5)+1:0;
-document.getElementById('cal').innerHTML=C.weeks.map(([n,t,clo,ref,href])=>{
-  const as=C.assess.filter(a=>a.week===n);
-  return `<tr${n===cur?' class="now"':''}><td class="n">${String(n).padStart(2,'0')}</td><td class="d">${weekDates(n)||'—'}</td>
-    <td>${href?`<a href="${href}">${esc(t)}</a>`:esc(t)}${ref?`<br><small style="color:var(--muted)">${esc(ref)}</small>`:''}</td>
-    <td>${clo||''}</td><td>${as.map(a=>`<button type="button" class="chip${a.exam?' exam':''}" data-id="${a.id}">${esc(a.short)} <small>${a.weight}%</small></button>`).join('')}</td></tr>`; }).join('');
-document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>Hub.open(b.dataset.id)));
-
-/* CLOs */
-document.getElementById('clos').innerHTML=C.clos.map((c,i)=>`<div><b>CLO ${i+1}</b>${esc(c)}</div>`).join('');
-
 /* grades + upcoming submissions (assignments only; past deadlines drop off) */
+const today=new Date();
 document.getElementById('grades').innerHTML=btn(C.portal,'Student faculty portal ↗','btn')+'<a class="btn ghost" href="credentials.html">My Credentials →</a>';
 const upcoming=C.assess.filter(a=>!a.exam&&(!a.due||new Date(a.due.replace(' ','T'))>today));
 document.getElementById('subs').innerHTML=upcoming.map(a=>`<div class="sub-row"><div><b>${esc(a.name)} · ${a.weight}%</b><small>Due: ${esc(dueText(a))}</small></div>

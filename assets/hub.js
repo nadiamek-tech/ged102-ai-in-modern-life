@@ -16,8 +16,10 @@
   const dueText = a => a.due ? new Date(a.due.replace(' ','T')).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : `Week ${a.week}${C.start?' · '+weekDates(a.week):''} · date to be announced`;
 
   /* Stanford-style header band + flat tab menu, shared by every course-system page */
-  const TABS=[['index.html','Home'],['lectures.html','Lectures'],['labs.html','Labs'],['syllabus.html','Syllabus'],['schedule.html','Schedule'],['assignments.html','Assignments'],['exams.html','Exams'],['credentials.html','Credentials'],['staff.html','Staff &amp; help']];
+  const TABS=[['index.html','Home'],['syllabus.html','Syllabus'],['schedule.html','Schedule'],['credentials.html','Credentials'],['assignments.html','Assignments'],['exams.html','Exams'],['staff.html','Help &amp; support']];
+  const PARENT={'lectures.html':'schedule.html','labs.html':'schedule.html'};  // pages reached from Schedule keep that tab lit
   function top(active){
+    active=PARENT[active]||active;
     const el=document.createElement('header'); el.className='sx-head';
     el.innerHTML=`<div class="sx-band"><div class="sx-in"><div><a class="sx-title" href="index.html">${esc(C.code)}: ${esc(C.title)}</a><p>Instructor: ${esc(C.instructor)}</p></div>
       <div class="sx-term"><span>${esc(C.term)} · 3 credit hours</span><button type="button" class="sx-theme" id="theme" title="Switch light or dark">◐ Theme</button></div></div></div>

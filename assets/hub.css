@@ -150,3 +150,5 @@ a.wrow:hover h3{text-decoration:underline;text-decoration-color:var(--wk)}
 .sx-weights span{display:block;height:100%}
 .sx-legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-family:var(--f-display);font-size:.88rem;margin-bottom:14px}
 .sx-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.doors.two{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}
+@media (max-width:520px){.doors.two{grid-template-columns:minmax(0,1fr)}}

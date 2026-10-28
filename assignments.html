@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Assignments · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body>
+<main class="hub">
+  <h1>Assignments</h1>
+  <p class="lede">Four assignments, 30% of your grade. Submit on Moodle through Turnitin; the maximum similarity index is 20%.</p>
+  <div class="sx-acc" id="acc"></div>
+</main>
+<script src="assets/professor.js"></script>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
+<script src="assets/hub.js"></script>
+<script>
+const {C,esc,btn,dueText,rubric}=Hub; Hub.top('assignments.html');
+const A=C.assess.filter(a=>!a.exam), open=(location.hash||'#a1').slice(1);
+document.getElementById('acc').innerHTML=A.map(a=>`<details id="${a.id}"${a.id===open?' open':''}><summary>${esc(a.name)} <span class="sx-due">${a.weight}%</span><span class="meta">Week ${a.week} · CLO ${a.clo}</span></summary>
+  <p>${esc(a.brief)}</p><dl class="facts"><div><dt>Due</dt><dd>${esc(dueText(a))}</dd></div><div><dt>Covers</dt><dd>${esc(a.covers)}</dd></div></dl>
+  <div class="row" style="margin-bottom:10px">${btn(a.submit,'Submit on Moodle ↗','btn','link coming soon')}</div>${rubric(a)}</details>`).join('');
+const t=document.getElementById(open); if(t&&location.hash) t.scrollIntoView();
+</script>
+</body>
+</html>

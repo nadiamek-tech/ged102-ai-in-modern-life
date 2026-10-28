@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Staff &amp; help · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/hub.css">
+<link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+<main class="hub">
+  <h1>Staff &amp; help</h1>
+  <p class="lede">Ask in class first. Then use office hours, the help buttons or email.</p>
+  <div class="scroll"><table class="sx-table"><thead><tr><th>Name</th><th>Role</th><th>Email</th><th>Office hours</th><th>Office</th></tr></thead><tbody id="st"></tbody></table></div>
+  <h2>Get help</h2>
+  <div id="helpers"></div>
+  <h2>FAQ</h2>
+  <p class="sub">The questions students ask most. Type a word to search.</p>
+  <input type="search" class="faq-search" id="q" placeholder="Search: absent, exam, grades, AI tools…" aria-label="Search the FAQ">
+  <div class="faq" id="faq"></div>
+</main>
+<script src="assets/professor.js"></script>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
+<script src="assets/hub.js"></script>
+<script src="assets/portal.js"></script>
+<script>
+const {C,esc,fill}=Hub; Hub.top('staff.html');
+const tba=v=>v?esc(v):'<span style="color:var(--muted)">To be announced</span>';
+document.getElementById('st').innerHTML=`<tr><td><b>${esc(C.instructor)}</b></td><td>Instructor</td><td>${C.email?`<a href="mailto:${esc(C.email)}">${esc(C.email)}</a>`:tba('')}</td><td>${tba(C.hours)}</td><td>${tba(C.office)}</td></tr>`;
+document.body.dataset.home='1';
+const hp=document.getElementById('helpers'); hp.className='pt pt-agents'; Portal.agents(hp);
+function faq(term=''){
+  const t=term.trim().toLowerCase();
+  const rows=C.faq.filter(([q,a])=>!t||(q+' '+a).toLowerCase().includes(t));
+  document.getElementById('faq').innerHTML=rows.length?rows.map(([q,a],i)=>`<details${t&&i===0?' open':''}><summary>${esc(q)}</summary><p>${fill(esc(a))}</p></details>`).join('')
+    :`<p class="none">No answer yet for “${esc(term)}”. Press “General help” and the professor will reply.</p>`;
+}
+document.getElementById('q').addEventListener('input',e=>faq(e.target.value)); faq();
+</script>
+</body>
+</html>

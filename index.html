@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>GED 102 · AI in Modern Life</title>
-<meta name="description" content="GED 102 – AI in Modern Life, Canadian University Dubai: lectures, labs, exams, calendar and submissions in one place.">
+<meta name="description" content="GED 102 – AI in Modern Life: lectures, labs, exams, calendar and submissions in one place.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
@@ -14,9 +14,6 @@
 </head>
 <body>
 <main class="hub">
-  <span class="code">CANADIAN UNIVERSITY DUBAI · GENERAL EDUCATION · 3 CREDIT HOURS</span>
-  <h1>AI in Modern Life</h1>
-  <p class="byline" id="byline"></p>
 
   <div class="doors">
     <a class="door l" href="lectures.html"><span class="ic" aria-hidden="true">▶</span><b>Lectures</b><span>Narrated weekly lectures: lecture, tools lab, case studies.</span></a>
@@ -58,7 +55,6 @@
 <script src="assets/portal.js"></script>
 <script>
 const {C,esc,fill,btn,weekDates,dueText}=Hub; Hub.top('index.html');
-document.getElementById('byline').innerHTML=`<b>${esc(C.instructor)}</b> · ${esc(C.term)}${C.email?` · <a href="mailto:${C.email}">${esc(C.email)}</a>`:''}`;
 
 /* help agents: same menu as every course (assets/portal.js + assets/professor.js) */
 document.body.dataset.home='1';

@@ -87,7 +87,7 @@ const ATT={
  small:{words:'The student put the book in her bag because it was too small'.split(' '),w:{it:{bag:.58,book:.2,small:.1,student:.05},her:{student:.72,bag:.12,book:.06},small:{it:.4,bag:.33,book:.12},put:{student:.4,book:.35,bag:.15}}}};
 function chatflow(el){
   el.innerHTML=`<div class="ui stack">
-   <div><b>Step 1 · Tokenise.</b> Type anything:<input type="text" id="tt" value="Canadian University Dubai students understand transformers!"><div class="toks" id="tk"></div><p class="mono" style="color:var(--muted);margin:6px 0 0">Simplified tokenizer for teaching; real ones learn their pieces from data.</p></div>
+   <div><b>Step 1 · Tokenise.</b> Type anything:<input type="text" id="tt" value="University students understand transformers!"><div class="toks" id="tk"></div><p class="mono" style="color:var(--muted);margin:6px 0 0">Simplified tokenizer for teaching; real ones learn their pieces from data.</p></div>
    <div><b>Step 2 · Attention.</b> Click a word to see which earlier words it “looks at”.
      <div class="row" style="margin-top:6px"><button type="button" class="btn ghost" data-s="heavy" aria-pressed="true">…because it was heavy</button><button type="button" class="btn ghost" data-s="small" aria-pressed="false">…because it was too small</button></div>
      <div class="att" id="att"></div><div class="feedback" id="am"></div></div></div>`;

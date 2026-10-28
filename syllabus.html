@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Syllabus · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body>
+<main class="hub">
+  <h1>Syllabus</h1>
+  <p class="lede">The essentials of the official course syllabus.</p>
+  <h2>Course description</h2><p id="desc" style="max-width:80ch;font-family:var(--f-display)"></p>
+  <h2>Course learning outcomes</h2><div class="scroll"><table class="sx-table"><tbody id="clo"></tbody></table></div>
+  <h2>Assessment</h2><div id="w"></div>
+  <div class="scroll"><table class="sx-table"><thead><tr><th>Item</th><th>Weight</th><th>Week</th><th>CLO</th></tr></thead><tbody id="as"></tbody></table></div>
+  <h2>Textbook and reference books</h2><div class="scroll"><table class="sx-table"><tbody id="bk"></tbody></table></div>
+  <h2>Policies</h2><div class="scroll"><table class="sx-table"><tbody id="pol"></tbody></table></div>
+</main>
+<script src="assets/professor.js"></script>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
+<script src="assets/hub.js"></script>
+<script>
+const {C,esc}=Hub; Hub.top('syllabus.html');
+const COL=['var(--sx)','color-mix(in srgb,var(--sx) 55%,var(--bg))','var(--muted)','color-mix(in srgb,var(--sx) 30%,var(--bg))','color-mix(in srgb,var(--muted) 55%,var(--bg))','var(--ink)'];
+const lab=a=>a.exam?(a.id==='mid'?'Midterm':'Final'):a.short;
+const weights=()=>`<div class="sx-weights" role="img" aria-label="Grade weights">${C.assess.map((a,i)=>`<span style="width:${a.weight}%;background:${COL[i]}"></span>`).join('')}</div><div class="sx-legend">${C.assess.map((a,i)=>`<span><i style="background:${COL[i]}"></i>${lab(a)} ${a.weight}%</span>`).join('')}</div>`;
+document.getElementById('desc').textContent=C.description;
+document.getElementById('clo').innerHTML=C.clos.map((c,i)=>`<tr><td class="k">CLO ${i+1}</td><td>${esc(c)}</td></tr>`).join('');
+document.getElementById('w').innerHTML=weights();
+document.getElementById('as').innerHTML=C.assess.map(a=>`<tr><td><button type="button" class="sx-due${a.exam?' exam':''}" data-id="${a.id}">${esc(lab(a))}</button> ${esc(a.name)}</td><td class="k">${a.weight}%</td><td class="k">${a.week}</td><td class="k">${a.clo}</td></tr>`).join('');
+document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>Hub.open(b.dataset.id)));
+document.getElementById('bk').innerHTML=C.books.map(([k,b])=>`<tr><td class="k">${k}</td><td>${esc(b)}</td></tr>`).join('');
+document.getElementById('pol').innerHTML=C.policies.map(([k,b])=>`<tr><td style="font-weight:700;white-space:nowrap">${esc(k)}</td><td>${esc(b)}</td></tr>`).join('');
+</script>
+</body>
+</html>

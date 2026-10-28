@@ -15,14 +15,16 @@
   const weekDates = n => { const s=weekStart(n); if(!s) return ''; return fmt(s)+' – '+fmt(new Date(s.getTime()+4*DAY)); };
   const dueText = a => a.due ? new Date(a.due.replace(' ','T')).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : `Week ${a.week}${C.start?' · '+weekDates(a.week):''} · date to be announced`;
 
+  /* Stanford-style header band + flat tab menu, shared by every course-system page */
+  const TABS=[['index.html','Home'],['lectures.html','Lectures'],['labs.html','Labs'],['syllabus.html','Syllabus'],['schedule.html','Schedule'],['assignments.html','Assignments'],['exams.html','Exams'],['staff.html','Staff &amp; help']];
   function top(active){
-    const links=[['index.html','Home'],['lectures.html','Lectures'],['labs.html','Labs'],['exams.html','Exams'],['credentials.html','My Credentials']];
-    const el=document.createElement('header'); el.className='hub-top';
-    el.innerHTML=`<a class="hub-brand" href="index.html"><b>${esc(C.code)}</b><span>${esc(C.title)}</span></a>
-      <nav aria-label="Course">${links.map(([h,t])=>`<a href="${h}"${h===active?' aria-current="page"':''}>${t}</a>`).join('')}</nav>
-      <button type="button" class="pill" id="theme" title="Switch light or dark">◐ Theme</button>`;
+    const el=document.createElement('header'); el.className='sx-head';
+    el.innerHTML=`<div class="sx-band"><div class="sx-in"><div><a class="sx-title" href="index.html">${esc(C.code)}: ${esc(C.title)}</a><p>Instructor: ${esc(C.instructor)}</p></div>
+      <div class="sx-term"><span>${esc(C.term)} · 3 credit hours</span><button type="button" class="sx-theme" id="theme" title="Switch light or dark">◐ Theme</button></div></div></div>
+      <nav class="sx-tabs" aria-label="Course"><div class="sx-in">${TABS.map(([h,t])=>`<a href="${h}"${h===active?' aria-current="page"':''}>${t}</a>`).join('')}</div></nav>`;
     document.body.prepend(el);
     el.querySelector('#theme').addEventListener('click',()=>window.GED102Theme&&GED102Theme.toggle());
+    const cur=el.querySelector('[aria-current="page"]'); if(cur&&cur.scrollIntoView&&innerWidth<760) cur.scrollIntoView({block:'nearest',inline:'center'});
   }
 
   function rubric(a){

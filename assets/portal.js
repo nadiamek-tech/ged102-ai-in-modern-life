@@ -80,7 +80,7 @@
       mail:()=>mail('Absence','Name:\nStudent ID:\nSection:\nDate(s) of absence:\nClass: lecture / lab\nReason:\nAssessment missed (if any):\nEvidence: attached / will bring\n')},
     meet:{face:IC.meet,t:'Meet the professor',s:'Office hours and booking',c:'#5B3FA8'},
     grades:{face:IC.grades,t:'Check my grades',s:'Student portal',c:'#1F6F8B',
-      what:['Log in with your CUD account','Marks appear once grading is complete','A question about a mark? Use “General help”'],
+      what:['Log in with your university account','Marks appear once grading is complete','A question about a mark? Use “General help”'],
       url:()=>L.portal, btn:'Open the student portal'}
   };
   const DAYS=['Mon','Tue','Wed','Thu','Fri'];
@@ -166,7 +166,7 @@
   /* ---------- FAQ ---------- */
   function faq(el){
     const Q=[
-      ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I was / will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the CUD Student Handbook.`],
+      ['I missed a quiz or an exam. What do I do?',`Tell the professor as soon as possible with <a href="#" data-agent="absent">I was / will be absent</a> and add your evidence (medical note or official letter). A make-up needs an accepted excuse, as in the Student Handbook.`],
       ['Is this an online course?',C.onlineAnswer||'No. Classes are on campus and taught on the board, and exams are on paper in class. Hybrid sessions happen only when the university announces them. This site supports your classes: notes, practice and dates.'],
       ['How do I contact or meet the professor?',`Email <a href="mailto:${esc(C.email)}">${esc(C.email)}</a>. Office hours: ${esc(C.officeHours||'announced in class')}${C.office?', '+esc(C.office):''}. <a href="#" data-agent="meet">See the weekly schedule and book</a>.`],
       ['What are the assessments?',`Each assessment, its weight and what it includes is on the <a href="${esc(C.assessPage||(C.pages||{}).exams||'exams.html')}">${esc(C.assessLabel||'Exams')}</a> page.`],

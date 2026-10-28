@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Schedule · GED 102</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<link rel="stylesheet" href="assets/hub.css">
+</head>
+<body>
+<main class="hub">
+  <h1>Schedule</h1>
+  <p class="lede">Topics as written in the syllabus. Click a due item for details.</p>
+  <div class="scroll"><table class="sx-table"><thead><tr><th>Wk</th><th>Dates</th><th>Topic</th><th>Materials</th><th>Reading</th><th>Due</th></tr></thead><tbody id="sch"></tbody></table></div>
+</main>
+<script src="assets/professor.js"></script>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
+<script src="assets/hub.js"></script>
+<script>
+const {C,esc,weekDates}=Hub; Hub.top('schedule.html');
+const lab=a=>a.exam?(a.id==='mid'?'Midterm':'Final'):a.short;
+const cur=C.start?Math.floor((Date.now()-new Date(C.start+'T00:00:00'))/6048e5)+1:0;
+document.getElementById('sch').innerHTML=C.weeks.map(([n,t,clo,ref,href])=>{
+  const as=C.assess.filter(a=>a.week===n), labs=C.labs.filter(l=>l[0]===n), subs=(C.subs||{})[n]||[];
+  const mat=href?[`<a href="${href}">Lecture</a>`].concat(labs.length?[`<a href="${href}#s${labs[0][4]}">Lab</a>`]:[]).concat([`<a href="${href}#s99">Practise</a>`]).join(' · '):(n<16?'<span class="soon-t" style="color:var(--muted)">Soon</span>':'');
+  return `<tr${n===cur?' class="now"':''}><td class="k">${n}</td><td class="k">${weekDates(n)||'—'}</td><td><b>${esc(t)}</b>${subs.length?`<ul class="sx-subs">${subs.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>`:''}</td><td style="white-space:nowrap">${mat}</td><td>${esc(ref)}</td><td>${as.map(a=>`<button type="button" class="sx-due${a.exam?' exam':''}" data-id="${a.id}">${esc(lab(a))} · ${a.weight}%</button>`).join('<br>')}</td></tr>`; }).join('');
+document.querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>Hub.open(b.dataset.id)));
+</script>
+</body>
+</html>

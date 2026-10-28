@@ -95,14 +95,49 @@ window.COURSE = {
       brief:'A comprehensive exam on the whole course. It evaluates your understanding of everything covered during the term.' }
   ],
 
+  /* ---------- syllabus details (verbatim where the syllabus gives wording) ---------- */
+  description: 'This course provides a broad, interdisciplinary introduction to Artificial Intelligence (AI) for students from all academic backgrounds. It explores the origins, principles, and societal implications of AI technologies, examining how they affect our everyday lives, from healthcare and education to entertainment and communication. Emphasis is placed on ethical questions, privacy concerns, creativity, and the future of work and human identity in an AI-driven world. No technical background is required.',
+  books: [
+    ['TB','Moutinho, L., Cavique, L., & Bigné, E. (2023). Philosophy of artificial intelligence and its place in society. IGI Global.'],
+    ['RB a','Mitchell, M. (2020). Artificial intelligence: A guide for thinking humans. Penguin Books.'],
+    ['RB b','Kaplan, J. (2016). Artificial intelligence: What everyone needs to know. Oxford University Press.'],
+    ['RB c','Dunis, C. L., Middleton, P. W., Karathanasopolous, A., & Theofilatos, K. (2017). Artificial intelligence in financial markets: Cutting-edge applications for risk management, portfolio optimization and economics. Palgrave Macmillan.'],
+    ['RB d','Du Sautoy, M. (2019). The creativity code: Art and innovation in the age of AI. Harvard University Press.'],
+    ['RB e','Cebral-Loureda, M., Rincón-Flores, E. G., & Sanchez-Ante, G. (2023). What AI can do: Strengths and limitations of artificial intelligence. CRC Press.'],
+    ['RB f','Santos, O., & Radanliev, P. (2024). Beyond the algorithm: AI, security, privacy, and ethics. Pearson.']
+  ],
+  subs: {
+    1:['What is AI?','The Foundations of Artificial Intelligence','Is AI a real science?','Can a computer ever really be smarter than a human being?'],
+    2:['The History of Artificial Intelligence','The Roots of Artificial Intelligence','Neural Networks and the Ascent of Machine Learning','AI Spring'],
+    3:['The State of the Art','What Are the Leading AI and ML Technologies and Algorithms?','ChatGPT and the Leading AI and ML Technologies: Exploring Capabilities and Applications'],
+    4:['Ask Me Anything','The Impact of AI on Social Equity','Who’s going to benefit from this technological revolution?','Are the disruptive effects inevitable?'],
+    5:['The Incorporation of Large Language Models (LLMs) in the Field of Education: Ethical Possibilities, Threats, and Opportunities'],
+    6:['Artificial Intelligence in Healthcare'],
+    7:['Artificial Intelligence in Financial Markets Cutting Edge Applications for Risk Management, Portfolio Optimization and Economics'],
+    8:['Three Types of Creativity','Painting by Numbers','Learning from the Masters'],
+    9:['AI Concepts in Architectural Design'],
+    10:['Going through the Challenges of Artificial Intelligence: Gray Eminences, Algocracy, Automated Unconsciousness','The Neurocomputational Becoming of Intelligence: Philosophical Challenges','Transparency and the Black Box Problem: Why We Do Not Trust AI'],
+    11:['Ethical Issues of Artificial Intelligence (AI): Strategic Solutions','Risks and Benefits of AI'],
+    12:['Privacy and Ethics: Navigating Privacy and Ethics in an AI-Infused World','The Dark Side of AI and ChatGPT: Privacy Concerns and Ethical Implications','Data Collection and Data Storage in AI Algorithms: Potential Risks and Ethical Privacy Concerns','The Moral Tapestry of AI and ChatGPT'],
+    13:['The Impact of Artificial Intelligence on Human Labor','Are there alternatives to a labor-based society?','Why should people go to work if they could live comfortably without doing so?'],
+    14:['Intelligence Augmentation via Human-AI Symbiosis: Formulating Wise Systems for a Metasociety'],
+    15:['Possible Future Impacts of Artificial Intelligence']
+  },
+  policies: [
+    ['Attendance','Attending classes is compulsory. An email reminder is sent at 10% and at 20% absence. At 25% absence the grade is “FA” (Grade Point 0.0) and you cannot take the final exam.'],
+    ['Academic integrity','Cheating and plagiarism are recorded in your file and sanctioned under the Academic Integrity Policy. Assignments go through Turnitin; the maximum similarity index is 20%.'],
+    ['Incomplete work','An “I” grade may be granted for verifiable reasons beyond your control. You have 12 calendar months to complete the work; after that it becomes “F”.'],
+    ['Grading scale','A+ 90–100 · A 80–89 · B+ 75–79 · B 70–74 · C+ 65–69 · C 60–64 · D+ 55–59 · D 50–54 · F 0–49']
+  ],
+
   /* ---------- FAQ (edit freely) ---------- */
   faq: [
     ['How do I contact the professor?', 'Email {email}. Write your name, student ID and “GED 102” in the subject line. You can also use “General help” above.'],
     ['When are office hours?', '{hours} in {office}. You are welcome to drop in during these times.'],
     ['How do I book an office-hour meeting?', 'Press “Meet the professor” at the top of this page and choose a time. If no slot fits, email the professor with two times that suit you.'],
     ['I missed a class. What should I do?', 'Open that week’s lecture on this site: every scene can be read or listened to. Then press “I was / will be absent” for future absences, and keep any official excuse (for example a medical certificate).'],
-    ['I missed an exam or a deadline. What happens now?', 'Contact the professor by email the same day, with your reason and any official evidence. A make-up or extension is possible only with an excuse accepted under CUD policy.'],
-    ['How many classes can I miss?', 'CUD sends a reminder at 10% and 20% absence. At 25% absence you receive “FA” (Failure for Non-Attendance) and cannot sit the final exam.'],
+    ['I missed an exam or a deadline. What happens now?', 'Contact the professor by email the same day, with your reason and any official evidence. A make-up or extension is possible only with an excuse accepted under university policy.'],
+    ['How many classes can I miss?', 'The university sends a reminder at 10% and 20% absence. At 25% absence you receive “FA” (Failure for Non-Attendance) and cannot sit the final exam.'],
     ['What are the exams?', 'Two exams: the Midterm (30%) in Week 8 covers Weeks 1–7, and the Final (40%) in Week 16 covers the whole course. Open “Exams” at the top for details and the review page.'],
     ['How is my grade calculated?', 'Assignment 1 (5%), Assignment 2 (5%), Assignment 3 (10%), Assignment 4 (10%), Midterm (30%), Final (40%).'],
     ['Where do I submit my assignments?', 'Use the Submit buttons under “Upcoming submissions”. Each one opens the right Moodle submission page. Assignments go through Turnitin; the maximum similarity index is 20%.'],

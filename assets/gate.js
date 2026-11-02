@@ -2,7 +2,7 @@
    (run it in the browser console on any page that loads this file). A student who enters it once stays
    unlocked on that device. Note: this keeps casual visitors out; it is not real security on a public repo. */
 (function(){
-  const PASS_HASH = '1ba05a9a';
+  const PASS_HASH = 'f9c65b48';
   const KEY = 'ged102-trial-pass';
   const hash = s => { let h = 0x811c9dc5; for (const c of String(s).trim()) { h ^= c.codePointAt(0); h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16); };
   window.gate = { hash };

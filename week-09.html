@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 9 · AI in Architecture and Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#3F6E2E;--wk-soft:rgba(63,110,46,.10);--wk-d:#9BD186;--wk-soft-d:rgba(155,209,134,.14)}
+.ctl{display:grid;grid-template-columns:auto minmax(0,1fr) 44px;gap:6px 10px;align-items:center;font-family:var(--f-display);font-size:.9rem;margin-top:10px}
+.ctl input{width:100%;accent-color:var(--wk)}
+.ctl output{font-family:var(--f-mono);font-size:.8rem;text-align:right}
+.read{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+.read div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg)}
+.read b{display:block;font-family:var(--f-display);font-size:1.2rem;font-variant-numeric:tabular-nums}
+.read span{font-family:var(--f-mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.opt circle{cursor:pointer}
+@media (max-width:520px){.read{grid-template-columns:minmax(0,1fr)}}
+</style>
+<script src="assets/gate.js"></script>
+</head>
+<body>
+<script src="assets/professor.js"></script>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
+<script src="assets/onepage.js"></script>
+<script>
+const {W} = Lecture;
+
+/* ---------- parametric facade: change parameters, the design redraws ---------- */
+function facade(el){
+  el.innerHTML=`<svg viewBox="0 0 400 260" role="img" aria-label="A building facade made of panels whose openings change with the sliders" id="fs"></svg>
+   <div class="ctl"><label for="fc">Panels per row</label><input type="range" id="fc" min="6" max="16" value="10"><output id="fcv"></output>
+   <label for="fo">Opening size</label><input type="range" id="fo" min="20" max="90" value="60"><output id="fov"></output>
+   <label for="fg">Shade the top floors</label><input type="range" id="fg" min="0" max="100" value="50"><output id="fgv"></output></div>
+   <div class="read"><div><b id="rg"></b><span>glass area</span></div><div><b id="rd"></b><span>daylight inside</span></div><div><b id="rh"></b><span>heat gain</span></div></div>
+   <p class="mono" style="color:var(--muted);margin:8px 0 0">Illustrative model for teaching, not an engineering calculation.</p>`;
+  const $=id=>el.querySelector('#'+id);
+  const draw=()=>{ const c=+$('fc').value, o=+$('fo').value/100, g=+$('fg').value/100, rows=7, W0=360, H0=220, pw=W0/c, ph=H0/rows; let s='', area=0;
+    for(let r=0;r<rows;r++){ const k=o*(1-g*(rows-1-r)/(rows-1)*0.8); for(let i=0;i<c;i++){ const x=20+i*pw, y=20+r*ph, w=pw*k, h=ph*k; area+=k*k;
+      s+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${pw.toFixed(1)}" height="${ph.toFixed(1)}" fill="var(--surface)" stroke="var(--line)" stroke-width=".6"/><rect x="${(x+(pw-w)/2).toFixed(1)}" y="${(y+(ph-h)/2).toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="${Math.min(w,h)/2*0.6}" fill="var(--wk)" opacity=".75"/>`; } }
+    const glass=area/(rows*c); $('fs').innerHTML=`<rect x="18" y="18" width="364" height="224" fill="none" stroke="var(--ink)" stroke-width="1.5"/>`+s+`<text x="200" y="256" text-anchor="middle" font-size="10" class="t-muted">south facade · ${c} × ${rows} panels</text>`;
+    $('fcv').textContent=c; $('fov').textContent=Math.round(o*100)+'%'; $('fgv').textContent=Math.round(g*100)+'%';
+    $('rg').textContent=Math.round(glass*100)+'%'; $('rd').textContent=glass<.15?'Low':glass<.35?'Good':'High'; $('rh').textContent=glass<.2?'Low':glass<.4?'Medium':'High'; };
+  el.querySelectorAll('input').forEach(i=>i.addEventListener('input',draw)); draw();
+}
+
+/* ---------- generative design: many options, two goals ---------- */
+function options(el){
+  let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return seed/2147483647; };
+  const P=Array.from({length:40},(_,i)=>{ const cost=20+rnd()*60; const day=Math.min(95,Math.max(15,30+cost*0.7+(rnd()-0.5)*40)); return {i:i+1,cost:+cost.toFixed(1),day:Math.round(day)}; });
+  P.forEach(p=>p.best=!P.some(q=>q.cost<=p.cost&&q.day>=p.day&&(q.cost<p.cost||q.day>p.day)));
+  const X=v=>50+(v-15)/75*320, Y=v=>200-(v-10)/90*170;
+  el.innerHTML=`<svg viewBox="0 0 400 240" class="opt" role="img" aria-label="Forty design options plotted by cost and daylight; the best trade-offs are highlighted">
+    <line x1="50" y1="200" x2="380" y2="200" stroke="var(--line)"/><line x1="50" y1="20" x2="50" y2="200" stroke="var(--line)"/>
+    ${[20,40,60,80].map(v=>`<text x="${X(v)}" y="215" text-anchor="middle" font-size="10" class="t-muted t-mono">${v}</text>`).join('')}
+    ${[25,50,75].map(v=>`<text x="44" y="${Y(v)+3}" text-anchor="end" font-size="10" class="t-muted t-mono">${v}</text>`).join('')}
+    <text x="215" y="233" text-anchor="middle" font-size="11" class="t-muted">cost (AED million, illustrative)</text>
+    <text x="14" y="110" text-anchor="middle" font-size="11" class="t-muted" transform="rotate(-90 14 110)">daylight score</text>
+    ${P.map(p=>`<circle cx="${X(p.cost).toFixed(1)}" cy="${Y(p.day).toFixed(1)}" r="${p.best?6:4.5}" fill="${p.best?'var(--wk)':'var(--surface)'}" stroke="${p.best?'var(--wk)':'var(--muted)'}" stroke-width="1.5" data-i="${p.i-1}" tabindex="0" role="button" aria-label="Option ${p.i}"/>`).join('')}
+  </svg><div class="pick-detail" id="od">Filled dots are the best trade-offs: no other option is both cheaper and brighter. Click any dot.</div>`;
+  el.querySelectorAll('circle[data-i]').forEach(c=>{ const go=()=>{ const p=P[+c.dataset.i]; el.querySelector('#od').innerHTML=`<b>Option ${p.i}</b><p>Cost ${p.cost} M · daylight ${p.day}/100 · ${p.best?'<span class="tag good">best trade-off</span> nothing beats it on both goals.':'<span class="tag">dominated</span> another option is cheaper and brighter.'}</p>`; };
+    c.addEventListener('click',go); c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();go();} }); });
+}
+
+Lecture.mount({
+  id:'w9', week:9, clo:2, short:'Week 9 · Architecture and Design',
+  title:'Applications of AI: AI in Architecture and Design',
+  meta:'AI Concepts in Architectural Design (WEI Likai) · 3 hours',
+  scenes:[
+  { part:1, nav:'Who designs?', title:'Who designs a building today?',
+    narration:[`Architects have used computers for decades, first to draw and now to generate and test ideas. AI enters at three points: creating options, evaluating them against goals, and producing images for early concepts. Vote, then we look at each.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Where does AI help an architect most?`,opts:[`Drawing plans faster`,`Creating many design options`,`Testing designs for energy, light and cost`,`Making concept images for clients`],reveal:i=>[`Drawing tools came first, but they are software, not AI.`,`That is generative design, in two scenes.`,`That is evaluation and optimisation. It often matters most for the building’s performance.`,`That is the newest use: image generators at the concept stage.`][i]+` All four appear today.`})} },
+
+  { part:1, nav:'Parametric design', title:'Parametric design: rules, not drawings', wide:true,
+    narration:[`In parametric design the architect defines rules and parameters instead of drawing every element. Change a parameter and the whole design updates. Move the sliders: the facade redraws, and the estimated glass area, daylight and heat gain change with it.`],
+    fig:{label:`A parametric facade · move the sliders`, build:facade} },
+
+  { part:1, nav:'Generative design', title:'Generative design: goals in, options out',
+    narration:[`Generative design goes one step further. The designer states goals and constraints, the computer generates hundreds or thousands of options, simulates each one, and ranks them. The architect still chooses. Play the flow.`],
+    fig:{label:`The generative design loop`, flow:[
+      {t:'Goals',s:'what matters',d:'For example: maximise daylight, minimise cost, keep teams close together.'},
+      {t:'Constraints',s:'what is fixed',d:'Site boundary, height limit, building code, budget.'},
+      {t:'Generate',s:'many options',d:'The algorithm varies the parameters and produces hundreds of designs.'},
+      {t:'Evaluate',s:'simulate each',d:'Each option is scored on every goal by simulation.'},
+      {t:'Choose',s:'the architect decides',d:'The designer compares the best trade-offs and makes the final call.'}]} },
+
+  { part:1, nav:'Trade-offs', title:'No option wins on everything', wide:true,
+    narration:[`Goals compete: more glass brings daylight but also heat and cost. Generative tools show the best trade-offs, the options that no other option beats on every goal. Click the dots and find a design you would defend to a client.`],
+    fig:{label:`40 generated options · illustrative`, build:options} },
+
+  { part:1, nav:'Concept images', title:'Image generators at the concept stage',
+    narration:[`Text-to-image models now produce early concept images in seconds. They help explore moods and forms, but they do not check structure, cost, climate or building codes. A picture is not yet a design.`],
+    fig:{label:`From prompt to building`, flow:[
+      {t:'Prompt',s:'words in',d:'“A shaded courtyard house for the Dubai climate, inspired by wind towers.”'},
+      {t:'Images',s:'many moods',d:'The model returns several concept images in seconds.'},
+      {t:'Select',s:'the architect',d:'The designer picks ideas worth developing.'},
+      {t:'Model',s:'real geometry',d:'Ideas are rebuilt as a measurable 3D model.'},
+      {t:'Test',s:'engineering',d:'Structure, energy, cost and codes are checked by engineers and simulation.'}]} },
+
+  { part:2, nav:'Google Earth', title:'Visit a computationally designed building',
+    narration:[`Open Google Earth and fly to the Museum of the Future on Sheikh Zayed Road. Switch to 3D and orbit the building. Notice that no two facade panels are the same, and think about how anyone could design and build over a thousand unique panels without a computer.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Google Earth',by:'Google',url:'https://earth.google.com/web/',steps:[
+      {t:'Search',s:'the museum',d:'Type “Museum of the Future, Dubai”.'},
+      {t:'3D view',s:'orbit',d:'Switch to 3D and hold Shift while dragging to tilt and rotate.'},
+      {t:'Observe',s:'the facade',d:'Look at the panel shapes and the openings that form the calligraphy.'},
+      {t:'Explain',s:'one sentence',d:'Why would this shape be almost impossible to draw by hand?'}]})} },
+
+  { part:2, nav:'Concept with Copilot', title:'Make a concept image, then critique it',
+    narration:[`Use Copilot to generate a concept image for a small building in Dubai. Then act as the engineer: list three things the image cannot tell you, such as whether it stands up, how hot it gets inside, or what it costs.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Microsoft Copilot (image creation)',by:'Microsoft',account:'Microsoft account',url:'https://copilot.microsoft.com/',steps:[
+      {t:'Brief',s:'one building',d:'Ask: “Create a concept image of a shaded student café for a Dubai campus, inspired by wind towers.”'},
+      {t:'Iterate',s:'two changes',d:'Change one parameter in words, for example more shade or a curved roof.'},
+      {t:'Critique',s:'as an engineer',d:'List three questions the image cannot answer.'},
+      {t:'Classify',s:'which concept?',d:'Is this parametric, generative or image generation? Why?'}]})} },
+
+  { part:3, nav:'Case: Museum of the Future', title:'Case: the Museum of the Future, Dubai',
+    narration:[`Opened in 2022, the Museum of the Future was designed by Killa Design with engineers Buro Happold. Its torus shape is covered by stainless-steel panels carrying Arabic calligraphy, and parametric models were used to define and manufacture each unique panel. It is a local example of computation turning a concept into a buildable structure.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Civil Engineering · ASCE',date:'January 2023',head:'Museum of the Future sets standard for what’s to come in digital design',dek:'How parametric and digital design made Dubai’s Museum of the Future buildable.',url:'https://www.asce.org/publications-and-news/civil-engineering-source/civil-engineering-magazine/issues/magazine-issue/article/2023/01/museum-of-the-future-sets-standard-for-whats-to-come-in-digital-design'})} },
+
+  { part:3, nav:'Case: a generated office', title:'Case: an office laid out by generative design',
+    narration:[`When Autodesk moved into the MaRS building in Toronto, its team surveyed staff about how they work and who they need to be near. A generative design process then produced and scored thousands of floor-plan options. Designers chose the final layout from the best trade-offs.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'BrainStation',head:'Autodesk’s new Toronto office displays algorithm-driven generative design',dek:'Staff preferences became goals; the algorithm generated and ranked layouts; designers chose.',url:'https://brainstation.io/magazine/autodesks-new-toronto-office-displays-algorithm-driven-generative-design'})} },
+
+  { part:3, nav:'Case: AI images in practice', title:'Case: a major firm uses image generators',
+    narration:[`In 2023 Patrik Schumacher, principal of Zaha Hadid Architects, said the firm was using AI image generators such as DALL-E 2 and Midjourney to develop ideas for most of its projects. Critics asked whether this helps creativity or simply repeats the firm’s own style.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Dezeen',date:'26 April 2023',head:'ZHA developing “most” projects using AI-generated images, says Patrik Schumacher',dek:'The firm uses text-to-image tools in the early design stage.',url:'https://www.dezeen.com/2023/04/26/zaha-hadid-architects-patrik-schumacher-ai-dalle-midjourney/'})} },
+
+  { part:3, nav:'Debate', title:'Debate: who is the designer?',
+    narration:[`If an algorithm generated the winning layout, who designed the building: the architect who set the goals, the programmers who wrote the tool, or the algorithm? Discuss in pairs, then vote.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Who is the designer of a generatively designed building?`,opts:[`The architect who set goals and chose`,`The software developers`,`The algorithm`,`All of them together`],reveal:i=>[`This is how the profession and the law currently see it: the human who decides is responsible.`,`They built the tool, but did not choose this building.`,`Recall Week 8: courts do not accept an AI as an author.`,`A fair description of the process; responsibility still needs a named human.`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`IBM’s free course Run AI Models with IBM Watson Studio shows how models are built, tested and run, the same steps behind design-evaluation tools. It is course 4 of the AI Fundamentals badge. Finish it and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open each branch of the mind map, then answer the six questions. Before Week 10, read RB e, Chapters 2 and 6, and von Eschenbach on transparency and the black box problem.`],
+    fig:{label:`The week in one map · then six questions`,
+      mindmap:{center:'AI in architecture',branches:[
+        {t:'Parametric design',items:['Rules and parameters','Change one value, the design updates']},
+        {t:'Generative design',items:['Goals + constraints in','Many options generated and simulated','Architect chooses']},
+        {t:'Trade-offs',items:['Daylight vs heat vs cost','Best trade-offs: nothing beats them on all goals']},
+        {t:'Concept images',items:['Text-to-image for early ideas','A picture is not yet a design']},
+        {t:'Cases',items:['Museum of the Future, 2022','Autodesk MaRS office','Zaha Hadid Architects, 2023']}]},
+      build:el=>W.quiz(el,[
+        {q:`In parametric design, the architect mainly…`,o:[`draws every element by hand`,`defines rules and parameters that generate the design`,`lets a chatbot write the brief`,`copies an existing building`],a:1,why:`Changing a parameter updates the whole design.`},
+        {q:`Generative design starts from…`,o:[`a finished drawing`,`goals and constraints`,`a photo of a building`,`the client’s budget only`],a:1,why:`The computer then generates and evaluates many options.`},
+        {q:`Who makes the final choice in generative design?`,o:[`The algorithm`,`The building inspector`,`The architect`,`The client’s computer`],a:2,why:`The tool ranks options; the designer decides.`},
+        {q:`A “best trade-off” option is one that…`,o:[`is the cheapest`,`no other option beats on every goal`,`has the most glass`,`was generated first`],a:1,why:`Improving one goal would make another worse.`},
+        {q:`What can a text-to-image concept NOT tell you?`,o:[`The mood of the design`,`Possible forms`,`Whether the structure stands and what it costs`,`A style direction`],a:2,why:`Images explore ideas; engineering and simulation check performance.`},
+        {q:`The Museum of the Future’s unique facade panels were made possible mainly by…`,o:[`hand drawing`,`parametric and digital design`,`a GAN`,`a chatbot`],a:1,why:`Parametric models defined and manufactured each panel.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

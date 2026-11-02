@@ -32,8 +32,8 @@ window.COURSE = {
     [5,'Applications of AI: Education and Learning',2,'TB Chapter 5','week-05.html'],
     [6,'Applications of AI: AI in Healthcare',2,'TB Chapter 3','week-06.html'],
     [7,'Applications of AI: AI in Finances and Business',2,'RB c Chapter 1','week-07.html'],
-    [8,'Applications of AI: AI in Art, Entertainment and Creativity',2,'RB d Chapters 2, 7, 8',''],
-    [9,'Applications of AI: AI in Architecture and Design',2,'AI Concepts in Architectural Design, WEI Likai',''],
+    [8,'Applications of AI: AI in Art, Entertainment and Creativity',2,'RB d Chapters 2, 7, 8','week-08.html'],
+    [9,'Applications of AI: AI in Architecture and Design',2,'AI Concepts in Architectural Design, WEI Likai','week-09.html'],
     [10,'What AI Can\'t Do (Yet): Limits, Bias, and the "Black Box"',3,'RB e Chapters 2 and 6 · von Eschenbach',''],
     [11,'AI Ethics and Responsible AI',3,'TB Chapter 13',''],
     [12,'AI and Privacy – Data, Surveillance, and Security',3,'RB f Chapter 7',''],
@@ -58,7 +58,11 @@ window.COURSE = {
     [6,'AlphaFold Protein Structure Database','Explore AI-predicted protein structures','https://alphafold.ebi.ac.uk/',5],
     [6,'Teachable Machine','Watch a model\'s confidence drop','https://teachablemachine.withgoogle.com/train/image',6],
     [7,'Google Trends','Read seasonal demand in the UAE','https://trends.google.com/trends/',6],
-    [7,'Google Sheets','Make your first forecast','https://sheets.new',7]
+    [7,'Google Sheets','Make your first forecast','https://sheets.new',7],
+    [8,'AutoDraw','Draw badly, let AI guess','https://www.autodraw.com/',5],
+    [8,'Microsoft Copilot (images)','Generate an image, then question it','https://copilot.microsoft.com/',6],
+    [9,'Google Earth','Visit the Museum of the Future in 3D','https://earth.google.com/web/',5],
+    [9,'Microsoft Copilot (images)','Make a concept image, then critique it','https://copilot.microsoft.com/',6]
   ],
 
   /* ---------- assessments (syllabus); add submit links and deadlines when ready ---------- */

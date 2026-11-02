@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 8 · AI in Art, Entertainment and Creativity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css">
+<style>
+:root{--wk:#8E3B78;--wk-soft:rgba(142,59,120,.10);--wk-d:#E39BCF;--wk-soft-d:rgba(227,155,207,.14)}
+.types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.types button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 10px;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:.95rem;color:var(--ink);text-align:left}
+.types button small{display:block;font-weight:400;color:var(--muted);font-size:.8rem;margin-top:3px}
+.types button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
+@media (max-width:520px){.types{grid-template-columns:minmax(0,1fr)}}
+</style>
+<script src="assets/gate.js"></script>
+</head>
+<body>
+<script src="assets/professor.js"></script>
+<script src="assets/course-data.js"></script>
+<script src="assets/credentials.js"></script>
+<script src="assets/supports.js"></script>
+<script src="assets/course.js"></script>
+<script src="assets/kb.js"></script>
+<script src="assets/search-index.js"></script>
+<script src="assets/assistant.js"></script>
+<script src="assets/onepage.js"></script>
+<script>
+const {W} = Lecture;
+
+/* ---------- Boden's three types of creativity (du Sautoy, ch. 2) ---------- */
+const TYPES={
+ 'Exploratory':['Push the rules of an existing style to see how far they go.','Bach exploring every possibility of the fugue. An AI that writes new melodies inside one musical style works here.'],
+ 'Combinational':['Join two ideas that were never put together before.','Architecture inspired by a seashell, or a dish that mixes two cuisines. Image generators that combine “camel” and “astronaut” work here.'],
+ 'Transformational':['Break a rule of the style so a new style becomes possible.','Picasso and Braque breaking single-point perspective to create Cubism. This is the hardest type for a machine.']};
+function types(el){
+  const k=Object.keys(TYPES);
+  el.innerHTML=`<div class="types">${k.map(t=>`<button type="button" data-k="${t}" aria-pressed="false">${t}<small>${TYPES[t][0].split(' ').slice(0,5).join(' ')}…</small></button>`).join('')}</div><div class="pick-detail"></div>`;
+  const bs=el.querySelectorAll('.types button'), d=el.querySelector('.pick-detail');
+  bs.forEach(b=>b.addEventListener('click',()=>{ bs.forEach(x=>x.setAttribute('aria-pressed',x===b)); const [def,ex]=TYPES[b.dataset.k]; d.innerHTML=`<b>${b.dataset.k} creativity</b><p>${def}</p><p><span class="tag">Example</span> ${ex}</p>`; }));
+  bs[0].click();
+}
+
+/* ---------- learning a style from paintings ---------- */
+const STYLE=`<svg viewBox="0 0 580 220" role="img" aria-label="Hundreds of paintings by one artist are measured by a model, which then produces a new image in that style">
+ ${[0,1,2,3].map(i=>`<rect x="${14+i*10}" y="${40+i*12}" width="96" height="120" rx="6" fill="var(--sunk)" stroke="var(--line)"/>`).join('')}
+ <rect x="44" y="76" width="96" height="120" rx="6" fill="var(--surface)" stroke="var(--wk)" stroke-width="1.5"/>
+ <circle cx="92" cy="122" r="16" fill="var(--wk-soft)" stroke="var(--wk)"/><path d="M66 180 Q92 150 118 180" fill="none" stroke="var(--wk)" stroke-width="2"/>
+ <text x="92" y="214" text-anchor="middle" font-size="11" class="t-muted">hundreds of real paintings</text>
+ <path d="M160 130 L222 130" stroke="var(--muted)" stroke-width="2" marker-end="url(#a8)"/>
+ <rect x="230" y="88" width="130" height="84" rx="12" fill="var(--wk)"/>
+ <text x="295" y="124" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--surface)">Model</text>
+ <text x="295" y="142" text-anchor="middle" font-size="10" style="fill:var(--surface)">learns brushwork,</text>
+ <text x="295" y="155" text-anchor="middle" font-size="10" style="fill:var(--surface)">colour and light</text>
+ <path d="M368 130 L430 130" stroke="var(--muted)" stroke-width="2" marker-end="url(#a8)"/>
+ <rect x="440" y="70" width="110" height="130" rx="6" fill="var(--surface)" stroke="var(--wk)" stroke-dasharray="5 4" stroke-width="1.5"/>
+ <circle cx="495" cy="120" r="17" fill="var(--wk-soft)" stroke="var(--wk)"/><path d="M466 184 Q495 152 524 184" fill="none" stroke="var(--wk)" stroke-width="2"/>
+ <text x="495" y="214" text-anchor="middle" font-size="11" class="t-muted">a new image “in the style”</text>
+ <text x="295" y="30" text-anchor="middle" font-size="12" font-weight="700">Who is the artist of the new image?</text>
+ <defs><marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="var(--muted)"/></marker></defs></svg>`;
+
+Lecture.mount({
+  id:'w8', week:8, clo:2, short:'Week 8 · Art, Entertainment and Creativity',
+  title:'Applications of AI: AI in Art, Entertainment and Creativity',
+  meta:'RB d Chapters 2, 7, 8 · 3 hours · Midterm week',
+  scenes:[
+  { part:1, nav:'Can a machine create?', title:'Can a machine be creative?',
+    narration:[`Ada Lovelace wrote in 1843 that a machine can only do what we order it to do, so it cannot originate anything. Du Sautoy uses her objection as a test: a machine is creative only if it makes something new, surprising and valuable that its programmers cannot explain. Vote before we start.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Can a machine be truly creative?`,opts:[`Yes, already today`,`Not yet, but one day`,`Never: creativity is human`,`It depends on how we define creativity`],reveal:i=>[`Then you need to show something new, surprising and valuable that its programmers cannot explain.`,`Many researchers agree. Today we look at how close machines have come.`,`That is Lovelace’s position. Keep it in mind when you see the cases in Part 3.`,`The strongest starting point. Boden’s three types of creativity, next, give us the definition.`][i]})} },
+
+  { part:1, nav:'Three types', title:'Three types of creativity',
+    narration:[`Margaret Boden, whom du Sautoy follows in Chapter 2, describes three types of creativity. Exploratory creativity pushes the rules of a style, combinational creativity joins ideas that were never joined, and transformational creativity breaks a rule so a new style becomes possible. Click each type.`],
+    src:`Du Sautoy, M. (2019). <em>The creativity code</em>, Chapter 2: Three Types of Creativity.`,
+    fig:{label:`Boden’s three types · click each`, build:types} },
+
+  { part:1, nav:'How AI makes images', title:'Two networks that compete: the GAN',
+    narration:[`A generative adversarial network, invented in 2014, pairs two networks. The generator makes fake images; the discriminator tries to tell them from real ones. Each round the generator learns from its failures, until the fakes are hard to spot. Play the flow.`],
+    fig:{label:`How a GAN learns`, flow:[
+      {t:'Real images',s:'the training set',d:'Thousands of real paintings or photos.'},
+      {t:'Generator',s:'makes a fake',d:'Starts from random noise and produces an image.'},
+      {t:'Discriminator',s:'real or fake?',d:'Compares the fake with real images and gives a verdict.'},
+      {t:'Feedback',s:'both improve',d:'The generator learns what gave it away; the discriminator learns new tells.'},
+      {t:'Repeat',s:'until convincing',d:'After many rounds the fakes look real to the discriminator, and often to us.'}]} },
+
+  { part:1, nav:'Learning from the masters', title:'Learning from the masters',
+    narration:[`A model can study hundreds of paintings by one artist, measure brushwork, colour and light, and then produce a new image in that style. In 2016 The Next Rembrandt project did this with 346 Rembrandt paintings and 3D-printed the result. It raises the question at the centre of this week: who is the artist?`],
+    src:`Du Sautoy, M. (2019). <em>The creativity code</em>, Chapters 7 and 8.`,
+    fig:{label:`Learning a style from data`, html:STYLE} },
+
+  { part:1, nav:'Timeline', title:'From AARON to Midjourney',
+    narration:[`Computer art is older than most people think. Click the milestones from oldest to newest.`],
+    fig:{label:`Put the milestones in order`, build:el=>W.order(el,[
+      {y:1973,t:`Harold Cohen starts AARON, a drawing program`},{y:2014,t:`Generative adversarial networks (GANs) are invented`},{y:2015,t:`Google’s DeepDream turns photos into dream-like images`},{y:2016,t:`The Next Rembrandt is 3D-printed`},{y:2018,t:`A GAN portrait sells at Christie’s`},{y:2022,t:`An AI image wins a state-fair art prize`}])} },
+
+  { part:2, nav:'AutoDraw', title:'Draw badly, let AI guess',
+    narration:[`AutoDraw pairs a doodle-recognition model with drawings made by artists. Sketch something roughly and pick the clean drawing it suggests. Ask yourself which type of creativity is happening, and whose.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'AutoDraw',by:'Google Creative Lab',url:'https://www.autodraw.com/',steps:[
+      {t:'Doodle',s:'rough sketch',d:'Choose the AutoDraw tool and sketch a camel, a lamp or a falcon.'},
+      {t:'Pick',s:'its suggestions',d:'Open the row of suggestions at the top and choose one.'},
+      {t:'Combine',s:'make a poster',d:'Add two more objects and some text to make a small poster.'},
+      {t:'Reflect',s:'whose work?',d:'Who is the author of your poster: you, the model, or the artists who drew the icons?'}]})} },
+
+  { part:2, nav:'Copilot images', title:'Generate an image, then question it',
+    narration:[`Use Microsoft Copilot to create an image from a text prompt. Then ask for the same scene in a historical art movement, such as Impressionism or Cubism, and compare. Note what you controlled and what the model decided.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Microsoft Copilot (image creation)',by:'Microsoft',account:'Microsoft account',url:'https://copilot.microsoft.com/',steps:[
+      {t:'Prompt',s:'one scene',d:'Ask: “Create an image of the Dubai Creek at sunset with traditional abra boats.”'},
+      {t:'Restyle',s:'an art movement',d:'Ask for the same scene as an Impressionist painting, then as Cubism.'},
+      {t:'Compare',s:'what changed',d:'List two things you chose and two things the model chose.'},
+      {t:'Classify',s:'Boden’s types',d:'Is this exploratory, combinational or transformational creativity?'}]})} },
+
+  { part:3, nav:'Case: Christie’s', title:'Case: a GAN portrait sells at auction',
+    narration:[`In October 2018 Christie’s in New York sold Portrait of Edmond de Belamy, made with a GAN by the Paris collective Obvious, for 432,500 US dollars, about 43 times its estimate. The code it used had been shared online by another programmer, which started a debate about who deserves the credit.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'artnet News',date:'25 October 2018',head:'The first AI-generated portrait ever sold at auction fetches $432,500, 43 times its estimate',dek:'Portrait of Edmond de Belamy, made by the collective Obvious with a generative adversarial network.',url:'https://news.artnet.com/market/first-everartificial-intelligence-portrait-painting-sells-at-christies-1379902'})} },
+
+  { part:3, nav:'Case: the art prize', title:'Case: an AI image wins first prize',
+    narration:[`In 2022 Jason Allen won the digital arts category at the Colorado State Fair with Théâtre D’opéra Spatial, made with Midjourney. He said he spent many hours refining his prompts and editing the result. Many artists were angry. Was the prize fair?`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Smithsonian Magazine',date:'September 2022',head:'Artificial intelligence art wins Colorado State Fair',dek:'Théâtre D’opéra Spatial, made with Midjourney, won the digital arts category and reopened the debate about AI and art.',url:'https://www.smithsonianmag.com/smart-news/artificial-intelligence-art-wins-colorado-state-fair-180980703/'})} },
+
+  { part:3, nav:'Case: copyright', title:'Case: can an AI own its art?',
+    narration:[`Stephen Thaler asked the US Copyright Office to register an image made by his AI system, with the AI as author. The office refused, and in March 2025 a US appeals court agreed: copyright needs a human author. Work made with AI can still be protected when a human’s creative choices are clear.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Cline Williams',date:'28 March 2025',head:'Thaler v. Perlmutter: D.C. Circuit upholds human authorship requirement for copyright',dek:'The court confirmed that a work created solely by an AI system cannot be registered with the AI as its author.',url:'https://www.clinewilliams.com/news/news-archives.html/article/2025/03/28/thaler-v-perlmutter-d-c-circuit-upholds-human-authorship-requirement-for-copyright'})} },
+
+  { part:3, nav:'Debate', title:'Debate: tool, partner or artist?',
+    narration:[`Split into three groups. One argues AI is only a tool like a camera, one that it is a creative partner, and one that it can be an artist in its own right. Use Boden’s types and one case from today, then vote.`],
+    fig:{label:`Vote after the debate`, build:el=>W.poll(el,{q:`In the cases we saw, AI was…`,opts:[`A tool, like a camera or a brush`,`A creative partner`,`An artist in its own right`],reveal:i=>[`The courts agree with you so far: the human is the author.`,`Close to how many artists describe working with AI today.`,`Then explain how it passes the Lovelace test: new, surprising, valuable and unexplained by its programmers.`][i]+` Write your answer with one example and one counter-argument.`})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Microsoft Learn’s Fundamentals of generative AI module explains how the image and text generators from today’s lab work. Finish it, keep the trophy, and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open each branch of the mind map, then answer the six questions. Before Week 9, read AI Concepts in Architectural Design (WEI Likai).`],
+    fig:{label:`The week in one map · then six questions`,
+      mindmap:{center:'AI and creativity',branches:[
+        {t:'Lovelace',items:['1843: machines only follow orders','Test: new, surprising, valuable','Not explained by its programmers']},
+        {t:'Boden’s three types',items:['Exploratory: push a style','Combinational: join ideas','Transformational: break a rule']},
+        {t:'How AI makes images',items:['GAN (2014): generator vs discriminator','Learns a style from many works']},
+        {t:'Cases',items:['Next Rembrandt, 2016','Christie’s GAN portrait, 2018','State-fair prize, 2022']},
+        {t:'Ownership',items:['Copyright needs a human author','Thaler v. Perlmutter, 2025','Credit for data and code']}]},
+      build:el=>W.quiz(el,[
+        {q:`Which type of creativity breaks a rule so a new style becomes possible?`,o:[`Exploratory`,`Combinational`,`Transformational`,`Computational`],a:2,why:`Transformational creativity changes the rules, as Cubism did with perspective.`},
+        {q:`Joining two ideas that were never joined before is…`,o:[`exploratory creativity`,`combinational creativity`,`transformational creativity`,`supervised learning`],a:1,why:`Combinational creativity connects existing ideas in a new way.`},
+        {q:`In a GAN, the discriminator…`,o:[`paints the final image`,`decides whether an image is real or fake`,`writes the prompt`,`stores the training data`],a:1,why:`The generator makes fakes; the discriminator judges them.`},
+        {q:`Lovelace’s objection says a machine…`,o:[`can only do what we order it to do`,`will one day replace artists`,`is creative if it passes the Turing Test`,`learns from data`],a:0,why:`She argued a machine cannot originate anything.`},
+        {q:`The Next Rembrandt (2016) was made by…`,o:[`a robot painting live in a gallery`,`a model that studied hundreds of Rembrandt paintings`,`Rembrandt’s students`,`a human forger`],a:1,why:`It analysed 346 paintings, then 3D-printed a new one in his style.`},
+        {q:`In Thaler v. Perlmutter (2025) the court held that…`,o:[`AI systems can hold copyright`,`copyright needs a human author`,`all AI images are free to copy`,`prompts are protected by copyright`],a:1,why:`A work made solely by an AI cannot be registered with the AI as author.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

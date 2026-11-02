@@ -59,8 +59,9 @@ window.COURSE = {
     [6,'Teachable Machine','Watch a model\'s confidence drop','https://teachablemachine.withgoogle.com/train/image',6],
     [7,'Google Trends','Read seasonal demand in the UAE','https://trends.google.com/trends/',6],
     [7,'Google Sheets','Make your first forecast','https://sheets.new',7],
-    [8,'AutoDraw','Draw badly, let AI guess','https://www.autodraw.com/',5],
-    [8,'Microsoft Copilot (images)','Generate an image, then question it','https://copilot.microsoft.com/',6],
+    [8,'Real or Not? quiz','Can you beat 62% at spotting AI images?','https://www.realornotquiz.com/',0],
+    [8,'Prompt builder + Copilot or Craiyon','Build a prompt, make an image, six prompt challenges','https://www.craiyon.com/',6],
+    [8,'Which Face Is Real?','Spot the real face next to a GAN face','https://www.whichfaceisreal.com/',8],
     [9,'Google Earth','Visit the Museum of the Future in 3D','https://earth.google.com/web/',5],
     [9,'Microsoft Copilot (images)','Make a concept image, then critique it','https://copilot.microsoft.com/',6]
   ],

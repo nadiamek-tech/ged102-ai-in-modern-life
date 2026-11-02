@@ -7,34 +7,99 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=202611021208">
+<link rel="stylesheet" href="assets/course.css?v=202611021420">
 <style>
 :root{--wk:#8E3B78;--wk-soft:rgba(142,59,120,.10);--wk-d:#E39BCF;--wk-soft-d:rgba(227,155,207,.14)}
 .types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .types button{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:12px 10px;cursor:pointer;font-family:var(--f-display);font-weight:700;font-size:.95rem;color:var(--ink);text-align:left}
 .types button small{display:block;font-weight:400;color:var(--muted);font-size:.8rem;margin-top:3px}
 .types button[aria-pressed="true"]{border-color:var(--wk);background:var(--wk-soft)}
-@media (max-width:520px){.types{grid-template-columns:minmax(0,1fr)}}
+/* game: beat 62% */
+.g62{display:grid;gap:12px;font-family:var(--f-display)}
+.g62 .inrow{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.g62 label{display:grid;gap:4px;font-size:.85rem;color:var(--muted)}
+.g62 input{width:90px;font:inherit;font-size:1.1rem;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+.bars{display:grid;gap:8px}
+.gbar{display:grid;grid-template-columns:140px minmax(0,1fr) 52px;gap:10px;align-items:center;font-size:.88rem}
+.gbar .t{height:22px;background:var(--sunk);border-radius:5px;overflow:hidden}
+.gbar .t i{display:block;height:100%;border-radius:5px;transition:width .5s}
+.gbar b{font-variant-numeric:tabular-nums;text-align:right}
+.verdict{font-weight:700;font-size:1.05rem}
+/* prompt builder */
+.pb{display:grid;gap:10px;font-family:var(--f-display)}
+.pb .sel{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pb label{display:grid;gap:3px;font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-family:var(--f-mono)}
+.pb select{font:inherit;font-family:var(--f-display);font-size:.92rem;text-transform:none;letter-spacing:0;color:var(--ink);padding:7px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.prompt{border:1.5px dashed var(--wk);background:var(--wk-soft);border-radius:10px;padding:14px 16px;font-family:var(--f-mono);font-size:.92rem;line-height:1.5;color:var(--ink)}
+.go{display:flex;flex-wrap:wrap;gap:8px}
+.copied{font-family:var(--f-mono);font-size:.78rem;color:var(--good);align-self:center}
+/* prompt cards */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.pc{border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:12px 14px;display:grid;gap:8px;align-content:start;font-family:var(--f-display)}
+.pc .k{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.07em;text-transform:uppercase;color:var(--wk)}
+.pc .prompt{font-size:.84rem;padding:10px 12px}
+.pc small{color:var(--muted)}
+/* tally */
+.tally{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;font-family:var(--f-display)}
+.tally div{border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center;background:var(--bg)}
+.tally b{display:block;font-size:2.4rem;font-variant-numeric:tabular-nums;line-height:1.1}
+.tally button{font:inherit;font-weight:700;margin-top:8px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--wk);background:var(--wk-soft);color:var(--ink);cursor:pointer}
+@media (max-width:620px){.types,.pb .sel,.cards{grid-template-columns:minmax(0,1fr)}.gbar{grid-template-columns:96px minmax(0,1fr) 46px}}
 </style>
-<script src="assets/gate.js?v=202611021208"></script>
+<script src="assets/gate.js?v=202611021420"></script>
 </head>
 <body>
-<script src="assets/professor.js?v=202611021208"></script>
-<script src="assets/course-data.js?v=202611021208"></script>
-<script src="assets/credentials.js?v=202611021208"></script>
-<script src="assets/supports.js?v=202611021208"></script>
-<script src="assets/course.js?v=202611021208"></script>
-<script src="assets/kb.js?v=202611021208"></script>
-<script src="assets/search-index.js?v=202611021208"></script>
-<script src="assets/assistant.js?v=202611021208"></script>
-<script src="assets/onepage.js?v=202611021208"></script>
+<script src="assets/professor.js?v=202611021420"></script>
+<script src="assets/course-data.js?v=202611021420"></script>
+<script src="assets/credentials.js?v=202611021420"></script>
+<script src="assets/supports.js?v=202611021420"></script>
+<script src="assets/course.js?v=202611021420"></script>
+<script src="assets/kb.js?v=202611021420"></script>
+<script src="assets/search-index.js?v=202611021420"></script>
+<script src="assets/assistant.js?v=202611021420"></script>
+<script src="assets/onepage.js?v=202611021420"></script>
 <script>
 const {W} = Lecture;
+const COPILOT='https://copilot.microsoft.com/', CRAIYON='https://www.craiyon.com/';
+function copy(text, note){
+  const done=()=>{ note.textContent='Copied ✓'; setTimeout(()=>note.textContent='',2000); };
+  try{ navigator.clipboard.writeText(text).then(done,()=>{ note.textContent='Select the prompt and copy it'; }); }catch(e){ note.textContent='Select the prompt and copy it'; }
+}
+const openBtns=`<a class="btn" href="${COPILOT}" target="_blank" rel="noopener">Open Copilot ↗</a><a class="btn ghost" href="${CRAIYON}" target="_blank" rel="noopener">Open Craiyon (no account) ↗</a>`;
 
-/* ---------- Boden's three types of creativity (du Sautoy, ch. 2) ---------- */
+/* ---------- Game: can you beat 62%? ---------- */
+function beat62(el){
+  el.innerHTML=`<div class="g62">
+    <div class="go"><a class="btn" href="https://www.realornotquiz.com/" target="_blank" rel="noopener">1 · Play “Real or Not?” ↗</a><span class="copied" style="color:var(--muted)">Microsoft’s free quiz · no account</span></div>
+    <div class="inrow"><label for="g-ok">2 · Correct answers<input type="number" id="g-ok" min="0" max="50" inputmode="numeric" placeholder="11"></label>
+      <label for="g-all">out of<input type="number" id="g-all" min="1" max="50" value="15" inputmode="numeric"></label></div>
+    <div class="bars">
+      <div class="gbar"><span>Coin flip</span><span class="t"><i style="width:50%;background:var(--line)"></i></span><b>50%</b></div>
+      <div class="gbar"><span>12,500 people</span><span class="t"><i style="width:62%;background:var(--muted)"></i></span><b>62%</b></div>
+      <div class="gbar"><span><b>You</b></span><span class="t"><i id="g-you" style="width:0;background:var(--wk)"></i></span><b id="g-pct">—</b></div>
+    </div>
+    <div class="verdict" id="g-v">Enter your score to compare.</div>
+    <p class="mono" style="color:var(--muted);margin:0">Benchmark: Microsoft AI for Good study, 12,500+ participants, about 287,000 image judgements, 62% correct.</p></div>`;
+  const ok=el.querySelector('#g-ok'), all=el.querySelector('#g-all');
+  const upd=()=>{ const a=+ok.value, b=+all.value; if(!ok.value||!b){ return; } const p=Math.max(0,Math.min(100,Math.round(a/b*100)));
+    el.querySelector('#g-you').style.width=p+'%'; el.querySelector('#g-pct').textContent=p+'%';
+    el.querySelector('#g-v').textContent= p>62?'You beat the average. Which clue helped you most?': p>50?'Better than a coin flip, below the average. AI images are hard to spot.':'No better than guessing. That is why we cannot trust our eyes alone.'; };
+  ok.addEventListener('input',upd); all.addEventListener('input',upd);
+}
+
+/* ---------- clues that give AI images away ---------- */
+const CLUES=[
+ {t:'Hands and fingers',d:'Extra, missing or merged fingers; hands holding objects in impossible ways.'},
+ {t:'Text and signs',d:'Shop signs, labels and number plates with letters that look right from far away but are nonsense up close.'},
+ {t:'Light, shadows, reflections',d:'Shadows falling in different directions; reflections in glasses or mirrors that do not match the scene.'},
+ {t:'Too perfect',d:'Skin with no pores, hair that melts into the background, a glossy “studio” look everywhere.'},
+ {t:'Background logic',d:'Railings that end in mid-air, windows that do not line up, repeated faces in a crowd.'},
+ {t:'Check the source',d:'The strongest test is not your eyes: who posted it first, is there a credible source, and does a reverse image search find the original?'}];
+
+/* ---------- Boden's three types (du Sautoy, ch. 2) ---------- */
 const TYPES={
  'Exploratory':['Push the rules of an existing style to see how far they go.','Bach exploring every possibility of the fugue. An AI that writes new melodies inside one musical style works here.'],
- 'Combinational':['Join two ideas that were never put together before.','Architecture inspired by a seashell, or a dish that mixes two cuisines. Image generators that combine “camel” and “astronaut” work here.'],
+ 'Combinational':['Join two ideas that were never put together before.','A dish that mixes two cuisines. Image generators that combine “falcon” and “astronaut” work here.'],
  'Transformational':['Break a rule of the style so a new style becomes possible.','Picasso and Braque breaking single-point perspective to create Cubism. This is the hardest type for a machine.']};
 function types(el){
   const k=Object.keys(TYPES);
@@ -62,22 +127,78 @@ const STYLE=`<svg viewBox="0 0 580 220" role="img" aria-label="Hundreds of paint
  <text x="295" y="30" text-anchor="middle" font-size="12" font-weight="700">Who is the artist of the new image?</text>
  <defs><marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10z" fill="var(--muted)"/></marker></defs></svg>`;
 
+/* ---------- prompt builder ---------- */
+const PB={
+ subject:['a falcon flying over the Dubai skyline','an abra boat crossing Dubai Creek','a student studying in a library','a desert camp at night','a robot serving karak tea','a futuristic metro station'],
+ style:['photorealistic photograph','watercolour painting','Impressionist oil painting','Cubist painting','Arabic geometric pattern art','3D animated film still','pencil sketch'],
+ light:['golden-hour sunlight','soft morning light','neon city lights at night','dramatic sunset','overcast daylight'],
+ view:['wide shot','close-up','bird’s-eye view','low angle looking up'],
+ mood:['calm and peaceful','energetic and busy','mysterious','joyful','nostalgic']};
+function builder(el){
+  const lab={subject:'Subject',style:'Style',light:'Light',view:'Camera',mood:'Mood'};
+  el.innerHTML=`<div class="pb"><div class="sel">${Object.keys(PB).map(k=>`<label for="pb-${k}">${lab[k]}<select id="pb-${k}">${PB[k].map(o=>`<option>${o}</option>`).join('')}</select></label>`).join('')}
+    <label for="pb-r" style="align-self:end"><span>&nbsp;</span><button type="button" class="btn ghost" id="pb-r">🎲 Surprise me</button></label></div>
+    <div class="prompt" id="pb-out"></div>
+    <div class="go"><button type="button" class="btn" id="pb-c">Copy prompt</button>${openBtns}<span class="copied" id="pb-n"></span></div></div>`;
+  const $=id=>el.querySelector('#'+id);
+  const build=()=>{ const v=k=>$('pb-'+k).value; const st=v('style'); $('pb-out').textContent=`${st[0].toUpperCase()+st.slice(1)} of ${v('subject')}, ${v('light')}, ${v('view')}, ${v('mood')} mood.`; };
+  Object.keys(PB).forEach(k=>$('pb-'+k).addEventListener('change',build));
+  $('pb-r').addEventListener('click',()=>{ Object.keys(PB).forEach(k=>{ const s=$('pb-'+k); s.selectedIndex=Math.floor(Math.random()*s.options.length); }); build(); });
+  $('pb-c').addEventListener('click',()=>copy($('pb-out').textContent,$('pb-n')));
+  build();
+}
+
+/* ---------- ready-made prompt challenges ---------- */
+const CHALLENGES=[
+ {k:'Exploratory · same scene, three styles',p:'Dubai Creek at sunset with traditional abra boats, painted as an Impressionist oil painting.',n:'Now change only the style: try “Cubist painting”, then “Japanese woodblock print”. What stays the same?'},
+ {k:'Combinational · join two ideas',p:'A traditional Emirati wind tower redesigned as a spaceship launching from the desert, detailed illustration.',n:'Which two ideas did the model combine? Did it add anything you did not ask for?'},
+ {k:'Combinational · unusual pair',p:'A camel made entirely of glass and light, standing in a modern art museum, photorealistic.',n:'Look for clues: reflections, shadows, the floor. Would a classmate believe it is a photo?'},
+ {k:'Transformational · break a rule',p:'A portrait painting where the face is drawn from four viewpoints at once, in a completely new art style that does not exist yet.',n:'Did it create a new style, or copy Cubism? This is the hardest test for AI.'},
+ {k:'Fool your classmates',p:'A realistic smartphone photo of a university corridor in Dubai with students walking, slightly blurry, everyday lighting.',n:'Use it in the “Real or AI?” class game in Part 2: can a partner tell it from a real photo?'},
+ {k:'Ethics · whose style?',p:'A portrait of a young woman wearing a pearl earring, in the style of a Dutch Golden Age painting.',n:'The original painter died in 1675. Is copying a living artist’s style different? Why?'}];
+function cards(el){
+  el.innerHTML=`<div class="cards">${CHALLENGES.map((c,i)=>`<div class="pc"><span class="k">${c.k}</span><div class="prompt" id="cp${i}">${c.p}</div><small>${c.n}</small>
+    <div class="go"><button type="button" class="btn" data-i="${i}">Copy</button><span class="copied" id="cn${i}"></span></div></div>`).join('')}</div>
+    <div class="go" style="margin-top:12px">${openBtns}</div>`;
+  el.querySelectorAll('button[data-i]').forEach(b=>b.addEventListener('click',()=>copy(CHALLENGES[+b.dataset.i].p,el.querySelector('#cn'+b.dataset.i))));
+}
+
+/* ---------- class game tally ---------- */
+function tally(el){
+  el.innerHTML=`<div class="tally"><div><span class="mono" style="color:var(--muted)">GUESSED RIGHT</span><b id="t-r">0</b><button type="button" data-k="r">+1</button></div>
+    <div><span class="mono" style="color:var(--muted)">FOOLED BY AI</span><b id="t-f">0</b><button type="button" data-k="f">+1</button></div></div>
+    <p class="verdict" id="t-v" style="margin:10px 0 0;font-family:var(--f-display)">Swap phones with a partner and start guessing.</p>
+    <button type="button" class="btn ghost" id="t-0" style="margin-top:8px">Reset</button>`;
+  const n={r:0,f:0}, upd=()=>{ el.querySelector('#t-r').textContent=n.r; el.querySelector('#t-f').textContent=n.f; const t=n.r+n.f;
+    el.querySelector('#t-v').textContent=t?`Your pair spotted ${Math.round(n.r/t*100)}% correctly (${t} images). The study average is 62%.`:'Swap phones with a partner and start guessing.'; };
+  el.querySelectorAll('button[data-k]').forEach(b=>b.addEventListener('click',()=>{ n[b.dataset.k]++; upd(); }));
+  el.querySelector('#t-0').addEventListener('click',()=>{ n.r=n.f=0; upd(); });
+}
+
 Lecture.mount({
   id:'w8', week:8, clo:2, short:'Week 8 · Art, Entertainment and Creativity',
   title:'Applications of AI: AI in Art, Entertainment and Creativity',
   meta:'RB d Chapters 2, 7, 8 · 3 hours · Midterm week',
   scenes:[
+  { part:1, nav:'Game: real or AI?', title:'Game: can you beat 62%?', wide:true,
+    narration:[`Start with a game. Play Microsoft’s free Real or Not quiz on your phone and decide, image by image, whether a person or an AI made it. Then enter your score. In Microsoft’s study, more than 12,500 people were right only 62% of the time.`],
+    fig:{label:`Real or AI? · play, then enter your score`, build:beat62} },
+
+  { part:1, nav:'How to spot AI', title:'Clues that give AI images away',
+    narration:[`AI images often slip on hands, text, shadows and backgrounds. Open each clue, then go back to the quiz and try again. Remember that the clues fade as models improve, so checking the source matters more than your eyes.`],
+    fig:{label:`Six clues · open each`, build:el=>W.accordion(el,CLUES)} },
+
   { part:1, nav:'Can a machine create?', title:'Can a machine be creative?',
-    narration:[`Ada Lovelace wrote in 1843 that a machine can only do what we order it to do, so it cannot originate anything. Du Sautoy uses her objection as a test: a machine is creative only if it makes something new, surprising and valuable that its programmers cannot explain. Vote before we start.`],
+    narration:[`Ada Lovelace wrote in 1843 that a machine can only do what we order it to do, so it cannot originate anything. Du Sautoy uses her objection as a test: a machine is creative only if it makes something new, surprising and valuable that its programmers cannot explain. Vote before we go on.`],
     fig:{label:`Vote`, build:el=>W.poll(el,{q:`Can a machine be truly creative?`,opts:[`Yes, already today`,`Not yet, but one day`,`Never: creativity is human`,`It depends on how we define creativity`],reveal:i=>[`Then you need to show something new, surprising and valuable that its programmers cannot explain.`,`Many researchers agree. Today we look at how close machines have come.`,`That is Lovelace’s position. Keep it in mind when you see the cases in Part 3.`,`The strongest starting point. Boden’s three types of creativity, next, give us the definition.`][i]})} },
 
   { part:1, nav:'Three types', title:'Three types of creativity',
-    narration:[`Margaret Boden, whom du Sautoy follows in Chapter 2, describes three types of creativity. Exploratory creativity pushes the rules of a style, combinational creativity joins ideas that were never joined, and transformational creativity breaks a rule so a new style becomes possible. Click each type.`],
+    narration:[`Margaret Boden, whom du Sautoy follows in Chapter 2, describes three types of creativity. Exploratory creativity pushes the rules of a style, combinational creativity joins ideas that were never joined, and transformational creativity breaks a rule so a new style becomes possible. You will test all three in the lab.`],
     src:`Du Sautoy, M. (2019). <em>The creativity code</em>, Chapter 2: Three Types of Creativity.`,
     fig:{label:`Boden’s three types · click each`, build:types} },
 
   { part:1, nav:'How AI makes images', title:'Two networks that compete: the GAN',
-    narration:[`A generative adversarial network, invented in 2014, pairs two networks. The generator makes fake images; the discriminator tries to tell them from real ones. Each round the generator learns from its failures, until the fakes are hard to spot. Play the flow.`],
+    narration:[`A generative adversarial network, invented in 2014, pairs two networks. The generator makes fake images; the discriminator tries to tell them from real ones. Each round the generator learns from its failures, until the fakes are hard to spot. That is why the quiz was difficult.`],
     fig:{label:`How a GAN learns`, flow:[
       {t:'Real images',s:'the training set',d:'Thousands of real paintings or photos.'},
       {t:'Generator',s:'makes a fake',d:'Starts from random noise and produces an image.'},
@@ -86,46 +207,45 @@ Lecture.mount({
       {t:'Repeat',s:'until convincing',d:'After many rounds the fakes look real to the discriminator, and often to us.'}]} },
 
   { part:1, nav:'Learning from the masters', title:'Learning from the masters',
-    narration:[`A model can study hundreds of paintings by one artist, measure brushwork, colour and light, and then produce a new image in that style. In 2016 The Next Rembrandt project did this with 346 Rembrandt paintings and 3D-printed the result. It raises the question at the centre of this week: who is the artist?`],
+    narration:[`A model can study hundreds of paintings by one artist and produce a new image in that style. In 2016 The Next Rembrandt project did this with 346 Rembrandt paintings and 3D-printed the result. It raises the question at the centre of this week: who is the artist?`],
     src:`Du Sautoy, M. (2019). <em>The creativity code</em>, Chapters 7 and 8.`,
     fig:{label:`Learning a style from data`, html:STYLE} },
 
-  { part:1, nav:'Timeline', title:'From AARON to Midjourney',
-    narration:[`Computer art is older than most people think. Click the milestones from oldest to newest.`],
-    fig:{label:`Put the milestones in order`, build:el=>W.order(el,[
-      {y:1973,t:`Harold Cohen starts AARON, a drawing program`},{y:2014,t:`Generative adversarial networks (GANs) are invented`},{y:2015,t:`Google’s DeepDream turns photos into dream-like images`},{y:2016,t:`The Next Rembrandt is 3D-printed`},{y:2018,t:`A GAN portrait sells at Christie’s`},{y:2022,t:`An AI image wins a state-fair art prize`}])} },
+  { part:2, nav:'Prompt builder', title:'Build a prompt, make an image', wide:true,
+    narration:[`A good image prompt names a subject, a style, the light, the camera view and a mood. Pick from the menus or press Surprise me, copy the prompt, and paste it into Copilot or Craiyon. Change one part at a time and compare the results.`],
+    fig:{label:`Prompt builder`, build:builder} },
 
-  { part:2, nav:'AutoDraw', title:'Draw badly, let AI guess',
-    narration:[`AutoDraw pairs a doodle-recognition model with drawings made by artists. Sketch something roughly and pick the clean drawing it suggests. Ask yourself which type of creativity is happening, and whose.`],
-    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'AutoDraw',by:'Google Creative Lab',url:'https://www.autodraw.com/',steps:[
-      {t:'Doodle',s:'rough sketch',d:'Choose the AutoDraw tool and sketch a camel, a lamp or a falcon.'},
-      {t:'Pick',s:'its suggestions',d:'Open the row of suggestions at the top and choose one.'},
-      {t:'Combine',s:'make a poster',d:'Add two more objects and some text to make a small poster.'},
-      {t:'Reflect',s:'whose work?',d:'Who is the author of your poster: you, the model, or the artists who drew the icons?'}]})} },
+  { part:2, nav:'Prompt challenges', title:'Six prompt challenges', full:true,
+    narration:[`Each card tests one idea from Part 1. Copy a prompt, generate the image, and answer the question under it. Work in pairs and keep your best image for the class game.`],
+    fig:{label:`Copy, generate, compare`, build:cards} },
 
-  { part:2, nav:'Copilot images', title:'Generate an image, then question it',
-    narration:[`Use Microsoft Copilot to create an image from a text prompt. Then ask for the same scene in a historical art movement, such as Impressionism or Cubism, and compare. Note what you controlled and what the model decided.`],
-    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Microsoft Copilot (image creation)',by:'Microsoft',account:'Microsoft account',url:'https://copilot.microsoft.com/',steps:[
-      {t:'Prompt',s:'one scene',d:'Ask: “Create an image of the Dubai Creek at sunset with traditional abra boats.”'},
-      {t:'Restyle',s:'an art movement',d:'Ask for the same scene as an Impressionist painting, then as Cubism.'},
-      {t:'Compare',s:'what changed',d:'List two things you chose and two things the model chose.'},
-      {t:'Classify',s:'Boden’s types',d:'Is this exploratory, combinational or transformational creativity?'}]})} },
+  { part:2, nav:'Which face is real?', title:'Game: which face is real?',
+    narration:[`This game, made by two University of Washington professors, shows two faces: one photo of a real person and one made by a GAN. Play ten rounds and use the clues you learned.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:'Which Face Is Real?',by:'University of Washington · Jevin West and Carl Bergstrom',url:'https://www.whichfaceisreal.com/',steps:[
+      {t:'Look',s:'two faces',d:'One is a photo, one was generated by a GAN.'},
+      {t:'Choose',s:'click the real one',d:'Decide before you zoom in.'},
+      {t:'Check',s:'the clues',d:'Look at the background, ears, earrings and hair edges.'},
+      {t:'Count',s:'ten rounds',d:'Write down your score and compare with your partner.'}]})} },
+
+  { part:2, nav:'Class game', title:'Class game: fool your partner',
+    narration:[`Take one real photo on campus with your phone and generate one AI image with the “Fool your classmates” prompt. Show both to your partner in random order. Count every right guess and every time your partner is fooled.`],
+    fig:{label:`Pair score`, build:tally} },
 
   { part:3, nav:'Case: Christie’s', title:'Case: a GAN portrait sells at auction',
     narration:[`In October 2018 Christie’s in New York sold Portrait of Edmond de Belamy, made with a GAN by the Paris collective Obvious, for 432,500 US dollars, about 43 times its estimate. The code it used had been shared online by another programmer, which started a debate about who deserves the credit.`],
     fig:{label:`Real case`, build:el=>W.news(el,{outlet:'artnet News',date:'25 October 2018',head:'The first AI-generated portrait ever sold at auction fetches $432,500, 43 times its estimate',dek:'Portrait of Edmond de Belamy, made by the collective Obvious with a generative adversarial network.',url:'https://news.artnet.com/market/first-everartificial-intelligence-portrait-painting-sells-at-christies-1379902'})} },
 
   { part:3, nav:'Case: the art prize', title:'Case: an AI image wins first prize',
-    narration:[`In 2022 Jason Allen won the digital arts category at the Colorado State Fair with Théâtre D’opéra Spatial, made with Midjourney. He said he spent many hours refining his prompts and editing the result. Many artists were angry. Was the prize fair?`],
+    narration:[`In 2022 Jason Allen won the digital arts category at the Colorado State Fair with Théâtre D’opéra Spatial, made with Midjourney. He said he spent many hours refining his prompts and editing the result. Many artists were angry. After today’s lab, was the prize fair?`],
     fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Smithsonian Magazine',date:'September 2022',head:'Artificial intelligence art wins Colorado State Fair',dek:'Théâtre D’opéra Spatial, made with Midjourney, won the digital arts category and reopened the debate about AI and art.',url:'https://www.smithsonianmag.com/smart-news/artificial-intelligence-art-wins-colorado-state-fair-180980703/'})} },
 
   { part:3, nav:'Case: copyright', title:'Case: can an AI own its art?',
-    narration:[`Stephen Thaler asked the US Copyright Office to register an image made by his AI system, with the AI as author. The office refused, and in March 2025 a US appeals court agreed: copyright needs a human author. Work made with AI can still be protected when a human’s creative choices are clear.`],
+    narration:[`Stephen Thaler asked the US Copyright Office to register an image made by his AI system, with the AI as author. The office refused, and in March 2025 a US appeals court agreed: copyright needs a human author. Who owns the images you made today?`],
     fig:{label:`Real case`, build:el=>W.news(el,{outlet:'Cline Williams',date:'28 March 2025',head:'Thaler v. Perlmutter: D.C. Circuit upholds human authorship requirement for copyright',dek:'The court confirmed that a work created solely by an AI system cannot be registered with the AI as its author.',url:'https://www.clinewilliams.com/news/news-archives.html/article/2025/03/28/thaler-v-perlmutter-d-c-circuit-upholds-human-authorship-requirement-for-copyright'})} },
 
   { part:3, nav:'Debate', title:'Debate: tool, partner or artist?',
-    narration:[`Split into three groups. One argues AI is only a tool like a camera, one that it is a creative partner, and one that it can be an artist in its own right. Use Boden’s types and one case from today, then vote.`],
-    fig:{label:`Vote after the debate`, build:el=>W.poll(el,{q:`In the cases we saw, AI was…`,opts:[`A tool, like a camera or a brush`,`A creative partner`,`An artist in its own right`],reveal:i=>[`The courts agree with you so far: the human is the author.`,`Close to how many artists describe working with AI today.`,`Then explain how it passes the Lovelace test: new, surprising, valuable and unexplained by its programmers.`][i]+` Write your answer with one example and one counter-argument.`})} },
+    narration:[`Split into three groups. One argues AI is only a tool like a camera, one that it is a creative partner, and one that it can be an artist in its own right. Use your own images from the lab as evidence, then vote.`],
+    fig:{label:`Vote after the debate`, build:el=>W.poll(el,{q:`In today’s lab, AI was…`,opts:[`A tool, like a camera or a brush`,`A creative partner`,`An artist in its own right`],reveal:i=>[`The courts agree with you so far: the human is the author.`,`Close to how many artists describe working with AI today.`,`Then explain how it passes the Lovelace test: new, surprising, valuable and unexplained by its programmers.`][i]+` Write your answer with one example and one counter-argument.`})} },
 
   { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
     narration:[`Microsoft Learn’s Fundamentals of generative AI module explains how the image and text generators from today’s lab work. Finish it, keep the trophy, and send your proof for a class-activity bonus.`] },
@@ -134,17 +254,17 @@ Lecture.mount({
     narration:[`Open each branch of the mind map, then answer the six questions. Before Week 9, read AI Concepts in Architectural Design (WEI Likai).`],
     fig:{label:`The week in one map · then six questions`,
       mindmap:{center:'AI and creativity',branches:[
-        {t:'Lovelace',items:['1843: machines only follow orders','Test: new, surprising, valuable','Not explained by its programmers']},
+        {t:'Spotting AI images',items:['People are right about 62% of the time','Clues: hands, text, shadows','Best test: check the source']},
+        {t:'Lovelace',items:['1843: machines only follow orders','Test: new, surprising, valuable']},
         {t:'Boden’s three types',items:['Exploratory: push a style','Combinational: join ideas','Transformational: break a rule']},
-        {t:'How AI makes images',items:['GAN (2014): generator vs discriminator','Learns a style from many works']},
-        {t:'Cases',items:['Next Rembrandt, 2016','Christie’s GAN portrait, 2018','State-fair prize, 2022']},
-        {t:'Ownership',items:['Copyright needs a human author','Thaler v. Perlmutter, 2025','Credit for data and code']}]},
+        {t:'How AI makes images',items:['GAN (2014): generator vs discriminator','Prompt: subject, style, light, view, mood']},
+        {t:'Cases and ownership',items:['Christie’s GAN portrait, 2018','State-fair prize, 2022','Copyright needs a human author (2025)']}]},
       build:el=>W.quiz(el,[
         {q:`Which type of creativity breaks a rule so a new style becomes possible?`,o:[`Exploratory`,`Combinational`,`Transformational`,`Computational`],a:2,why:`Transformational creativity changes the rules, as Cubism did with perspective.`},
-        {q:`Joining two ideas that were never joined before is…`,o:[`exploratory creativity`,`combinational creativity`,`transformational creativity`,`supervised learning`],a:1,why:`Combinational creativity connects existing ideas in a new way.`},
+        {q:`A prompt asking for “a camel made of glass in a museum” mainly tests…`,o:[`exploratory creativity`,`combinational creativity`,`transformational creativity`,`supervised learning`],a:1,why:`It joins two ideas that do not normally go together.`},
         {q:`In a GAN, the discriminator…`,o:[`paints the final image`,`decides whether an image is real or fake`,`writes the prompt`,`stores the training data`],a:1,why:`The generator makes fakes; the discriminator judges them.`},
+        {q:`The most reliable way to check whether a viral image is real is to…`,o:[`count the fingers`,`look for a credible original source`,`zoom in on the background`,`ask an AI chatbot`],a:1,why:`Visual clues fade as models improve; the source does not.`},
         {q:`Lovelace’s objection says a machine…`,o:[`can only do what we order it to do`,`will one day replace artists`,`is creative if it passes the Turing Test`,`learns from data`],a:0,why:`She argued a machine cannot originate anything.`},
-        {q:`The Next Rembrandt (2016) was made by…`,o:[`a robot painting live in a gallery`,`a model that studied hundreds of Rembrandt paintings`,`Rembrandt’s students`,`a human forger`],a:1,why:`It analysed 346 paintings, then 3D-printed a new one in his style.`},
         {q:`In Thaler v. Perlmutter (2025) the court held that…`,o:[`AI systems can hold copyright`,`copyright needs a human author`,`all AI images are free to copy`,`prompts are protected by copyright`],a:1,why:`A work made solely by an AI cannot be registered with the AI as author.`}])} }
   ]
 });

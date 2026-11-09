@@ -11,7 +11,11 @@
   const view=LS.get('view')||'page', voice=LS.on('voice');
   const css=`
 body.op .toc{display:none!important}
-body.op .shell{grid-template-columns:minmax(0,1fr)!important;max-width:1180px}
+body.op .shell{grid-template-columns:minmax(0,1fr)!important;max-width:1440px;padding-left:20px;padding-right:20px}
+body.op .bar{background:var(--bg)}
+.op-links{display:flex;gap:14px;font-family:var(--f-display);font-size:.9rem;white-space:nowrap}
+.op-links a{color:var(--muted);text-decoration:none}.op-links a:hover{color:var(--ink);text-decoration:underline}
+@media (max-width:999px){.op-links{display:none}}
 body.op-page .stage>.pager,body.op-page .kbd{display:none}
 .op-sec{border-top:1px solid var(--line);padding:30px 0 6px;scroll-margin-top:84px}
 .op-sec:first-child{border-top:0;padding-top:6px}
@@ -60,7 +64,7 @@ body.op-novoice #listen{display:none!important}
 .op-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0 4px;font-family:var(--f-display);font-size:.82rem;color:var(--muted)}
 .op-legend span{display:inline-flex;align-items:center;gap:6px}.op-legend b{width:10px;height:10px;border-radius:3px;display:inline-block}
 /* ---- left lecture menu ---- */
-.op-grid{display:grid;grid-template-columns:236px minmax(0,1fr);gap:32px;align-items:start}
+.op-grid{display:grid;grid-template-columns:212px minmax(0,1fr);gap:28px;align-items:start}
 .op-side{position:sticky;top:76px;max-height:calc(100vh - 92px);overflow:auto;font-family:var(--f-display);padding:6px 4px 20px 0;border-right:1px solid var(--line);scrollbar-width:thin}
 .op-side h4{font-family:var(--f-mono);font-size:.64rem;letter-spacing:.09em;text-transform:uppercase;color:var(--wk);margin:16px 0 6px;font-weight:600}
 .op-side h4:first-child{margin-top:0}
@@ -71,6 +75,7 @@ body.op-novoice #listen{display:none!important}
 @media (min-width:1000px){body.op-page .op-chips{display:none}}
 @media (max-width:999px){.op-grid{grid-template-columns:minmax(0,1fr)}.op-side{display:none}}
 @media (max-width:620px){.op-sec[data-type]:not([data-type="reading"]){padding:16px 14px;margin:16px -6px}}
+.op-sec [hidden]{display:none!important}
 .op-reveal{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 12px}
 .op-reveal button{font:inherit;font-family:var(--f-display);font-weight:700;font-size:1rem;padding:12px 18px;border-radius:12px;border:1.5px solid var(--ty,var(--wk));background:var(--bg);color:var(--ink);cursor:pointer;display:inline-flex;gap:10px;align-items:center}
 .op-reveal button small{font-weight:400;color:var(--muted)}
@@ -182,16 +187,19 @@ body.op-novoice #listen{display:none!important}
     const grid=document.createElement('div'); grid.className='op-grid'; const main=document.createElement('div'); main.style.minWidth='0';
     [...page.childNodes].forEach(n=>main.appendChild(n)); grid.append(side,main); page.appendChild(grid);
     stage.innerHTML=''; stage.appendChild(page);
+    try{ history.replaceState(null,'',location.pathname+location.search+hash); }catch(e){}  /* building the page changed the hash to the last scene; put the student's own hash back so the browser does not jump */
     addEventListener('keydown',e=>{ if(e.key==='ArrowRight'||e.key==='ArrowLeft') e.stopImmediatePropagation(); },true);
     /* top chips */
     const barIn=document.querySelector('.bar .bar-in'), brand=barIn&&barIn.querySelector('.brand');
     const chips=document.createElement('nav'); chips.className='op-chips'; chips.setAttribute('aria-label','In this lecture');
     chips.innerHTML=navs.map((t,i)=>`<a href="#s${i}" data-i="${i}"><span>${i+1}</span>${esc(t)}</a>`).join('');
     if(brand) brand.after(chips);
+    const ql=document.createElement('nav'); ql.className='op-links'; ql.setAttribute('aria-label','Course'); ql.innerHTML='<a href="schedule.html">← Schedule</a><a href="lectures.html">All lectures</a><a href="labs.html">Labs</a>'; chips.after(ql);
     const secs=[...page.querySelectorAll('.op-sec')], cs=[...chips.querySelectorAll('a')];
     const sl=[...document.querySelectorAll('.op-side a')];
-    const mark=i=>{ cs.forEach((c,j)=>{ c.classList.toggle('on',j===i); if(j===i&&c.scrollIntoView&&innerWidth<1000) c.scrollIntoView({block:'nearest',inline:'nearest'}); }); sl.forEach((c,j)=>c.classList.toggle('on',j===i)); };
-    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=secs.indexOf(e.target); mark(i); try{ history.replaceState(null,'','#s'+i); }catch(x){} } }),{rootMargin:'-30% 0px -60% 0px'});
+    const mark=i=>{ cs.forEach((c,j)=>{ c.classList.toggle('on',j===i); if(j===i&&innerWidth<1000){ const L=c.offsetLeft-chips.clientWidth/2+c.offsetWidth/2; chips.scrollTo?chips.scrollTo({left:L,behavior:'smooth'}):(chips.scrollLeft=L); } }); sl.forEach((c,j)=>c.classList.toggle('on',j===i)); };
+    let moved=false; addEventListener('load',()=>setTimeout(()=>addEventListener('scroll',()=>{ moved=true; },{once:true,passive:true}),300));
+    const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ const i=secs.indexOf(e.target); mark(i); if(moved) try{ history.replaceState(null,'','#s'+i); }catch(x){} } }),{rootMargin:'-30% 0px -60% 0px'});
     secs.forEach(s=>io.observe(s));
     const prog=document.querySelector('.bar .progress i');
     const onScroll=()=>{ const d=document.documentElement; if(prog) prog.style.width=(d.scrollTop/((d.scrollHeight-d.clientHeight)||1)*100)+'%'; };

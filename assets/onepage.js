@@ -70,7 +70,18 @@ body.op-novoice #listen{display:none!important}
 .op-side a.on{background:var(--wk-soft);color:var(--ink);font-weight:700}
 @media (min-width:1000px){body.op-page .op-chips{display:none}}
 @media (max-width:999px){.op-grid{grid-template-columns:minmax(0,1fr)}.op-side{display:none}}
-@media (max-width:620px){.op-sec[data-type]:not([data-type="reading"]){padding:16px 14px;margin:16px -6px}}`;
+@media (max-width:620px){.op-sec[data-type]:not([data-type="reading"]){padding:16px 14px;margin:16px -6px}}
+.op-reveal{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 12px}
+.op-reveal button{font:inherit;font-family:var(--f-display);font-weight:700;font-size:1rem;padding:12px 18px;border-radius:12px;border:1.5px solid var(--ty,var(--wk));background:var(--bg);color:var(--ink);cursor:pointer;display:inline-flex;gap:10px;align-items:center}
+.op-reveal button small{font-weight:400;color:var(--muted)}
+.op-reveal button[aria-expanded="true"]{background:color-mix(in srgb,var(--ty,var(--wk)) 12%,var(--bg))}
+.op-next{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin:34px 0 10px;padding:20px 22px;border-radius:16px;background:var(--wk);color:var(--on-wk,#fff);text-decoration:none;font-family:var(--f-display)}
+.op-next small{display:block;font-family:var(--f-mono);font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.op-next b{font-size:clamp(1.1rem,2.6vw,1.45rem)}
+.op-next span.arrow{font-size:1.8rem;font-weight:800}
+.op-next:hover{filter:brightness(1.07)}
+.op-alllinks{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--f-display);font-size:.92rem;margin-bottom:10px}
+`;
   const st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
 
   /* practice methods (same as MTH 105), wording for text-based courses */
@@ -145,6 +156,23 @@ body.op-novoice #listen{display:none!important}
     const lg=document.createElement('div'); lg.className='op-legend';
     lg.innerHTML=[...new Set(types)].map(t=>`<span><b style="background:var(--ty-${{reading:'read',activity:'act',try:'try',case:'case',watch:'watch',nerd:'nerd',practise:'prac'}[t]})"></b>${TY[t][0]}</span>`).join('');
     head.appendChild(lg);
+    /* revision map and MCQ stay closed until the student opens them */
+    const reveal=(target,label,sub)=>{ if(!target||target.dataset.rv) return; target.dataset.rv='1'; target.hidden=true;
+      const bar=document.createElement('div'); bar.className='op-reveal';
+      const b=document.createElement('button'); b.type='button'; b.setAttribute('aria-expanded','false'); b.innerHTML=`<span>▸ ${label}</span><small>${sub}</small>`;
+      b.addEventListener('click',()=>{ const open=target.hidden; target.hidden=!open; b.setAttribute('aria-expanded',String(open)); b.querySelector('span').textContent=(open?'▾ ':'▸ ')+label; if(open) dispatchEvent(new Event('resize')); });
+      bar.appendChild(b); target.before(bar); };
+    page.querySelectorAll('.op-sec').forEach(sec=>{
+      const mm=sec.querySelector('.mmap'); if(mm&&sec.dataset.type==='practise') reveal(mm.parentElement,'Open the revision map','the week in one picture');
+      sec.querySelectorAll('.quiz').forEach(q=>reveal(q,'Start the MCQ',q.querySelectorAll('.q, .qq, fieldset').length?q.querySelectorAll('.q, .qq, fieldset').length+' questions':'check yourself')); });
+    /* next lecture button at the end */
+    const WK=(window.COURSE&&window.COURSE.weeks)||[];
+    const nx=cfg.week?WK.find(w=>w[0]>cfg.week&&w[4]):null;
+    const endNav=document.createElement('div');
+    endNav.innerHTML=nx?`<a class="op-next" href="${nx[4]}"><span><small>Next lecture · Week ${nx[0]}</small><b>${esc(nx[1])}</b></span><span class="arrow">→</span></a>`
+      :`<a class="op-next" href="lectures.html"><span><small>More lectures are coming soon</small><b>All lectures</b></span><span class="arrow">→</span></a>`;
+    endNav.innerHTML+=`<div class="op-alllinks"><a href="lectures.html">All lectures</a><a href="schedule.html">Schedule</a><a href="index.html">Course home</a></div>`;
+    page.appendChild(endNav);
     /* left menu grouped by part */
     const PARTS=cfg.parts||{1:'Part 1 · Lecture',2:'Part 2 · Tools lab',3:'Part 3 · Case studies & AI Nerd',4:'Practise & remember'};
     const side=document.createElement('nav'); side.className='op-side'; side.setAttribute('aria-label','Lecture contents');

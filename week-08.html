@@ -179,6 +179,11 @@ Lecture.mount({
   title:'Applications of AI: AI in Art, Entertainment and Creativity',
   meta:'RB d Chapters 2, 7, 8 · 3 hours · Midterm week',
   scenes:[
+  { part:1, type:'activity', nav:'Today’s project', title:'Today’s project: Creative AI Studio',
+    narration:[`Today you work in teams on a two-hour guided project that applies Weeks 8 and 9. Choose one of ten topics, follow the six stages, add your images and links, and save your work as a PDF. Use the scenes below whenever you need an idea, a tool or a prompt.`],
+    fig:{label:`Team project · about 2 hours`, build:el=>{ el.innerHTML=`<div style="display:grid;gap:12px;font-family:var(--f-display)">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">${[['1','Team','names and roles'],['2','Topic','1 of 10'],['3','Work','6 stages · 2 hours'],['4','Save PDF','your final work']].map(([n,t,d])=>`<div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)"><b style="color:var(--wk);font-size:1.3rem">${n}</b> <b>${t}</b><br><small style="color:var(--muted)">${d}</small></div>`).join('')}</div>
+      <a class="btn" href="studio-8-9.html" style="justify-self:start;font-size:1.05rem;padding:12px 20px">Open the Creative AI Studio →</a></div>`; }} },
   { part:1, nav:'Game: real or AI?', title:'Game: can you beat 62%?', wide:true,
     narration:[`Start with a game. Play Microsoft’s free Real or Not quiz on your phone and decide, image by image, whether a person or an AI made it. Then enter your score. In Microsoft’s study, more than 12,500 people were right only 62% of the time.`],
     fig:{label:`Real or AI? · play, then enter your score`, build:beat62} },

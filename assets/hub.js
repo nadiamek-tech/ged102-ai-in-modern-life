@@ -13,10 +13,10 @@
   const weekStart = n => { if(!C.start) return null; const d=new Date(C.start+'T00:00:00'); return new Date(d.getTime()+(n-1)*7*DAY); };
   const fmt = (d, o={day:'numeric',month:'short'}) => d.toLocaleDateString('en-GB', o);
   const weekDates = n => { const s=weekStart(n); if(!s) return ''; return fmt(s)+' – '+fmt(new Date(s.getTime()+4*DAY)); };
-  const dueText = a => a.due ? new Date(a.due.replace(' ','T')).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : `Week ${a.week}${C.start?' · '+weekDates(a.week):''} · date to be announced`;
+  const dueText = a => a.done ? 'Done' : (!a.week&&!a.due) ? 'Date to be announced in class' : a.due ? new Date(a.due.replace(' ','T')).toLocaleString('en-GB',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : `Week ${a.week}${C.start?' · '+weekDates(a.week):''} · date to be announced`;
 
   /* Stanford-style header band + flat tab menu, shared by every course-system page */
-  const TABS=[['index.html','Home'],['syllabus.html','Syllabus'],['schedule.html','Schedule'],['credentials.html','Credentials'],['assignments.html','Assignments'],['exams.html','Exams'],['staff.html','Help &amp; support']];
+  const TABS=[['index.html','Home'],['syllabus.html','Syllabus'],['schedule.html','Schedule'],['credentials.html','Credentials'],['assignments.html','Coursework'],['exams.html','Exams'],['staff.html','Help &amp; support']];
   const PARENT={'lectures.html':'schedule.html','labs.html':'schedule.html'};  // pages reached from Schedule keep that tab lit
   function top(active){
     active=PARENT[active]||active;
@@ -39,7 +39,13 @@
       <dl class="facts"><div><dt>When</dt><dd>${esc(dueText(a))}</dd></div><div><dt>Covers</dt><dd>${esc(a.covers)}</dd></div><div><dt>Type</dt><dd>${esc(a.type)}</dd></div><div><dt>Weight</dt><dd>${a.weight}% of the course grade</dd></div></dl>
       <p>${esc(a.brief)}</p>${rubric(a)}
       ${a.exam?`<div class="row"><a class="btn" href="exams.html#${a.id}">Exam details →</a>${a.id==='mid'?'<a class="btn ghost" href="review.html">Midterm review →</a>':''}</div>`
-        :`<p class="mono note">Submitted through Turnitin on Moodle · maximum similarity index 20%.</p><div class="row">${btn(a.submit,'Submit on Moodle ↗','btn','link coming soon')}</div>`}`;
+        :actions(a)}`;
+  }
+  /* what a student can do for each assessment */
+  function actions(a){
+    if(a.page) return `<p class="mono note">In class · submit the PDF on Moodle.</p><div class="row"><a class="btn" href="${a.page}">Open the project →</a>${btn(a.submit,'Submit on Moodle ↗','btn ghost','link from your professor')}</div>`;
+    if(a.inclass) return `<p class="mono note">${a.done?'Already taken in class. Grades are on the student portal.':'Taken in class, on paper. Nothing to submit online.'}</p>`;
+    return `<p class="mono note">Submitted through Turnitin on Moodle · maximum similarity index 20%.</p><div class="row">${btn(a.submit,'Submit on Moodle ↗','btn','link coming soon')}</div>`;
   }
 
   let dlg=null;
@@ -52,5 +58,5 @@
     dlg.showModal();
   }
 
-  window.Hub = { C, esc, fill, btn, weekDates, dueText, top, detail, rubric, open };
+  window.Hub = { C, esc, fill, btn, weekDates, dueText, top, detail, rubric, open, actions };
 })();

@@ -212,7 +212,7 @@
     const shell=h('div',{class:'shell'});
     const toc=h('nav',{class:'toc','aria-label':'Scenes'});
     toc.innerHTML=`<div class="eyebrow">Week ${cfg.week} · CLO ${cfg.clo}</div><h1>${esc(cfg.title)}</h1>
-      <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Eng. Nadia Mek')}</b></div>`;
+      <div class="meta">${esc(cfg.meta)}</div><div class="meta">Instructor: <b>${esc(cfg.instructor||'Nadia')}</b></div>`;
     const ol=h('ol'); toc.appendChild(ol);
     const PARTS=cfg.parts||{1:'Lecture · 60 min',2:'Tools lab · 60 min',3:'Case studies & AI Nerd · 50 min',4:'Practise & remember'};
     let lastPart=null;

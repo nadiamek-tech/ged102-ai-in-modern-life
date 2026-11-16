@@ -1,7 +1,7 @@
 """Generate week-10.html … week-15.html from the specs below (same engine as Weeks 1–9)."""
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-V = '202611161310'
+V = '202611161400'
 HEAD = '''<!doctype html>
 <html lang="en">
 <head>
@@ -66,8 +66,8 @@ W[10] = dict(c='#9F1239', cs='rgba(159,18,57,.10)', cd='#FDA4AF', csd='rgba(253,
  full='What AI Can’t Do (Yet): Limits, Bias, and the "Black Box"', meta='RB e Chapters 2 and 6 · von Eschenbach (2021) · 3 hours · Course project today',
  scenes=[
   scene(1,'Today’s project','Today’s course project: AI Reality Check',
-   'Today you complete the individual course project in class: 50 minutes, 10 marks. You test Copilot in one context with three tests and judge whether it can be trusted. Use the scenes below as your toolkit while you work.',
-   "{label:`Individual · 50 minutes · 10 marks`, build:el=>{ el.innerHTML=`<div style=\"display:grid;gap:12px;font-family:var(--f-display)\"><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px\">${[['5 min','Name and context'],['25 min','Three tests with Copilot'],['15 min','Two analysis questions'],['5 min','Save PDF, upload to Moodle']].map(([a,b])=>`<div style=\"border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)\"><b style=\"color:var(--wk)\">${a}</b><br>${b}</div>`).join('')}</div><a class=\"btn\" href=\"project-10.html\" style=\"justify-self:start;font-size:1.05rem;padding:12px 20px\">Open the course project →</a></div>`; }}",
+   'Today you complete the individual course project in class: 50 minutes, 10 marks. Everyone follows the same story: two scenarios, ready prompts to copy, screenshots and decisions. Use the scenes below as your toolkit while you work.',
+   "{label:`Individual · 50 minutes · 10 marks`, build:el=>{ el.innerHTML=`<div style=\"display:grid;gap:12px;font-family:var(--f-display)\"><div style=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px\">${[['2 min','Your details, open Copilot'],['20 min','Scenario 1 · the hiring assistant'],['20 min','Scenario 2 · real or AI?'],['8 min','Your advice, save PDF, upload']].map(([a,b])=>`<div style=\"border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)\"><b style=\"color:var(--wk)\">${a}</b><br>${b}</div>`).join('')}</div><a class=\"btn\" href=\"project-10.html\" style=\"justify-self:start;font-size:1.05rem;padding:12px 20px\">Open the course project →</a></div>`; }}",
    extra=" type:'activity',"),
   scene(1,'Narrow, not general','What AI still cannot do',
    'Every system we have studied is narrow: excellent at one task and lost outside it. Today’s AI has no common sense, no understanding of cause and effect, and no awareness of what it does not know. Tick what you think AI can already do well, then compare with a classmate.',

@@ -86,7 +86,7 @@ window.COURSE = {
       submit:'', due:'', exam:true,
       brief:'The midterm will cover the topics taught during the first seven weeks. It helps you and your instructor see what you have mastered and where you need more support.' },
     { id:'proj', short:'Project', name:'Course Project · AI Reality Check', weight:10, week:10, clo:'2, 3', type:'Course project · individual, in class', covers:'Weeks 1–10: applications, limits, bias and the black box',
-      submit:'', due:'', inclass:true, page:'project-10.html',
+      submit:'https://my.cud.ac.ae/mod/assign/view.php?id=23625', due:'', inclass:true, page:'project-10.html',
       brief:'An individual 50-minute project in class. Everyone follows the same story with two scenarios: a hiring assistant (is it fair?) and a marketing post (real or AI?). You copy ready prompts into Copilot, take screenshots, click your decisions and give your advice. Save it as a PDF and upload it to Moodle before you leave.',
       rubric:[['Scenario 1 · hiring assistant (4 marks)','Fewer than two steps','Steps without screenshots','All steps with screenshots and decisions','All steps, clear decisions and the right course concept'],
               ['Scenario 2 · real or AI? (4 marks)','Fewer than two steps','Steps without screenshots','All steps with screenshots and decisions','All steps, every fact checked, clear clues'],

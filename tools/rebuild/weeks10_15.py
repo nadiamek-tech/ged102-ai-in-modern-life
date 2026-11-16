@@ -1,7 +1,7 @@
 """Generate week-10.html … week-15.html from the specs below (same engine as Weeks 1–9)."""
 import os
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-V = '202611161400'
+V = '202611161230'
 HEAD = '''<!doctype html>
 <html lang="en">
 <head>

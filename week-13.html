@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 13 · AI and Autonomous Systems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=202611161310">
+<style>:root{--wk:#B45309;--wk-soft:rgba(180,83,9,.10);--wk-d:#FCD34D;--wk-soft-d:rgba(252,211,77,.14)}</style>
+</head>
+<body>
+<script src="assets/professor.js?v=202611161310"></script>
+<script src="assets/course-data.js?v=202611161310"></script>
+<script src="assets/credentials.js?v=202611161310"></script>
+<script src="assets/supports.js?v=202611161310"></script>
+<script src="assets/course.js?v=202611161310"></script>
+<script src="assets/kb.js?v=202611161310"></script>
+<script src="assets/search-index.js?v=202611161310"></script>
+<script src="assets/assistant.js?v=202611161310"></script>
+<script src="assets/onepage.js?v=202611161310"></script>
+<script src="assets/w-extra.js?v=202611161310"></script>
+<script>
+const {W} = Lecture;
+Lecture.mount({
+  id:'w13', week:13, clo:4, short:`Week 13 · AI and Autonomous Systems`,
+  title:`AI and Autonomous Systems`,
+  meta:`RB b Chapters 6 and 7 · 3 hours`,
+  scenes:[
+  { part:1, nav:`Your future job`, title:`Will AI change the job you want?`,
+    narration:[`Think of the job you want after graduation. Vote on how much AI will change it in the next ten years, then we look at the evidence.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`How will AI affect the job you want?`,opts:[`It will mostly replace it`,`It will change many of its tasks`,`It will barely change it`,`It will create my job: it does not exist yet`],reveal:i=>[`Few jobs disappear completely; tasks change first.`,`This is what most studies predict: tasks shift, roles adapt.`,`Check again after the lab: most jobs include tasks AI can do.`,`Possible: many future jobs do not have names yet.`][i]})} },
+
+  { part:1, nav:`Levels of autonomy`, title:`How autonomous is a self-driving car?`,
+    narration:[`Autonomous systems act without a human for some time. For cars, the SAE scale runs from level 0, no automation, to level 5, full automation anywhere. Most cars on the road today are at level 2: the driver must watch at all times. Click each level.`],
+    fig:{label:`SAE levels of driving automation · click each`, build:el=>WX.stack(el,[{n:`L0`,t:`No automation`,d:`The human does all the driving; warnings only.`},{n:`L1`,t:`Driver assistance`,d:`One function helps, such as adaptive cruise control.`},{n:`L2`,t:`Partial automation`,d:`Steering and speed together, but the driver must watch constantly.`,ex:`Most driver-assist systems sold today.`},{n:`L3`,t:`Conditional automation`,d:`The car drives in some conditions; the human must take over when asked.`},{n:`L4`,t:`High automation`,d:`No driver needed in a defined area and conditions.`,ex:`Robotaxi services in limited zones.`},{n:`L5`,t:`Full automation`,d:`Drives anywhere, in any conditions, with no human.`,ex:`Not yet available.`}],{start:2})} },
+
+  { part:1, nav:`AI and labour`, title:`Machines replace tasks, not whole jobs`,
+    narration:[`Kaplan, Chapter 6, argues that automation has always changed work: it removes some tasks, makes workers more productive at others, and creates new jobs. The question is how fast the change comes and who pays the cost of adjusting.`],
+    src:`Kaplan, J. (2016). <em>Artificial intelligence: What everyone needs to know</em>, Chapter 6.`,
+    fig:{label:`How automation changes a job`, flow:[{t:`Tasks`,s:`break the job down`,d:`Every job is a bundle of tasks.`},{t:`Automate`,s:`routine tasks`,d:`Predictable, repetitive tasks are automated first.`},{t:`Augment`,s:`the rest`,d:`People do more of the creative, social and complex work.`},{t:`New jobs`,s:`appear`,d:`New roles grow around the new technology.`},{t:`Transition`,s:`the hard part`,d:`Workers need time, training and support to move.`}]} },
+
+  { part:1, nav:`The numbers`, title:`Jobs created and jobs lost by 2030`,
+    narration:[`The World Economic Forum’s Future of Jobs Report 2025 expects 170 million jobs to be created and 92 million to be displaced worldwide by 2030, a net gain of 78 million. The gain is real, but the people who lose jobs are not always the ones who get the new ones.`],
+    fig:{label:`Future of Jobs Report 2025 · millions of jobs by 2030`, build:el=>WX.bars(el,[[`Created`,170,`var(--good)`],[`Displaced`,92,`var(--bad)`],[`Net change`,78,`var(--wk)`]],{label:`Future of Jobs Report 2025 · millions of jobs by 2030`,note:`Source: World Economic Forum (2025)`,fmt:v=>v+' M'})} },
+
+  { part:1, nav:`Without work?`, title:`If machines do the work, what do people do?`,
+    narration:[`Kaplan, Chapter 7, asks two questions from the syllabus: are there alternatives to a labour-based society, and why would people work if they could live comfortably without doing so? One proposal is a universal basic income: regular money for everyone, with no conditions.`],
+    src:`Kaplan, J. (2016), Chapter 7.`,
+    fig:{label:`Universal basic income`, build:el=>WX.compare(el,{h:`Arguments for`,items:[`A safety net if automation removes jobs`,`Freedom to study, care or start a business`,`Simpler than many separate benefits`]},{h:`Arguments against`,items:[`Very expensive to fund`,`May reduce the incentive to work`,`Work also gives purpose, status and community`]})} },
+
+  { part:2, nav:`Will robots take my job?`, title:`Check the automation risk of a job`,
+    narration:[`This site estimates the automation risk of hundreds of jobs from research data. Look up your future job and one of your parents’ jobs, then question the number: which tasks does it miss?`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Will Robots Take My Job?`,by:`willrobotstakemyjob.com`,url:`https://willrobotstakemyjob.com/`,steps:[{t:`Search`,s:`your future job`,d:`Type the job title.`},{t:`Read`,s:`the risk score`,d:`Note the automation percentage and the trend.`},{t:`Compare`,s:`a second job`,d:`Try a family member’s job.`},{t:`Question`,s:`the number`,d:`Which human tasks might the score ignore?`}]})} },
+
+  { part:2, nav:`Task audit`, title:`Audit your future job, task by task`,
+    narration:[`Use Copilot to break your future job into ten tasks. For each task, decide whether AI will automate it, help with it, or leave it to humans. Then write the one skill you must build now.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Microsoft Copilot`,by:`Microsoft`,url:`https://copilot.microsoft.com/`,account:`Microsoft account`,steps:[{t:`Prompt`,s:`list the tasks`,d:`Ask: “List the 10 main tasks of a [your job] in the UAE.”`},{t:`Classify`,s:`three groups`,d:`Mark each task: automate, augment, or human.`},{t:`Check`,s:`with a person`,d:`Is the list realistic? Ask someone who does the job.`},{t:`Plan`,s:`one skill`,d:`Which skill keeps you in the “human” and “augment” groups?`}]})} },
+
+  { part:3, nav:`Case: basic income trial`, title:`Case: Finland gave 2,000 people free money`,
+    narration:[`From 2017 to 2018 Finland paid 2,000 unemployed people 560 euros a month with no conditions. In the first year, employment did not change much, but participants reported better wellbeing and less stress. A real test of Kaplan’s question.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`Kela (Social Insurance Institution of Finland)`,date:`2019`,head:`The basic income experiment 2017–2018 in Finland: preliminary results`,dek:`The official preliminary results of Finland’s two-year basic income experiment.`,url:`https://tietotarjotin.fi/en/publication/123942/the-basic-income-experiment-2017-2018-in-finland-preliminary-results`})} },
+
+  { part:3, nav:`Case: the jobs report`, title:`Case: which jobs grow fastest?`,
+    narration:[`The same WEF report lists technology roles, such as big data specialists and AI and machine learning specialists, among the fastest-growing jobs, along with care and education roles. Clerical jobs like cashiers and data entry decline fastest.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`World Economic Forum`,date:`January 2025`,head:`Future of Jobs Report 2025: 78 million new job opportunities by 2030 but urgent upskilling needed`,dek:`The press release summarising the report’s main findings.`,url:`https://www.weforum.org/press/2025/01/future-of-jobs-report-2025-78-million-new-job-opportunities-by-2030-but-urgent-upskilling-needed-to-prepare-workforces/`})} },
+
+  { part:3, nav:`Debate`, title:`Debate: should governments slow automation?`,
+    narration:[`Should governments slow automation to protect jobs, or speed it up and help workers retrain? Debate in two groups, then vote.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`What should governments do?`,opts:[`Slow automation to protect jobs`,`Speed it up and fund retraining`,`Tax automation to pay for a basic income`],reveal:i=>[`Protects workers today, but may make the country less competitive.`,`Faster growth, but retraining is slow and not everyone can switch.`,`Kaplan discusses such ideas; the hard part is designing them fairly.`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`IBM’s Your Future in AI: The Job Landscape completes the AI Fundamentals badge. It maps the jobs and skills that grow with AI. Finish it, claim your Credly badge, and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open the revision map, then try the MCQ. Before Week 14, read TB Chapter 14 on human–AI collaboration.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:{center:`AI, autonomy and work`,branches:[{t:`Autonomy`,items:[`SAE levels 0–5`,`Most cars today: level 2`]},{t:`Labour`,items:[`Tasks change before jobs`,`Automate · augment · create`]},{t:`Numbers`,items:[`170 M created, 92 M displaced by 2030`,`Net +78 M (WEF 2025)`]},{t:`Without work`,items:[`Universal basic income`,`Finland trial 2017–2018`]},{t:`Skills`,items:[`Creative, social, complex tasks`,`Lifelong learning`]}]}, build:el=>W.quiz(el,[{q:`A car that steers and brakes by itself but needs the driver to watch at all times is at SAE level…`,o:[`0`,`2`,`4`,`5`],a:1,why:`Level 2: partial automation.`},{q:`According to Kaplan, automation usually replaces…`,o:[`whole professions overnight`,`specific tasks first`,`only manual jobs`,`nothing`],a:1,why:`Tasks change before jobs disappear.`},{q:`The WEF 2025 report expects, by 2030, a net change of about…`,o:[`−92 million jobs`,`+78 million jobs`,`+170 million jobs`,`zero`],a:1,why:`170 created minus 92 displaced.`},{q:`In Finland’s basic income trial, the first-year results showed…`,o:[`a big rise in employment`,`little change in employment but better wellbeing`,`everyone stopped working`,`the trial was cancelled`],a:1,why:`Wellbeing improved; employment barely moved.`},{q:`Which task is most likely to be automated first?`,o:[`Comforting a patient`,`Entering invoice data into a system`,`Negotiating a contract`,`Designing a new product`],a:1,why:`Routine, predictable tasks go first.`},{q:`A level 4 robotaxi…`,o:[`needs no driver within a defined area and conditions`,`drives anywhere in any weather`,`needs a driver watching constantly`,`is only a warning system`],a:0,why:`High automation in a limited zone.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

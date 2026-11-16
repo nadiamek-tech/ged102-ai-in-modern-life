@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 11 · AI Ethics and Responsible AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=202611161310">
+<style>:root{--wk:#0F766E;--wk-soft:rgba(15,118,110,.10);--wk-d:#5EEAD4;--wk-soft-d:rgba(94,234,212,.14)}</style>
+</head>
+<body>
+<script src="assets/professor.js?v=202611161310"></script>
+<script src="assets/course-data.js?v=202611161310"></script>
+<script src="assets/credentials.js?v=202611161310"></script>
+<script src="assets/supports.js?v=202611161310"></script>
+<script src="assets/course.js?v=202611161310"></script>
+<script src="assets/kb.js?v=202611161310"></script>
+<script src="assets/search-index.js?v=202611161310"></script>
+<script src="assets/assistant.js?v=202611161310"></script>
+<script src="assets/onepage.js?v=202611161310"></script>
+<script src="assets/w-extra.js?v=202611161310"></script>
+<script>
+const {W} = Lecture;
+Lecture.mount({
+  id:'w11', week:11, clo:3, short:`Week 11 · AI Ethics and Responsible AI`,
+  title:`AI Ethics and Responsible AI`,
+  meta:`TB Chapter 13 · 3 hours`,
+  scenes:[
+  { part:1, nav:`Your rules`, title:`If you wrote the rules for AI…`,
+    narration:[`Before any theory, decide for yourself. Which single rule would you make every AI system in the UAE follow? Vote, then compare your choice with the principles that governments and companies actually use.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Pick the one rule every AI must follow`,opts:[`Never discriminate between people`,`Always explain its decisions`,`Always keep personal data private`,`A human is always responsible`],reveal:i=>[`That is fairness, the most common principle worldwide.`,`That is transparency, the answer to last week’s black box.`,`That is privacy, our topic next week.`,`That is accountability: someone must answer when AI causes harm.`][i]})} },
+
+  { part:1, nav:`Risks and benefits`, title:`Every AI brings risks and benefits together`,
+    narration:[`TB Chapter 13 frames AI ethics as weighing risks against benefits. The same face recognition that finds a missing child can track a protester; the same chatbot that tutors can mislead. Ethics asks who benefits, who is harmed, and who decides.`],
+    src:`Moutinho, Cavique & Bigné (2023). <em>Philosophy of artificial intelligence and its place in society</em>, Chapter 13.`,
+    fig:{label:`One technology, two sides`, build:el=>WX.compare(el,{h:`Benefits`,items:[`Faster diagnosis and drug discovery`,`Personal tutoring at scale`,`Safer roads and fraud detection`]},{h:`Risks`,items:[`Bias and unfair decisions`,`Loss of privacy and surveillance`,`Misinformation, deepfakes and job disruption`]})} },
+
+  { part:1, nav:`Six principles`, title:`Six principles of responsible AI`,
+    narration:[`Most frameworks share the same core. Microsoft, for example, names six principles: fairness, reliability and safety, privacy and security, inclusiveness, transparency, and accountability. Click each principle to see what it means in practice.`],
+    fig:{label:`Six principles · click each`, build:el=>WX.stack(el,[{n:`1`,t:`Fairness`,d:`Treat similar people similarly; test results across groups.`,ex:`A hiring model checked for equal outcomes for men and women.`},{n:`2`,t:`Reliability and safety`,d:`Work as intended, even in unusual situations, and fail safely.`,ex:`A self-driving car that stops when it cannot see clearly.`},{n:`3`,t:`Privacy and security`,d:`Protect personal data and resist attacks.`,ex:`A chatbot that does not store your conversations by default.`},{n:`4`,t:`Inclusiveness`,d:`Work for people of all abilities, languages and backgrounds.`,ex:`Arabic and English support, screen-reader friendly design.`},{n:`5`,t:`Transparency`,d:`People know when AI is used and how it reaches decisions.`,ex:`A label saying “This answer was written by AI”.`},{n:`6`,t:`Accountability`,d:`Named people are responsible for the system and its effects.`,ex:`A bank officer who signs off on AI loan decisions.`}],{start:0})} },
+
+  { part:1, nav:`Regulation by risk`, title:`The EU AI Act: rules by level of risk`,
+    narration:[`The European Union’s AI Act, in force since 2024, sorts AI by risk. Some uses are banned, high-risk uses need strict checks, limited-risk uses need transparency, and minimal-risk uses are free. Click each level.`],
+    fig:{label:`Four risk levels · click each`, build:el=>WX.stack(el,[{n:`Banned`,t:`Unacceptable risk`,d:`Practices judged too harmful are prohibited.`,ex:`Social scoring of citizens by governments.`,c:`#9F1239`},{n:`Strict`,t:`High risk`,d:`Allowed only with risk management, data quality, human oversight and registration.`,ex:`AI used in hiring, credit, education or medical devices.`,c:`#B45309`},{n:`Label`,t:`Limited risk`,d:`Users must be told they are dealing with AI.`,ex:`Chatbots and deepfakes must be disclosed.`,c:`#0E7490`},{n:`Free`,t:`Minimal risk`,d:`No extra obligations.`,ex:`Spam filters and AI in video games.`,c:`#15803D`}],{start:1})} },
+
+  { part:1, nav:`UAE approach`, title:`The UAE’s charter for AI`,
+    narration:[`The UAE published its Charter for the Development and Use of Artificial Intelligence in 2024. It sets principles such as human wellbeing, safety, fairness, privacy, transparency and human oversight, building on the UAE’s National AI Strategy 2031.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`UAE Government portal`,date:`2024`,head:`The UAE Charter for the Development and Use of Artificial Intelligence`,dek:`The official summary of the UAE’s AI principles.`,url:`https://u.ae/en/about-the-uae/strategies-initiatives-and-awards/policies/Ai/The-UAE-Charter-for-the-Development-and-Use-of-Artificial-Intelligence`})} },
+
+  { part:2, nav:`Moral Machine`, title:`Judge like a self-driving car`,
+    narration:[`MIT’s Moral Machine asks you to decide what a self-driving car should do when a crash cannot be avoided. Judge thirteen scenarios, then compare your results with millions of people around the world.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Moral Machine`,by:`MIT Media Lab`,url:`https://www.moralmachine.net/`,steps:[{t:`Start`,s:`Judge`,d:`Press “Start Judging”.`},{t:`Decide`,s:`13 dilemmas`,d:`Choose one outcome in each scenario.`},{t:`Results`,s:`your profile`,d:`Look at which factors mattered most to you.`},{t:`Discuss`,s:`who should decide?`,d:`Should engineers, governments or users set these rules?`}]})} },
+
+  { part:2, nav:`Measuring fairness`, title:`Explore what “fair” means with numbers`,
+    narration:[`Google’s PAIR Explorables show, with interactive diagrams, why a model cannot satisfy every definition of fairness at once. Move the threshold and watch how accuracy for two groups changes.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`PAIR Explorables: Measuring Fairness`,by:`Google People + AI Research`,url:`https://pair.withgoogle.com/explorables/measuring-fairness/`,steps:[{t:`Read`,s:`the scenario`,d:`A model screens for a medical condition.`},{t:`Move`,s:`the threshold`,d:`Watch errors for each group change.`},{t:`Compare`,s:`two definitions`,d:`Equal accuracy or equal false alarms?`},{t:`Conclude`,s:`one sentence`,d:`Why must people, not models, choose the fairness rule?`}]})} },
+
+  { part:3, nav:`Case: Tay`, title:`Case: a chatbot that learned the worst from its users`,
+    narration:[`In 2016 Microsoft launched Tay, a chatbot that learned from conversations on Twitter. Within a day, users taught it to post racist and offensive messages, and Microsoft took it offline. Which principle failed: reliability and safety, or accountability?`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`TechCrunch`,date:`24 March 2016`,head:`Microsoft silences its new A.I. bot Tay, after Twitter users teach it racism`,dek:`Tay learned from public conversations without enough safeguards.`,url:`https://techcrunch.com/2016/03/24/microsoft-silences-its-new-a-i-bot-tay-after-twitter-users-teach-it-racism`})} },
+
+  { part:3, nav:`Case: who is responsible?`, title:`Case: the first pedestrian killed by a self-driving car`,
+    narration:[`In 2018 an Uber test vehicle in Arizona struck and killed a pedestrian. Investigators found the system did not recognise a person crossing outside a crosswalk, and the safety driver was distracted. Who was responsible: the software, the company, or the driver?`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`NBC News`,date:`November 2019`,head:`Self-driving Uber car that hit and killed woman did not recognize that pedestrians jaywalk`,dek:`The US safety board’s findings on the 2018 crash in Tempe, Arizona.`,url:`https://www.nbcnews.com/news/amp/ncna1079281`})} },
+
+  { part:3, nav:`Debate`, title:`Debate: should AI ethics be law or choice?`,
+    narration:[`Should responsible AI be enforced by law, like the EU AI Act, or left to companies’ own principles, which can move faster? Debate in two groups, then vote.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Responsible AI should be…`,opts:[`Required by law, with fines`,`Voluntary company principles`,`Both: laws for high risk, principles for the rest`],reveal:i=>[`Strong protection, but laws can be slow and may limit innovation.`,`Fast and flexible, but who checks the companies?`,`This is close to the EU’s risk-based approach.`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`IBM’s AI Ethics course explains fairness, explainability and governance with real business cases. It is course 5 of the AI Fundamentals badge. Finish it and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open the revision map, then try the MCQ. Before Week 12, read RB f, Chapter 7 on privacy and ethics.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:{center:`Responsible AI`,branches:[{t:`Ethics`,items:[`Weigh risks and benefits`,`Who benefits? Who is harmed?`]},{t:`Six principles`,items:[`Fairness · reliability and safety`,`Privacy and security · inclusiveness`,`Transparency · accountability`]},{t:`EU AI Act`,items:[`Banned · high · limited · minimal risk`]},{t:`UAE`,items:[`AI Charter, 2024`,`National AI Strategy 2031`]},{t:`Cases`,items:[`Tay, 2016`,`Uber crash, 2018`]}]}, build:el=>W.quiz(el,[{q:`Under the EU AI Act, AI used to screen job applicants is…`,o:[`banned`,`high risk`,`limited risk`,`minimal risk`],a:1,why:`Hiring is a high-risk use with strict obligations.`},{q:`A chatbot must tell users they are talking to AI. Which principle is this?`,o:[`Transparency`,`Inclusiveness`,`Reliability`,`Fairness`],a:0,why:`People should know when AI is used.`},{q:`Accountability means…`,o:[`the AI is never wrong`,`named humans answer for the system and its effects`,`the code is open source`,`data is deleted`],a:1,why:`Someone must be responsible.`},{q:`Microsoft’s Tay failed mainly because…`,o:[`it was too slow`,`it learned from users without enough safeguards`,`it had no internet`,`it was too expensive`],a:1,why:`Unfiltered learning from trolls.`},{q:`Social scoring of citizens by governments is, under the EU AI Act,…`,o:[`minimal risk`,`limited risk`,`high risk`,`unacceptable and banned`],a:3,why:`It is a prohibited practice.`},{q:`Which pair is a benefit and a risk of the same technology?`,o:[`Face recognition: finding a missing child / tracking people without consent`,`Spam filter: fast / cheap`,`Calculator: accurate / small`,`Robot vacuum: quiet / round`],a:0,why:`One technology, two sides.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

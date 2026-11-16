@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 14 · AI and Human Collaboration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=202611161310">
+<style>:root{--wk:#0E7490;--wk-soft:rgba(14,116,144,.10);--wk-d:#67E8F9;--wk-soft-d:rgba(103,232,249,.14)}</style>
+</head>
+<body>
+<script src="assets/professor.js?v=202611161310"></script>
+<script src="assets/course-data.js?v=202611161310"></script>
+<script src="assets/credentials.js?v=202611161310"></script>
+<script src="assets/supports.js?v=202611161310"></script>
+<script src="assets/course.js?v=202611161310"></script>
+<script src="assets/kb.js?v=202611161310"></script>
+<script src="assets/search-index.js?v=202611161310"></script>
+<script src="assets/assistant.js?v=202611161310"></script>
+<script src="assets/onepage.js?v=202611161310"></script>
+<script src="assets/w-extra.js?v=202611161310"></script>
+<script>
+const {W} = Lecture;
+Lecture.mount({
+  id:'w14', week:14, clo:4, short:`Week 14 · AI and Human Collaboration`,
+  title:`AI and Human Collaboration`,
+  meta:`TB Chapter 14 · 3 hours`,
+  scenes:[
+  { part:1, nav:`Human, AI or both?`, title:`Who does it best?`,
+    narration:[`For each task, decide whether a human, an AI, or a human working with AI would do it best. Then compare your answers with the research in this lecture.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Writing a first draft of a marketing email: who does it best?`,opts:[`A human alone`,`AI alone`,`A human working with AI`],reveal:i=>[`Slower, but full control of tone and facts.`,`Fast, but it may be generic or wrong.`,`Most studies find the best results here, if the human checks the output.`][i]})} },
+
+  { part:1, nav:`Augmentation`, title:`Intelligence augmentation: AI as a partner`,
+    narration:[`TB Chapter 14 describes intelligence augmentation: using AI to extend human thinking rather than replace it. The aim is a human–AI symbiosis, where each does what it does best, and “wise systems” that serve society, not only efficiency.`],
+    src:`Moutinho, Cavique & Bigné (2023), Chapter 14: Intelligence augmentation via human–AI symbiosis.`,
+    fig:{label:`Who is good at what?`, build:el=>WX.compare(el,{h:`Humans`,items:[`Goals, values and judgement`,`Common sense and context`,`Empathy, trust and responsibility`]},{h:`AI`,items:[`Speed and scale`,`Finding patterns in huge data`,`Tireless, consistent repetition`]})} },
+
+  { part:1, nav:`The centaur`, title:`Centaurs: humans and machines on one team`,
+    narration:[`After losing to Deep Blue, Garry Kasparov promoted “advanced chess”, where a human plays together with a computer. Teams that combined human strategy with machine calculation could beat both strong players and strong computers alone. These teams are called centaurs.`],
+    fig:{label:`How a centaur team works`, flow:[{t:`Human`,s:`sets the goal`,d:`Chooses the strategy and the questions.`},{t:`AI`,s:`calculates`,d:`Searches options and checks for mistakes.`},{t:`Human`,s:`judges`,d:`Decides which suggestion fits the goal.`},{t:`Together`,s:`learn`,d:`Each round, the human learns how to use the AI better.`}]} },
+
+  { part:1, nav:`The jagged frontier`, title:`AI helps a lot, until it suddenly does not`,
+    narration:[`In a 2023 study with Boston Consulting Group, consultants using GPT-4 finished 12.2% more tasks, 25.1% faster, with over 40% higher quality on tasks inside AI’s abilities. On a task just outside those abilities, they were less likely to reach the right answer than those without AI. The researchers call this the jagged frontier.`],
+    fig:{label:`Consultants using GPT-4 vs without (tasks inside the frontier)`, build:el=>WX.bars(el,[[`More tasks done`,12.2,null],[`Faster`,25.1,null],[`Higher quality`,40,`var(--good)`]],{label:`Consultants using GPT-4 vs without (tasks inside the frontier)`,note:`Source: Dell’Acqua et al. (2023), Harvard Business School working paper 24-013`,fmt:v=>'+'+v+'%'})} },
+
+  { part:1, nav:`Rules for collaboration`, title:`Five rules for working with AI`,
+    narration:[`Good collaboration needs habits. Click each rule; they apply to your studies now and to your work later.`],
+    fig:{label:`Five rules · click each`, build:el=>WX.stack(el,[{n:`1`,t:`You own the goal`,d:`Decide what you want before you ask the AI.`},{n:`2`,t:`Check every fact`,d:`Verify claims, numbers and sources.`},{n:`3`,t:`Know the frontier`,d:`Learn where the AI is strong and where it fails.`},{n:`4`,t:`Keep your skills`,d:`Do some work without AI so you do not lose the skill.`},{n:`5`,t:`Say how you used it`,d:`Be transparent about AI help, as academic integrity requires.`}],{start:0})} },
+
+  { part:2, nav:`Co-writing race`, title:`Race: human, AI, or both?`,
+    narration:[`In teams of three, write the same 100-word product description for a new campus café. One person writes alone, one uses only Copilot, one writes with Copilot and edits. Time each one, then the class votes for the best text without knowing who wrote which.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Microsoft Copilot`,by:`Microsoft`,url:`https://copilot.microsoft.com/`,account:`Microsoft account`,steps:[{t:`Split`,s:`three roles`,d:`Human alone, AI alone, human + AI.`},{t:`Write`,s:`100 words`,d:`Same brief: a description for a new campus café.`},{t:`Time`,s:`each one`,d:`Record the minutes taken.`},{t:`Vote`,s:`blind`,d:`The class picks the best text without knowing the author.`}]})} },
+
+  { part:2, nav:`NotebookLM study partner`, title:`Use AI to study, not to skip studying`,
+    narration:[`Upload your notes from this course to NotebookLM and ask it to quiz you, not to summarise for you. Answer in your own words first, then check its sources. This is augmentation, not replacement.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`NotebookLM`,by:`Google`,url:`https://notebooklm.google.com/`,account:`Google account`,steps:[{t:`Upload`,s:`your notes`,d:`Add one lecture’s slides or your own notes.`},{t:`Ask`,s:`to be quizzed`,d:`“Ask me five questions about this, one at a time.”`},{t:`Answer`,s:`first`,d:`Write your answer before reading the AI’s.`},{t:`Check`,s:`the sources`,d:`Click the citations to verify.`}]})} },
+
+  { part:3, nav:`Case: programmers`, title:`Case: developers finished a task 55.8% faster`,
+    narration:[`In a controlled experiment, developers using GitHub Copilot completed a programming task 55.8% faster than those without it. The study measured one well-defined task: a good example of AI inside its frontier.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`arXiv · Microsoft Research and MIT`,date:`February 2023`,head:`The impact of AI on developer productivity: Evidence from GitHub Copilot`,dek:`Peng, Kalliamvakou, Cihon & Demirer ran a randomised experiment with professional developers.`,url:`https://arxiv.org/abs/2302.06590`})} },
+
+  { part:3, nav:`Case: consultants`, title:`Case: the jagged frontier study`,
+    narration:[`The Harvard and BCG study with 758 consultants is one of the largest tests of AI at work. It shows both sides: big gains inside AI’s abilities, and worse results when people trusted it outside them.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`The Harvard Crimson`,date:`October 2023`,head:`Harvard study finds AI boosts consultants’ performance, with limits`,dek:`Coverage of “Navigating the Jagged Technological Frontier”.`,url:`https://www.thecrimson.com/article/2023/10/13/jagged-edge-ai-bcg/`})} },
+
+  { part:3, nav:`Debate`, title:`Debate: should universities require AI skills?`,
+    narration:[`Should every student learn to work with AI as a core skill, or should some courses ban AI to protect basic skills? Debate in two groups, then vote.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Universities should…`,opts:[`Teach AI collaboration in every course`,`Ban AI in some courses to protect basic skills`,`Do both: AI-free foundations, then AI-assisted work`],reveal:i=>[`Prepares you for work, but you may lose basic skills.`,`Protects skills, but ignores the tools you will use at work.`,`This mirrors rule 4: keep your skills while you learn the tools.`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Microsoft Learn’s Introduction to natural language processing module explains the language technology behind AI assistants you collaborate with. Finish it, keep the trophy, and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open the revision map, then try the MCQ. Before Week 15, read RB b, Chapter 8 on the possible future impacts of AI.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:{center:`Human–AI collaboration`,branches:[{t:`Augmentation`,items:[`Extend humans, not replace them`,`Human–AI symbiosis`]},{t:`Strengths`,items:[`Humans: goals, judgement, empathy`,`AI: speed, scale, patterns`]},{t:`Centaurs`,items:[`Advanced chess: human + computer`]},{t:`Jagged frontier`,items:[`+12.2% tasks, 25.1% faster, 40% better`,`Worse outside AI’s abilities`]},{t:`Rules`,items:[`Own the goal · check facts`,`Keep your skills · disclose use`]}]}, build:el=>W.quiz(el,[{q:`Intelligence augmentation means…`,o:[`AI replacing workers`,`AI extending human thinking`,`AI with no human input`,`a faster computer`],a:1,why:`The human stays in charge, with AI as a partner.`},{q:`A “centaur” in advanced chess is…`,o:[`a chess engine`,`a human and a computer playing as one team`,`a type of opening`,`a grandmaster without help`],a:1,why:`Human strategy plus machine calculation.`},{q:`The “jagged frontier” means…`,o:[`AI is good at everything`,`AI’s abilities are uneven: strong on some tasks, weak on similar-looking ones`,`AI only works in consulting`,`AI is always worse than humans`],a:1,why:`Gains inside, losses outside.`},{q:`In the GitHub Copilot experiment, developers with AI finished the task about…`,o:[`10% faster`,`25% faster`,`56% faster`,`twice as slow`],a:2,why:`55.8% faster.`},{q:`Which task should stay mainly with the human?`,o:[`Spell-checking`,`Sorting 10,000 records`,`Deciding whether to fire an employee`,`Translating a menu draft`],a:2,why:`Judgement and responsibility for people.`},{q:`Why keep doing some work without AI?`,o:[`AI is illegal`,`To keep your own skills strong`,`Because AI is always wrong`,`To save electricity`],a:1,why:`Rule 4: keep your skills.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

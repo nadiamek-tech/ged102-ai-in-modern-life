@@ -34,12 +34,12 @@ window.COURSE = {
     [7,'Applications of AI: AI in Finances and Business',2,'RB c Chapter 1','week-07.html'],
     [8,'Applications of AI: AI in Art, Entertainment and Creativity',2,'RB d Chapters 2, 7, 8','week-08.html'],
     [9,'Applications of AI: AI in Architecture and Design',2,'AI Concepts in Architectural Design, WEI Likai','week-09.html'],
-    [10,'What AI Can\'t Do (Yet): Limits, Bias, and the "Black Box"',3,'RB e Chapters 2 and 6 · von Eschenbach',''],
-    [11,'AI Ethics and Responsible AI',3,'TB Chapter 13',''],
-    [12,'AI and Privacy – Data, Surveillance, and Security',3,'RB f Chapter 7',''],
-    [13,'AI and Autonomous Systems',4,'RB b Chapters 6 and 7',''],
-    [14,'AI and Human Collaboration',4,'TB Chapter 14',''],
-    [15,'Tomorrow\'s AI: Hopes, Fears, and Human Identity',4,'RB b Chapter 8',''],
+    [10,'What AI Can\'t Do (Yet): Limits, Bias, and the "Black Box"',3,'RB e Chapters 2 and 6 · von Eschenbach','week-10.html'],
+    [11,'AI Ethics and Responsible AI',3,'TB Chapter 13','week-11.html'],
+    [12,'AI and Privacy – Data, Surveillance, and Security',3,'RB f Chapter 7','week-12.html'],
+    [13,'AI and Autonomous Systems',4,'RB b Chapters 6 and 7','week-13.html'],
+    [14,'AI and Human Collaboration',4,'TB Chapter 14','week-14.html'],
+    [15,'Tomorrow\'s AI: Hopes, Fears, and Human Identity',4,'RB b Chapter 8','week-15.html'],
     [16,'Final Exam',0,'','']
   ],
 
@@ -63,7 +63,19 @@ window.COURSE = {
     [8,'Prompt builder + Copilot or Craiyon','Build a prompt, make an image, six prompt challenges','https://www.craiyon.com/',7],
     [8,'Which Face Is Real?','Spot the real face next to a GAN face','https://www.whichfaceisreal.com/',9],
     [9,'Google Earth','Visit the Museum of the Future in 3D','https://earth.google.com/web/',5],
-    [9,'Microsoft Copilot (images)','Make a concept image, then critique it','https://copilot.microsoft.com/',6]
+    [9,'Microsoft Copilot (images)','Make a concept image, then critique it','https://copilot.microsoft.com/',6],
+    [10,'AI Incident Database','Investigate real AI failures','https://incidentdatabase.ai/',6],
+    [10,'Teachable Machine','Build a biased model on purpose','https://teachablemachine.withgoogle.com/train/image',7],
+    [11,'Moral Machine','Judge like a self-driving car','https://www.moralmachine.net/',5],
+    [11,'PAIR Explorables','Explore what “fair” means with numbers','https://pair.withgoogle.com/explorables/measuring-fairness/',6],
+    [12,'Have I Been Pwned','Has your email been in a data breach?','https://haveibeenpwned.com/',5],
+    [12,'Am I Unique?','How unique is your browser fingerprint?','https://amiunique.org/',6],
+    [13,'Will Robots Take My Job?','Check the automation risk of a job','https://willrobotstakemyjob.com/',5],
+    [13,'Microsoft Copilot','Audit your future job, task by task','https://copilot.microsoft.com/',6],
+    [14,'Microsoft Copilot','Race: human, AI, or both?','https://copilot.microsoft.com/',5],
+    [14,'NotebookLM','Use AI to study, not to skip studying','https://notebooklm.google.com/',6],
+    [15,'AI Index Report','Read the data on AI’s progress','https://aiindex.stanford.edu/',5],
+    [15,'Microsoft Copilot','Write a letter from your future self','https://copilot.microsoft.com/',6]
   ],
 
   /* ---------- assessments (syllabus); add submit links and deadlines when ready ---------- */

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 12 · AI and Privacy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=202611161310">
+<style>:root{--wk:#4338CA;--wk-soft:rgba(67,56,202,.10);--wk-d:#A5B4FC;--wk-soft-d:rgba(165,180,252,.14)}</style>
+</head>
+<body>
+<script src="assets/professor.js?v=202611161310"></script>
+<script src="assets/course-data.js?v=202611161310"></script>
+<script src="assets/credentials.js?v=202611161310"></script>
+<script src="assets/supports.js?v=202611161310"></script>
+<script src="assets/course.js?v=202611161310"></script>
+<script src="assets/kb.js?v=202611161310"></script>
+<script src="assets/search-index.js?v=202611161310"></script>
+<script src="assets/assistant.js?v=202611161310"></script>
+<script src="assets/onepage.js?v=202611161310"></script>
+<script src="assets/w-extra.js?v=202611161310"></script>
+<script>
+const {W} = Lecture;
+Lecture.mount({
+  id:'w12', week:12, clo:3, short:`Week 12 · AI and Privacy`,
+  title:`AI and Privacy – Data, Surveillance, and Security`,
+  meta:`RB f Chapter 7 · 3 hours`,
+  scenes:[
+  { part:1, nav:`Your data trail`, title:`What did you share today?`,
+    narration:[`AI runs on data, and much of it is yours. Tick everything you did in the last 24 hours. Each tick leaves a trace that a company could store, combine and use to train or target.`],
+    fig:{label:`Tick what you did today`, build:el=>WX.ticks(el,[`Unlocked your phone with your face`,`Used maps or ride-hailing`,`Liked or watched social media videos`,`Paid by card or phone`,`Asked a chatbot a question`,`Walked past CCTV cameras`,`Used a loyalty card or delivery app`],[[0,`A light trail.`],[3,`A clear profile of your day.`],[5,`Enough to predict your routine, interests and location.`]])} },
+
+  { part:1, nav:`Privacy and ethics`, title:`Why privacy matters in an AI world`,
+    narration:[`RB f, Chapter 7 explains that AI raises privacy stakes because it can collect at scale, combine separate data sets, and infer things you never shared, such as health, mood or beliefs. Privacy protects your freedom to choose what others know about you.`],
+    src:`Santos & Radanliev (2024). <em>Beyond the algorithm</em>, Chapter 7.`,
+    fig:{label:`From data to inference`, flow:[{t:`Collect`,s:`at scale`,d:`Apps, cameras, sensors and chats gather data constantly.`},{t:`Combine`,s:`link sources`,d:`Location + purchases + likes form one profile.`},{t:`Infer`,s:`beyond what you said`,d:`Models predict age, health, mood or beliefs.`},{t:`Act`,s:`decide about you`,d:`Ads, prices, credit or access are adjusted.`}]} },
+
+  { part:1, nav:`Chatbots and privacy`, title:`The dark side of chatbots: what happens to your prompts?`,
+    narration:[`Whatever you type into a chatbot may be stored, reviewed by people, or used to improve the model, depending on the service and your settings. Never paste passwords, ID numbers, health details, or confidential work data into a public chatbot.`],
+    fig:{label:`Safe or risky to type into a public chatbot?`, build:el=>WX.compare(el,{h:`Usually safe`,items:[`General questions about a topic`,`Text you wrote and are happy to share`,`Public information`]},{h:`Risky`,items:[`Passwords, ID or card numbers`,`Health or family details`,`Confidential company or university data`]})} },
+
+  { part:1, nav:`Data storage risks`, title:`Where your data can leak`,
+    narration:[`Stored data can leak through hacks, insider misuse, sharing with third parties, or the model itself repeating training data. Click each risk and the protection against it.`],
+    fig:{label:`Risks and protections · click each`, build:el=>WX.stack(el,[{n:`1`,t:`Breaches`,d:`Attackers steal stored data.`,ex:`Protection: encryption and limited storage.`},{n:`2`,t:`Third-party sharing`,d:`Data sold or shared with partners.`,ex:`Protection: read permissions; refuse unnecessary sharing.`},{n:`3`,t:`Re-identification`,d:`“Anonymous” data matched back to you.`,ex:`Protection: minimise data; aggregate before sharing.`},{n:`4`,t:`Model memorisation`,d:`A model repeats personal data it was trained on.`,ex:`Protection: filter training data; test for leaks.`},{n:`5`,t:`Surveillance`,d:`Cameras and tracking used without consent.`,ex:`Protection: laws, transparency and oversight.`}],{start:0})} },
+
+  { part:1, nav:`The law in the UAE`, title:`Your rights under UAE data protection law`,
+    narration:[`The UAE’s Personal Data Protection Law, Federal Decree-Law No. 45 of 2021, requires consent and clear purposes for processing personal data and gives people rights such as access, correction and objection. Dubai’s DIFC and Abu Dhabi’s ADGM have their own data protection laws.`],
+    fig:{label:`Your data rights · click each`, build:el=>WX.stack(el,[{n:`1`,t:`Know`,d:`Be told what data is collected and why.`},{n:`2`,t:`Access`,d:`Ask for a copy of your personal data.`},{n:`3`,t:`Correct`,d:`Ask for wrong data to be fixed.`},{n:`4`,t:`Object`,d:`Object to some uses, such as direct marketing.`},{n:`5`,t:`Delete`,d:`Ask for data to be erased in certain cases.`}],{start:0})} },
+
+  { part:2, nav:`Have I Been Pwned`, title:`Has your email been in a data breach?`,
+    narration:[`Have I Been Pwned checks whether an email address appears in known data breaches. Check your own email only, read which breaches it appears in, and decide what to change.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Have I Been Pwned`,by:`Troy Hunt`,url:`https://haveibeenpwned.com/`,steps:[{t:`Check`,s:`your own email`,d:`Type your personal email address.`},{t:`Read`,s:`the breaches`,d:`Which sites leaked it, and which data?`},{t:`Act`,s:`secure it`,d:`Change reused passwords; turn on two-factor sign-in.`},{t:`Reflect`,s:`one sentence`,d:`Which data about you is now out of your control?`}]})} },
+
+  { part:2, nav:`Am I Unique?`, title:`How unique is your browser fingerprint?`,
+    narration:[`Websites can recognise you without cookies by reading details of your browser and device. Am I Unique? shows how identifiable your browser is. Run the test, then try it in a private window and compare.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Am I Unique?`,by:`Research project · Inria`,url:`https://amiunique.org/`,steps:[{t:`Test`,s:`your browser`,d:`Press “View my browser fingerprint”.`},{t:`Read`,s:`the result`,d:`Is your fingerprint unique among visitors?`},{t:`Compare`,s:`private window`,d:`Run it again in a private window.`},{t:`Protect`,s:`one setting`,d:`Find one browser privacy setting you can turn on.`}]})} },
+
+  { part:3, nav:`Case: Samsung`, title:`Case: engineers pasted secret code into ChatGPT`,
+    narration:[`In 2023 Samsung restricted staff use of generative AI after employees pasted confidential source code into ChatGPT. Once typed, the data was stored on outside servers. It shows how everyday prompts can become data leaks.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`The Japan Times`,date:`2 May 2023`,head:`Samsung bans ChatGPT and other generative AI use by staff after leak`,dek:`Samsung restricted generative AI tools after sensitive data was entered into ChatGPT.`,url:`https://www.japantimes.co.jp/news/2023/05/02/business/tech/samsung-bans-chatgpt-workplace-use`})} },
+
+  { part:3, nav:`Case: Italy`, title:`Case: a country paused ChatGPT over privacy`,
+    narration:[`In March 2023 Italy’s data protection authority temporarily blocked ChatGPT, questioning the legal basis for collecting personal data to train it and the lack of age checks. Service returned after OpenAI added privacy controls.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`VOA News`,date:`31 March 2023`,head:`Italy temporarily blocks ChatGPT over privacy concerns`,dek:`Italy’s privacy regulator ordered a temporary limit on processing Italian users’ data.`,url:`https://www.voanews.com/a/italy-temporarily-blocks-chatgpt-over-privacy-concerns-/7031654.html`})} },
+
+  { part:3, nav:`Debate`, title:`Debate: safety or privacy?`,
+    narration:[`Smart cameras with face recognition can find missing people and reduce crime, but they also record everyone. Where should the line be? Debate in two groups, then vote.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Face recognition in public places should be…`,opts:[`Allowed everywhere for safety`,`Allowed only with a court order or for serious crimes`,`Banned in public places`],reveal:i=>[`Safer streets, but everyone becomes a suspect.`,`This is close to the EU AI Act’s approach to real-time biometric identification.`,`Strong privacy, but police lose a powerful tool.`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Microsoft Learn’s Embrace responsible AI principles and practices module shows how organisations protect privacy and security in AI projects. Finish it, keep the trophy, and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open the revision map, then try the MCQ. Before Week 13, read RB b, Chapters 6 and 7 on AI and work.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:{center:`AI and privacy`,branches:[{t:`Why it matters`,items:[`AI collects at scale`,`Combines sources`,`Infers what you never shared`]},{t:`Chatbots`,items:[`Prompts may be stored`,`Never share passwords, IDs, health data`]},{t:`Leaks`,items:[`Breaches · sharing`,`Re-identification · memorisation`]},{t:`UAE law`,items:[`PDPL: Decree-Law 45 of 2021`,`Rights: know, access, correct, object`]},{t:`Cases`,items:[`Samsung, 2023`,`Italy pauses ChatGPT, 2023`]}]}, build:el=>W.quiz(el,[{q:`Which is the safest to type into a public chatbot?`,o:[`Your passport number`,`A general question about photosynthesis`,`Your bank password`,`A colleague’s medical record`],a:1,why:`General, non-personal questions carry little risk.`},{q:`“Re-identification” means…`,o:[`logging in again`,`matching anonymous data back to a person`,`deleting data`,`encrypting data`],a:1,why:`Combining data sets can reveal who someone is.`},{q:`An AI predicts your mood from your typing speed. This is an example of…`,o:[`inference beyond what you shared`,`encryption`,`a data breach`,`consent`],a:0,why:`You never shared your mood; it was inferred.`},{q:`The UAE’s main personal data protection law is…`,o:[`the EU AI Act`,`Federal Decree-Law No. 45 of 2021`,`the Bletchley Declaration`,`the GDPR`],a:1,why:`The UAE PDPL.`},{q:`Why did Samsung restrict ChatGPT in 2023?`,o:[`It was too slow`,`Staff pasted confidential code into it`,`It was banned in Korea`,`It cost too much`],a:1,why:`Prompts became a data leak.`},{q:`Browser fingerprinting can identify you…`,o:[`only with cookies`,`without cookies, from device and browser details`,`only on phones`,`never`],a:1,why:`Details of your setup can be unique.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

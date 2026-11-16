@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 10 · What AI Can’t Do (Yet)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=202611161310">
+<style>:root{--wk:#9F1239;--wk-soft:rgba(159,18,57,.10);--wk-d:#FDA4AF;--wk-soft-d:rgba(253,164,175,.14)}</style>
+</head>
+<body>
+<script src="assets/professor.js?v=202611161310"></script>
+<script src="assets/course-data.js?v=202611161310"></script>
+<script src="assets/credentials.js?v=202611161310"></script>
+<script src="assets/supports.js?v=202611161310"></script>
+<script src="assets/course.js?v=202611161310"></script>
+<script src="assets/kb.js?v=202611161310"></script>
+<script src="assets/search-index.js?v=202611161310"></script>
+<script src="assets/assistant.js?v=202611161310"></script>
+<script src="assets/onepage.js?v=202611161310"></script>
+<script src="assets/w-extra.js?v=202611161310"></script>
+<script>
+const {W} = Lecture;
+Lecture.mount({
+  id:'w10', week:10, clo:3, short:`Week 10 · Limits, Bias and the Black Box`,
+  title:`What AI Can’t Do (Yet): Limits, Bias, and the "Black Box"`,
+  meta:`RB e Chapters 2 and 6 · von Eschenbach (2021) · 3 hours · Course project today`,
+  scenes:[
+  { part:1, nav:`Today’s project`, title:`Today’s course project: AI Reality Check`, type:'activity',
+    narration:[`Today you complete the individual course project in class: 50 minutes, 10 marks. You test a real AI tool in one context and judge whether it can be trusted. Use the scenes below as your toolkit while you work.`],
+    fig:{label:`Individual · 50 minutes · 10 marks`, build:el=>{ el.innerHTML=`<div style="display:grid;gap:12px;font-family:var(--f-display)"><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">${[['5 min','Name and context'],['25 min','Four tests with Copilot'],['15 min','Four analysis questions'],['5 min','Save PDF, upload to Moodle']].map(([a,b])=>`<div style="border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)"><b style="color:var(--wk)">${a}</b><br>${b}</div>`).join('')}</div><a class="btn" href="project-10.html" style="justify-self:start;font-size:1.05rem;padding:12px 20px">Open the course project →</a></div>`; }} },
+
+  { part:1, nav:`Narrow, not general`, title:`What AI still cannot do`,
+    narration:[`Every system we have studied is narrow: excellent at one task and lost outside it. Today’s AI has no common sense, no understanding of cause and effect, and no awareness of what it does not know. Tick what you think AI can already do well, then compare with a classmate.`],
+    fig:{label:`Can AI do this reliably today?`, build:el=>WX.ticks(el,[`Recognise faces in photos`,`Write a fluent essay`,`Know when its own answer is wrong`,`Explain why it made a decision`,`Understand a joke the way you do`,`Drive in any city, in any weather`],[[0,`Be careful: most of these are still hard.`],[3,`Look again: only the first two are reliable today.`]])} },
+
+  { part:1, nav:`Three challenges`, title:`Gray eminences, algocracy, automated unconsciousness`,
+    narration:[`RB e, Chapter 2 names three risks of handing decisions to algorithms. Gray eminences are hidden systems that steer choices behind the scenes. Algocracy is rule by algorithms instead of people. Automated unconsciousness is when we stop thinking because the system decides for us. Open each one.`],
+    src:`Cebral-Loureda, Rincón-Flores & Sanchez-Ante (2023). <em>What AI can do</em>, Chapter 2.`,
+    fig:{label:`Three challenges · RB e, Chapter 2`, build:el=>W.accordion(el,[{t:`Gray eminences`,d:`Hidden systems that influence decisions without being seen, such as ranking and recommendation engines that decide what news, jobs or prices you see.`},{t:`Algocracy`,d:`Governance by algorithm: when scores and automated rules replace human judgement in schools, courts, banks or welfare offices.`},{t:`Automated unconsciousness`,d:`When people trust the output so much that they stop questioning it, like following a GPS into a lake.`}])} },
+
+  { part:1, nav:`Where bias comes from`, title:`Bias enters at every stage`,
+    narration:[`Bias is not a bug added at the end. It can enter through the data that was collected, the labels people gave it, the goal the designers chose, and the way the output is used. Play the flow and find the stage behind each case from Week 4.`],
+    fig:{label:`Where bias enters`, flow:[{t:`Data`,s:`who is missing?`,d:`Groups under-represented in the training data, like darker-skinned faces in Gender Shades.`},{t:`Labels`,s:`who decided?`,d:`Human labels carry human judgement, for example past hiring decisions.`},{t:`Goal`,s:`what is optimised?`,d:`Optimising for clicks or cost can harm fairness.`},{t:`Model`,s:`what is learned?`,d:`The model copies patterns, including unfair ones.`},{t:`Use`,s:`who is affected?`,d:`A score used for a new purpose, on new people, can do new harm.`}]} },
+
+  { part:1, nav:`The black box`, title:`Why we do not trust what we cannot see`,
+    narration:[`A deep network can be accurate yet impossible to explain: millions of weights, no reasons. Von Eschenbach argues that trust needs transparency we can question, not only accuracy. Compare a glass-box model with a black-box model.`],
+    src:`von Eschenbach, W. J. (2021). Transparency and the black box problem: Why we do not trust AI. <em>Philosophy & Technology</em>, 34, 1607–1622.`,
+    fig:{label:`Glass box or black box?`, build:el=>WX.compare(el,{h:`Glass box (for example a decision tree)`,items:[`You can read the rule that decided`,`Easier to challenge and correct`,`Often less accurate on complex data`]},{h:`Black box (for example a deep network)`,items:[`Very accurate on images, speech and text`,`No human-readable reason`,`Hard to appeal, audit or fix`]})} },
+
+  { part:1, nav:`Explainable AI`, title:`Can we open the black box?`,
+    narration:[`Explainable AI adds tools that show which inputs mattered most, such as heat maps on images or the top factors behind a loan decision. These help, but they explain the model only approximately. In high-stakes uses, a human must still be able to question the result.`],
+    fig:{label:`Making a decision explainable`, flow:[{t:`Decision`,s:`score or label`,d:`The model outputs “loan rejected”.`},{t:`Explain`,s:`top factors`,d:`A tool lists the inputs that pushed the score most.`},{t:`Check`,s:`does it make sense?`,d:`A human checks if the reasons are fair and lawful.`},{t:`Appeal`,s:`right to contest`,d:`The person affected can ask for a human review.`}]} },
+
+  { part:2, nav:`AI Incident Database`, title:`Investigate real AI failures`,
+    narration:[`The AI Incident Database collects thousands of real cases where AI caused harm. Search a sector you care about, open one incident, and identify the stage where the problem began: data, labels, goal, model or use.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`AI Incident Database`,by:`Responsible AI Collaborative`,url:`https://incidentdatabase.ai/`,steps:[{t:`Search`,s:`a sector`,d:`Try “hiring”, “facial recognition”, “chatbot” or “school”.`},{t:`Open`,s:`one incident`,d:`Read the summary and one news report.`},{t:`Diagnose`,s:`which stage?`,d:`Data, labels, goal, model or use?`},{t:`Share`,s:`one sentence`,d:`Tell your neighbour what should have been done differently.`}]})} },
+
+  { part:2, nav:`Build a biased model`, title:`Train a model with biased data on purpose`,
+    narration:[`Use Teachable Machine to see bias appear in five minutes. Train “thumbs up” only with one hand position and lighting, then test it with different hands, angles and light. The model fails where the data was missing.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Teachable Machine`,by:`Google`,url:`https://teachablemachine.withgoogle.com/train/image`,steps:[{t:`Biased data`,s:`one condition only`,d:`Record class 1 (thumbs up) with one hand, one angle, bright light.`},{t:`Class 2`,s:`anything else`,d:`Record “no thumb” with the same setup.`},{t:`Test`,s:`new conditions`,d:`Use another person’s hand, a dark room, a different angle.`},{t:`Fix`,s:`add variety`,d:`Add more varied examples and retrain. What changed?`}]})} },
+
+  { part:3, nav:`Case: Dutch benefits`, title:`Case: an algorithm that flagged families unfairly`,
+    narration:[`In the Netherlands, a risk-scoring system used by the tax authority wrongly treated thousands of families as fraudsters when they claimed childcare benefits, and nationality was used as a risk factor. The scandal led the government to resign in 2021. It is a clear case of algocracy without human checks.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`Amnesty International`,date:`25 October 2021`,head:`Dutch childcare benefit scandal an urgent wake-up call to ban racist algorithms`,dek:`Amnesty’s report “Xenophobic Machines” describes how a risk-classification algorithm discriminated in the Dutch childcare benefits system.`,url:`https://www.amnesty.org/en/latest/news/2021/10/xenophobic-machines-dutch-child-benefit-scandal/`})} },
+
+  { part:3, nav:`Case: A-level grades`, title:`Case: when an algorithm graded students`,
+    narration:[`In 2020, exams in England were cancelled, and an algorithm estimated A-level grades from schools’ past results. Almost 40% of predicted grades were lowered, hitting students at historically weaker schools hardest. After protests, the government switched to teacher-assessed grades.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`Engadget`,date:`August 2020`,head:`How the UK’s algorithm-based grading fell apart`,dek:`The model adjusted teachers’ predicted grades using each school’s history, and was abandoned after a public outcry.`,url:`https://www.engadget.com/uk-algorithm-a-levels-gcse-results-143503870.html`})} },
+
+  { part:3, nav:`Debate`, title:`Debate: should a black box ever decide about people?`,
+    narration:[`Some say accuracy is what matters, even without explanations. Others say any decision about a person must be explainable and open to appeal. Take a side, use one case from today, then vote.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`Should an unexplainable AI be allowed to decide on loans, grades or benefits?`,opts:[`Yes, if it is more accurate than humans`,`Only with a human who can overrule it`,`No, never for decisions about people`],reveal:i=>[`Then who answers when it is wrong? Think of the Dutch families.`,`This is the “human in the loop” position, close to most AI regulations today.`,`A strong position. What about medical scans, where AI can be more accurate?`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Google’s Introduction to Responsible AI course explains how companies test for bias and build fairer systems, and it completes the Generative AI Fundamentals skill badge. Finish it and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open the revision map, then try the MCQ. Before Week 11, read TB Chapter 13 on the ethical issues of AI.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:{center:`Limits of AI`,branches:[{t:`Narrow AI`,items:[`Good at one task`,`No common sense`,`Does not know what it does not know`]},{t:`Three challenges`,items:[`Gray eminences`,`Algocracy`,`Automated unconsciousness`]},{t:`Bias`,items:[`Data · labels · goal · model · use`]},{t:`Black box`,items:[`Accurate but unexplainable`,`Trust needs transparency`,`Explainable AI helps, partly`]},{t:`Cases`,items:[`Dutch childcare benefits`,`A-level algorithm, 2020`]}]}, build:el=>W.quiz(el,[{q:`“Algocracy” means…`,o:[`AI that writes code`,`rule by algorithms instead of human judgement`,`a type of neural network`,`a privacy law`],a:1,why:`Decisions are handed to automated rules and scores.`},{q:`A model fails on dark-skinned faces because few were in the training set. Bias entered at the…`,o:[`data stage`,`use stage`,`appeal stage`,`explanation stage`],a:0,why:`Missing groups in the data is data bias.`},{q:`Why is a deep network called a black box?`,o:[`It is stored on black servers`,`Its decisions cannot be traced to human-readable reasons`,`It only works at night`,`It has no data`],a:1,why:`Millions of weights, no readable rule.`},{q:`“Automated unconsciousness” describes…`,o:[`a computer that sleeps`,`people who stop questioning automated outputs`,`an AI that dreams`,`robots replacing doctors`],a:1,why:`Over-trust leads people to stop thinking.`},{q:`Which safeguard best answers the black-box problem in high-stakes decisions?`,o:[`More data only`,`A human who can review and overrule, plus a right to appeal`,`Hiding the model`,`Faster computers`],a:1,why:`Human oversight and contestability.`},{q:`In the 2020 A-level case, grades were lowered mainly because…`,o:[`students cheated`,`the algorithm used each school’s past results`,`teachers refused to grade`,`the exams were too hard`],a:1,why:`School history pulled individual grades down.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

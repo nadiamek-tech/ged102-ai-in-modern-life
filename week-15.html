@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Week 15 · Tomorrow’s AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<link rel="stylesheet" href="assets/course.css?v=202611161310">
+<style>:root{--wk:#7E22CE;--wk-soft:rgba(126,34,206,.10);--wk-d:#D8B4FE;--wk-soft-d:rgba(216,180,254,.14)}</style>
+</head>
+<body>
+<script src="assets/professor.js?v=202611161310"></script>
+<script src="assets/course-data.js?v=202611161310"></script>
+<script src="assets/credentials.js?v=202611161310"></script>
+<script src="assets/supports.js?v=202611161310"></script>
+<script src="assets/course.js?v=202611161310"></script>
+<script src="assets/kb.js?v=202611161310"></script>
+<script src="assets/search-index.js?v=202611161310"></script>
+<script src="assets/assistant.js?v=202611161310"></script>
+<script src="assets/onepage.js?v=202611161310"></script>
+<script src="assets/w-extra.js?v=202611161310"></script>
+<script>
+const {W} = Lecture;
+Lecture.mount({
+  id:'w15', week:15, clo:4, short:`Week 15 · Tomorrow’s AI`,
+  title:`Tomorrow’s AI: Hopes, Fears, and Human Identity`,
+  meta:`RB b Chapter 8 · 3 hours · Final exam next week`,
+  scenes:[
+  { part:1, nav:`Hope or fear?`, title:`When you think of AI in 2040, you feel…`,
+    narration:[`Start with your gut feeling. Vote, then we look at what the evidence and the experts say about AI’s possible futures.`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`When you think of AI in 2040, you feel…`,opts:[`Excited`,`Worried`,`Both`,`Not sure yet`],reveal:i=>[`Many researchers share your hope: medicine, science, education.`,`Many researchers share your worry: misuse, jobs, control.`,`The most common answer, and probably the most realistic.`,`A fair position: the future depends on choices still being made.`][i]})} },
+
+  { part:1, nav:`Possible futures`, title:`Kaplan’s possible future impacts`,
+    narration:[`Kaplan, Chapter 8, separates realistic near-term impacts, such as changes to work, law and warfare, from speculative ideas like superintelligence. He argues that machines need not be conscious to change society deeply.`],
+    src:`Kaplan, J. (2016). <em>Artificial intelligence: What everyone needs to know</em>, Chapter 8.`,
+    fig:{label:`Possible futures · RB b, Chapter 8`, build:el=>W.accordion(el,[{t:`Near-term`,d:`Smarter assistants, automation of many tasks, AI in medicine, law and transport, new questions about responsibility.`},{t:`Medium-term`,d:`Large shifts in jobs and education, AI in government services, autonomous systems in cities.`},{t:`Speculative`,d:`Artificial general intelligence or superintelligence that matches or exceeds humans in most tasks: possible, but with no agreed timeline.`},{t:`What stays human`,d:`Choosing goals and values, taking responsibility, and the meaning we find in work and relationships.`}])} },
+
+  { part:1, nav:`Hopes`, title:`The hopes: what AI could solve`,
+    narration:[`AI is already speeding up science: AlphaFold predicted the structures of over 200 million proteins. The hopes include faster cures, personal tutoring for every child, cleaner energy, and safer roads.`],
+    fig:{label:`Hopes and fears`, build:el=>WX.compare(el,{h:`Hopes`,items:[`Faster science and medicine`,`Education for everyone`,`Climate and energy solutions`,`Safer transport`]},{h:`Fears`,items:[`Misinformation and deepfakes`,`Mass surveillance`,`Loss of jobs and skills`,`Losing control of powerful systems`]})} },
+
+  { part:1, nav:`Governing the future`, title:`How the world is trying to steer AI`,
+    narration:[`Governments are starting to cooperate on AI safety. Put these milestones in order, from oldest to newest.`],
+    fig:{label:`Put the milestones in order`, build:el=>W.order(el,[{y:2017,t:`The UAE appoints the world’s first Minister of State for AI`},{y:2019,t:`Dubai publishes its AI ethics principles`},{y:2021,t:`UNESCO adopts its Recommendation on the Ethics of AI`},{y:2023,t:`28 countries and the EU sign the Bletchley Declaration on AI safety`},{y:2024,t:`The EU AI Act enters into force`}])} },
+
+  { part:1, nav:`Human identity`, title:`What makes us human when machines can think?`,
+    narration:[`If AI can write, draw, diagnose and drive, what is uniquely human? Many argue it is not intelligence alone, but consciousness, values, relationships, and the responsibility we take for our choices.`],
+    fig:{label:`Which of these do you think only humans can truly have?`, build:el=>WX.ticks(el,[`Consciousness: being aware of yourself`,`Emotions that you really feel`,`Values you choose and defend`,`Creativity that changes a culture`,`Responsibility for your actions`,`Friendship and love`],[[0,`You think machines could have all of these.`],[3,`You see a clear human core.`],[5,`You see most of what matters as uniquely human.`]])} },
+
+  { part:2, nav:`AI Index`, title:`Read the data on AI’s progress`,
+    narration:[`Stanford’s AI Index publishes the main data on AI each year: investment, performance, jobs, policy and public opinion. Open the latest report, choose one chart, and explain what it tells us about the future.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`AI Index Report`,by:`Stanford Institute for Human-Centered AI`,url:`https://aiindex.stanford.edu/`,steps:[{t:`Open`,s:`the latest report`,d:`Read the top takeaways.`},{t:`Choose`,s:`one chart`,d:`Pick a chart on jobs, policy, or public opinion.`},{t:`Explain`,s:`in two sentences`,d:`What does it show? What surprised you?`},{t:`Predict`,s:`2030`,d:`What will that chart look like in 2030?`}]})} },
+
+  { part:2, nav:`Letter from 2040`, title:`Write a letter from your future self`,
+    narration:[`Use Copilot as a brainstorming partner, not a ghost-writer. Ask it for three possible futures for your career in 2040, then write, in your own words, a 150-word letter from your future self describing one of them.`],
+    fig:{label:`Tools lab`, build:el=>W.tool(el,{name:`Microsoft Copilot`,by:`Microsoft`,url:`https://copilot.microsoft.com/`,account:`Microsoft account`,steps:[{t:`Brainstorm`,s:`three futures`,d:`Ask: “Describe three possible futures in 2040 for a [your field] graduate in the UAE.”`},{t:`Choose`,s:`one future`,d:`Pick the most realistic or most hopeful one.`},{t:`Write`,s:`your letter`,d:`150 words, in your own words.`},{t:`Disclose`,s:`AI use`,d:`Add one line: how did you use AI?`}]})} },
+
+  { part:3, nav:`Case: Bletchley`, title:`Case: the first global agreement on frontier AI`,
+    narration:[`In November 2023, 28 countries including the US, China and the UAE, plus the European Union, signed the Bletchley Declaration, agreeing that the most powerful AI models carry serious risks and need international cooperation on safety.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`GOV.UK`,date:`1 November 2023`,head:`Countries agree to safe and responsible development of frontier AI in landmark Bletchley Declaration`,dek:`The UK government’s announcement of the Bletchley Declaration.`,url:`https://www.gov.uk/government/news/countries-agree-to-safe-and-responsible-development-of-frontier-ai-in-landmark-bletchley-declaration`})} },
+
+  { part:3, nav:`Case: the UAE strategy`, title:`Case: a country that planned for AI`,
+    narration:[`In 2017 the UAE became the first country to appoint a Minister of State for Artificial Intelligence and launched its National AI Strategy 2031, aiming to make the UAE a global AI leader in sectors such as transport, health, education and energy.`],
+    fig:{label:`Real case`, build:el=>W.news(el,{outlet:`UAE Government portal`,date:`2017–2031`,head:`UAE National Strategy for Artificial Intelligence 2031`,dek:`The official overview of the UAE’s national AI strategy.`,url:`https://u.ae/-/media/AI-publications/UAE-National-Strategy-for-Artificial-Intelligence-2031.pdf`})} },
+
+  { part:3, nav:`Final debate`, title:`Final debate: will AI make humanity better?`,
+    narration:[`For the last debate of the course, use everything you have learned: history, applications, limits, ethics, privacy, work and collaboration. Will AI make humanity better or worse by 2040?`],
+    fig:{label:`Vote`, build:el=>W.poll(el,{q:`By 2040, AI will make humanity…`,opts:[`Better`,`Worse`,`Better for some, worse for others`,`It depends on the choices we make now`],reveal:i=>[`Then which safeguards will make that happen?`,`Then which risks can still be prevented?`,`The most evidence-based answer: who gains depends on access and policy.`,`The key message of this course: AI’s future is a human choice.`][i]})} },
+
+  { part:3, kind:'bonus', nav:'AI Nerd', title:'AI Nerd · take it further',
+    narration:[`Claim and share your three badges: IBM AI Fundamentals, Google Generative AI Fundamentals, and your Microsoft Learn trophies. Add them to LinkedIn and send your proof for a class-activity bonus.`] },
+
+  { part:4, nav:'Practise & remember', title:'Practise & remember', full:true,
+    narration:[`Open the revision map, then try the MCQ. The final exam is next week and covers Weeks 1 to 15: revise each lecture’s “Practise & remember”.`],
+    fig:{label:`The week in one map · then six questions`, mindmap:{center:`Tomorrow’s AI`,branches:[{t:`Futures`,items:[`Near-term: tasks, medicine, law`,`Speculative: AGI, no agreed timeline`]},{t:`Hopes`,items:[`Science, health, education`]},{t:`Fears`,items:[`Deepfakes, surveillance, control`]},{t:`Governance`,items:[`UAE AI minister, 2017`,`UNESCO, 2021 · Bletchley, 2023 · EU AI Act, 2024`]},{t:`Being human`,items:[`Values, responsibility`,`Relationships and meaning`]}]}, build:el=>W.quiz(el,[{q:`Which country appointed the world’s first Minister of State for AI in 2017?`,o:[`Singapore`,`The UAE`,`The UK`,`China`],a:1,why:`The UAE, alongside its National AI Strategy 2031.`},{q:`The Bletchley Declaration (2023) is about…`,o:[`AI copyright`,`safety of the most powerful AI models`,`banning chatbots`,`data protection in Europe`],a:1,why:`International cooperation on frontier AI safety.`},{q:`Kaplan argues that machines…`,o:[`must be conscious to change society`,`can change society deeply without being conscious`,`will never affect jobs`,`are already superintelligent`],a:1,why:`Impact does not require consciousness.`},{q:`Artificial general intelligence is…`,o:[`already common`,`AI that matches humans in most tasks, with no agreed timeline`,`another name for a chatbot`,`a law`],a:1,why:`Speculative, with expert disagreement on timing.`},{q:`Which is the strongest example of AI speeding up science?`,o:[`A spam filter`,`AlphaFold predicting protein structures`,`A music playlist`,`Autocorrect`],a:1,why:`Over 200 million predicted structures.`},{q:`The main message of this course about AI’s future is that…`,o:[`it is already decided`,`it depends on human choices, laws and values`,`only engineers matter`,`AI will stop progressing`],a:1,why:`The future of AI is a human choice.`}])} }
+  ]
+});
+</script>
+</body>
+</html>

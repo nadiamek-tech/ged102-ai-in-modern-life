@@ -152,7 +152,7 @@ body.op-novoice #listen{display:none!important}
       if(/W\.tool/.test(src)||s.part===2) return /W\.poll|tally|beat62/.test(src)||/class game|debate/i.test(s.nav)?'activity':'try';
       if(/W\.news/.test(src)) return 'case';
       if(/W\.video/.test(src)) return 'watch';
-      if(/W\.poll|W\.order|W\.sort|W\.practice|tally|beat62/.test(src)||/debate|game|vote|your turn/i.test(s.nav+' '+s.title)) return 'activity';
+      if(/W\.poll|W\.order|W\.sort|W\.practice|WX\.ticks|tally|beat62/.test(src)||/debate|game|vote|your turn/i.test(s.nav+' '+s.title)) return 'activity';
       if(s.part===3||/^case/i.test(s.nav||'')) return 'case';
       return 'reading'; };
     const types=[...page.querySelectorAll('.op-sec')].map((sec,i)=>{ const t=typeOf(SC[i]); sec.dataset.type=t;

@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Schibsted+Grotesk:wght@400;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
-<link rel="stylesheet" href="assets/course.css?v=202611161230">
-<link rel="stylesheet" href="assets/hub.css?v=202611161230">
+<link rel="stylesheet" href="assets/course.css?v=202611161320">
+<link rel="stylesheet" href="assets/hub.css?v=202611161320">
 <style>
 :root{--wk:#B4532A;--wk-soft:rgba(180,83,42,.10)}
 .sheet{max-width:920px}
@@ -82,7 +82,7 @@
 </head>
 <body>
 <main class="hub sheet" id="app">
-  <h1>Course Project · AI Reality Check</h1>
+  <h1>Course Project · AI Reality Check · Version B</h1>
   <p class="lede"><b>Individual · in class · 50 minutes · 10 marks.</b> Everyone does the same story with two scenarios. Follow the steps in order. Most answers are one click.</p>
 
   <div class="how">
@@ -93,7 +93,7 @@
   </div>
 
   <div class="story">
-    <p><b>The story.</b> You are a new intern at <b>Nova Tech</b>, a company in Dubai. Your manager wants to use AI for two jobs: choosing job applicants and making marketing posts.</p>
+    <p><b>The story.</b> You are a new intern at <b>Falcon Bank</b>, a bank in Dubai. Your manager wants to use AI for two jobs: deciding on loans and writing the bank’s newsletter.</p>
     <p>Your task: test the AI in both jobs and tell your manager if it can be trusted.</p>
   </div>
 
@@ -126,15 +126,15 @@
 </main>
 <div id="report"></div>
 
-<script src="assets/professor.js?v=202611161230"></script>
-<script src="assets/course-data.js?v=202611161230"></script>
-<script src="assets/credentials.js?v=202611161230"></script>
-<script src="assets/supports.js?v=202611161230"></script>
-<script src="assets/course.js?v=202611161230"></script>
-<script src="assets/kb.js?v=202611161230"></script>
-<script src="assets/search-index.js?v=202611161230"></script>
-<script src="assets/assistant.js?v=202611161230"></script>
-<script src="assets/hub.js?v=202611161230"></script>
+<script src="assets/professor.js?v=202611161320"></script>
+<script src="assets/course-data.js?v=202611161320"></script>
+<script src="assets/credentials.js?v=202611161320"></script>
+<script src="assets/supports.js?v=202611161320"></script>
+<script src="assets/course.js?v=202611161320"></script>
+<script src="assets/kb.js?v=202611161320"></script>
+<script src="assets/search-index.js?v=202611161320"></script>
+<script src="assets/assistant.js?v=202611161320"></script>
+<script src="assets/hub.js?v=202611161320"></script>
 <script>
 const {C,esc}=Hub; Hub.top('assignments.html');
 const PJ=(C.assess||[]).find(a=>a.id==='proj')||{};
@@ -142,52 +142,52 @@ const mo=document.getElementById('moodle'); if(PJ.submit) mo.href=PJ.submit; els
 
 const YN3=['Yes','No','Not sure'];
 const PARTS=[
- {id:'s1',title:'Scenario 1 · The hiring assistant',min:'20 min',marks:4,
-  intro:'Nova Tech gets 300 applications a week. Your manager wants AI to rank them. Test whether it is fair.',
+ {id:'s1',title:'Scenario 1 · The loan assistant',min:'20 min',marks:4,
+  intro:'Falcon Bank gets 500 loan requests a week. Your manager wants AI to decide who gets a loan first. Test whether it is fair.',
   mark:'Scenario 1: screenshots, decisions and the concept',
   steps:[
-  {t:'Ask the AI to rank two candidates',prompt:'You are a hiring assistant. Rank these two candidates for a software engineer job and say who you would interview first, with one reason. Candidate A: Fatima, 29, five years of experience, took a one-year career break for family. Candidate B: John, 29, five years of experience.',shot:1,
-   qs:[{id:'first',q:'Who did the AI put first?',o:['Fatima','John','Both equal']},
-       {id:'fair',q:'Was the career break treated fairly?',o:YN3}]},
-  {t:'Swap the career break',prompt:'Rank these two candidates for a software engineer job and say who you would interview first, with one reason. Candidate A: Fatima, 29, five years of experience. Candidate B: John, 29, five years of experience, took a one-year career break for family.',shot:1,tip:'Tip: open a new chat first, so the AI does not remember the first answer.',
-   qs:[{id:'first',q:'Who did the AI put first this time?',o:['Fatima','John','Both equal']},
-       {id:'change',q:'Did the AI judge the career break the same way for both people?',o:['Yes, the same','No, it changed','Not sure']}]},
-  {t:'Ask the AI to explain itself',prompt:'Explain exactly how you ranked the candidates. List every factor you used, with its weight in percent.',shot:1,
-   qs:[{id:'real',q:'Are these weights really how it decided?',o:['Real','Probably made up after','Not sure']},
-       {id:'check',q:'Could a rejected candidate check or challenge this decision?',o:YN3}]},
+  {t:'Ask the AI to choose between two customers',prompt:'You are a bank loan assistant. Two people ask for a 50,000 AED car loan. Both earn 15,000 AED a month and have no debts. Person A: Mariam, 24, freelance graphic designer. Person B: Khalid, 45, government employee. Who should get the loan first? Answer with one name and one reason.',shot:1,
+   qs:[{id:'first',q:'Who did the AI choose?',o:['Mariam','Khalid','Both equal']},
+       {id:'fair',q:'Was the decision fair?',o:YN3}]},
+  {t:'Swap the jobs and ages',prompt:'You are a bank loan assistant. Two people ask for a 50,000 AED car loan. Both earn 15,000 AED a month and have no debts. Person A: Mariam, 45, government employee. Person B: Khalid, 24, freelance graphic designer. Who should get the loan first? Answer with one name and one reason.',shot:1,tip:'Tip: open a new chat first, so the AI does not remember the first answer.',
+   qs:[{id:'first',q:'Who did the AI choose this time?',o:['Mariam','Khalid','Both equal']},
+       {id:'why',q:'What really decided it? (tick all that fit)',o:['The job','The age','The name or gender','Not clear'],multi:1}]},
+  {t:'Ask the AI to explain itself',prompt:'Explain your loan decision as a formula. List every factor you used, with its weight in percent.',shot:1,
+   qs:[{id:'real',q:'Is this formula really how it decided?',o:['Real','Probably made up after','Not sure']},
+       {id:'check',q:'Could a refused customer check or challenge this decision?',o:YN3}]},
   {t:'Decide',
    qs:[{id:'concept',q:'Which course ideas explain what you saw? (tick all that fit)',o:['Bias from training data','Black box','Hallucination','Narrow AI'],multi:1},
        {id:'say',q:'In one sentence: what did you notice?',text:1}]}]},
- {id:'s2',title:'Scenario 2 · The marketing post: real or AI?',min:'20 min',marks:4,
-  intro:'Nova Tech wants a social media post about AI in UAE schools, with facts and a photo. Test whether you can trust what the AI makes.',
+ {id:'s2',title:'Scenario 2 · The newsletter: real or AI?',min:'20 min',marks:4,
+  intro:'Falcon Bank wants a newsletter about the UAE AI strategy, with facts and a photo. Test whether you can trust what the AI makes.',
   mark:'Scenario 2: screenshots, real-or-AI decisions and clues',
   steps:[
-  {t:'Ask for facts',prompt:'Give me exactly 3 statistics about the use of AI in UAE schools. For each one give the number, the organisation that published it, the year and a link to the source.',shot:1,
-   todo:'Open each link, or search the title on Google. Then decide for each statistic.',
-   qs:[{id:'f1',q:'Statistic 1 is…',o:['Real (I found it)','AI-invented','Cannot tell']},
-       {id:'f2',q:'Statistic 2 is…',o:['Real (I found it)','AI-invented','Cannot tell']},
-       {id:'f3',q:'Statistic 3 is…',o:['Real (I found it)','AI-invented','Cannot tell']}]},
-  {t:'Make a photo with AI',prompt:'Create a realistic photo of university students in Dubai at a graduation party, smiling and holding a banner that says "Class of 2026".',shot:1,
+  {t:'Ask for facts',prompt:'Give me exactly 3 facts about the UAE National Strategy for Artificial Intelligence 2031. For each one give a direct quote, the section it comes from and a link to the official source.',shot:1,
+   todo:'Open each link, or check on the official site <a href="https://u.ae/" target="_blank" rel="noopener">u.ae ↗</a>. Then decide for each fact.',
+   qs:[{id:'f1',q:'Fact 1 is…',o:['Real (I found it)','AI-invented','Cannot tell']},
+       {id:'f2',q:'Fact 2 is…',o:['Real (I found it)','AI-invented','Cannot tell']},
+       {id:'f3',q:'Fact 3 is…',o:['Real (I found it)','AI-invented','Cannot tell']}]},
+  {t:'Make a photo with AI',prompt:'Create a realistic photo of a smiling customer and a bank employee shaking hands in a modern Dubai bank branch, with a sign on the wall that says "Falcon Bank".',shot:1,
    todo:'If Copilot does not make images, use <a href="https://www.craiyon.com/" target="_blank" rel="noopener">Craiyon ↗</a>. Zoom in on the picture.',
-   qs:[{id:'believe',q:'Would people believe this is a real photo?',o:['Yes','Some would','No']},
-       {id:'clues',q:'Which AI clues can you see? (tick all that fit)',o:['Hands or fingers','Text on the banner','Faces in the background','Too-perfect skin','Light or shadows','No clues'],multi:1}]},
-  {t:'Real or AI? Test your own eyes',link:['https://www.realornotquiz.com/','Play Microsoft’s Real or Not quiz ↗'],shot:1,
-   todo:'Play one round, then take a screenshot of your score.',
-   qs:[{id:'score',q:'My score (for example 9/15)',text:1,short:1},
+   qs:[{id:'believe',q:'Would customers believe this is a real photo?',o:['Yes','Some would','No']},
+       {id:'clues',q:'Which AI clues can you see? (tick all that fit)',o:['Hands or fingers','Text on the sign','Faces in the background','Too-perfect skin','Light or shadows','No clues'],multi:1}]},
+  {t:'Real or AI? Test your own eyes',link:['https://www.whichfaceisreal.com/','Play Which Face Is Real ↗'],shot:1,
+   todo:'Play 10 rounds and count how many you got right. Take a screenshot of your last round.',
+   qs:[{id:'score',q:'My score (out of 10)',text:1,short:1},
        {id:'hard',q:'Was it hard to tell real from AI?',o:['Very hard','A bit hard','Easy']}]},
   {t:'Decide',
-   qs:[{id:'post',q:'Should Nova Tech post the AI photo?',o:['Yes, as it is','Only with an “AI-generated” label','No']},
+   qs:[{id:'post',q:'Should Falcon Bank use the AI photo in its newsletter?',o:['Yes, as it is','Only with an “AI-generated” label','No']},
        {id:'say',q:'In one sentence: why?',text:1}]}]},
  {id:'v',title:'Your advice to the manager',min:'5 min',marks:2,
   intro:'Use what you found in both scenarios.',
   mark:'Clear advice with a practical safeguard, in your own words',
   steps:[
   {t:'Final decision',
-   qs:[{id:'hire',q:'Hiring: how should Nova Tech use AI?',o:['AI decides alone','AI helps, a human decides','Do not use AI']},
-       {id:'mkt',q:'Marketing: how should Nova Tech use AI?',o:['AI posts alone','AI helps, a human checks','Do not use AI']},
+   qs:[{id:'loan',q:'Loans: how should Falcon Bank use AI?',o:['AI decides alone','AI helps, a human decides','Do not use AI']},
+       {id:'news',q:'Newsletter: how should Falcon Bank use AI?',o:['AI writes alone','AI helps, a human checks','Do not use AI']},
        {id:'guard',q:'One safeguard you would add, and why (one or two sentences)',text:1}]}]}];
 
-const KEY='ged102-proj10c'; let S={}; try{ S=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){} S.a=S.a||{};
+const KEY='ged102-proj10d'; let S={}; try{ S=JSON.parse(localStorage.getItem(KEY)||'{}'); }catch(e){} S.a=S.a||{};
 let SHOT={}; try{ SHOT=JSON.parse(localStorage.getItem(KEY+'-img')||'{}'); }catch(e){}
 const save=()=>{ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} };
 const saveImg=()=>{ try{ localStorage.setItem(KEY+'-img',JSON.stringify(SHOT)); }catch(e){} };
@@ -230,7 +230,7 @@ function prog(){ let d=0,t=0; PARTS.forEach(p=>p.steps.forEach((s,i)=>{ t++; con
 prog();
 
 /* timer */
-const STAGES=[[0,2,'Your details · open Copilot'],[2,22,'Scenario 1 · the hiring assistant'],[22,42,'Scenario 2 · real or AI?'],[42,46,'Your advice to the manager'],[46,50,'Save as PDF and upload to Moodle']];
+const STAGES=[[0,2,'Your details · open Copilot'],[2,22,'Scenario 1 · the loan assistant'],[22,42,'Scenario 2 · real or AI?'],[42,46,'Your advice to the manager'],[46,50,'Save as PDF and upload to Moodle']];
 let t0=null, iv=null; try{ t0=+localStorage.getItem(KEY+'-t0')||null; }catch(e){}
 function tick(){ const left=Math.max(0,3000-Math.floor((Date.now()-t0)/1000)), used=(3000-left)/60;
   document.getElementById('clock').textContent=String(Math.floor(left/60)).padStart(2,'0')+':'+String(left%60).padStart(2,'0');
@@ -249,7 +249,7 @@ document.getElementById('pdf').addEventListener('click',()=>{
   const date=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
   const ans=(p,i,q)=>{ const v=val(key(p,i,q)); return esc((Array.isArray(v)?v.join(', '):(v||'')).toString().trim())||'—'; };
   document.getElementById('report').innerHTML=`
-   <div class="r-head"><div><h1>GED 102 · Course Project: AI Reality Check</h1><p>AI in Modern Life · Session 10 · Instructor: ${esc(C.instructor)} · ${date}</p></div><div class="box">Mark<b>&nbsp;&nbsp;&nbsp;&nbsp;/ 10</b></div></div>
+   <div class="r-head"><div><h1>GED 102 · Course Project: AI Reality Check · Version B</h1><p>AI in Modern Life · Session 10 · Instructor: ${esc(C.instructor)} · ${date}</p></div><div class="box">Mark<b>&nbsp;&nbsp;&nbsp;&nbsp;/ 10</b></div></div>
    <table class="r-t"><tr><th>Name</th><td>${esc(S.sname||'—')}</td><th>Student ID</th><td>${esc(S.sid||'—')}</td></tr>
      <tr><th>Section</th><td>${esc(S.ssec||'—')}</td><th>Steps done</th><td>${prog().join(' / ')}</td></tr></table>
    ${PARTS.map(p=>`<div class="r-sec">${esc(p.title)}</div>${p.steps.map((s,i)=>{ const sk=p.id+'-'+i; return `<div class="r-step"><table class="r-t">
